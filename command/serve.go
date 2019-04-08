@@ -91,7 +91,8 @@ func configureServer(app *server.App) error {
 	}))
 
 	// handlers
-	e.GET("/", server.InfoHandler)
+	e.Any("/", server.InfoHandler)
+	e.POST("/job", server.CreateJobHandler)
 
 	return nil
 }
