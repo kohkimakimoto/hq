@@ -37,6 +37,8 @@ type App struct {
 	UseTempDataDir bool
 	// DB
 	DB *bolt.DB
+	// Store
+	Store *Store
 	// Background
 	Background *Background
 	// katsubushi
@@ -132,6 +134,18 @@ func (app *App) Open() error {
 	}
 	app.DB = db
 	logger.Infof("Opened boltdb: %s", db.Path())
+
+	// store
+	app.Store = &Store{
+		app:    app,
+		db:     db,
+		logger: logger,
+		gen:    gen,
+	}
+
+	if err := app.Store.Init(); err != nil {
+		return err
+	}
 
 	// background
 	app.Background = NewBackground(app)

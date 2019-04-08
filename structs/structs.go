@@ -20,7 +20,7 @@ type Job struct {
 	Name       string     `json:"name" gluamapper:"name"`
 	Comment    string     `json:"comment" gluamapper:"comment"`
 	Code       string     `json:"code" gluamapper:"code"`
-	CreatedAt  time.Time `json:"created_at" gluamapper:"created_at"`
+	CreatedAt  time.Time  `json:"created_at" gluamapper:"created_at"`
 	FinishedAt *time.Time `json:"finished_at" gluamapper:"finished_at"`
 	Failure    bool       `json:"failure" gluamapper:"failure"`
 	Success    bool       `json:"success" gluamapper:"success"`
@@ -28,6 +28,11 @@ type Job struct {
 	Output     string     `json:"output" gluamapper:"output"`
 	active     bool
 	lockWait   bool
+}
+
+
+type DeletedJob struct {
+	ID uint64 `json:"id,string"`
 }
 
 // J is internal representation of a job in the boltdb.
@@ -42,4 +47,8 @@ type J struct {
 	Success    bool
 	Err        string
 	Output     string
+}
+
+type JobList struct {
+	Jobs []*Job `json:"jobs" gluamapper:"jobs"`
 }

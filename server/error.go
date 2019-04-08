@@ -1,58 +1,50 @@
 package server
 
 import (
-	"github.com/kohkimakimoto/govalidator-report"
-	"github.com/kohkimakimoto/hq/util/stringutil"
 	"github.com/labstack/echo"
 	"net/http"
+	"strings"
 )
 
 type ErrorResponse struct {
-	Status  int    `json:"status"`
-	Message string `json:"message"`
-}
-
-type ErrorValidationFailedResponse struct {
-	Status  int                 `json:"status"`
-	Message string              `json:"message"`
-	Errors  map[string][]string `json:"errors"`
+	Status int    `json:"status"`
+	Error  string `json:"error"`
 }
 
 // NewErrorResponseWithValidatorReport creates new error response with ValidationReport.
-func NewErrorValidationFailedResponse(r *report.Report) *ErrorValidationFailedResponse {
-	resp := &ErrorValidationFailedResponse{
-		Status:  http.StatusUnprocessableEntity,
-		Message: "Validation Failed",
+func NewErrorValidationFailed(msgs ...string) *echo.HTTPError {
+	msg := http.StatusText(http.StatusUnprocessableEntity)
+	if len(msg) > 0 {
+		msg = strings.Join(msgs, "\n")
 	}
 
-	errors := map[string][]string{}
-	for _, err := range r.Errors {
-		name := stringutil.LowerFirst(err.Name)
-
-		e := errors[name]
-		if e == nil {
-			e = []string{}
-		}
-
-		e = append(e, err.Err.Error())
-		errors[name] = e
+	return &echo.HTTPError{
+		Code:    http.StatusUnprocessableEntity,
+		Message: msg,
 	}
-
-	resp.Errors = errors
-	return resp
 }
 
-func NewHttpErrorBadRequest() *echo.HTTPError {
+func NewHttpErrorBadRequest(msgs ...string) *echo.HTTPError {
+	msg := http.StatusText(http.StatusBadRequest)
+	if len(msg) > 0 {
+		msg = strings.Join(msgs, "\n")
+	}
+
 	return &echo.HTTPError{
 		Code:    http.StatusBadRequest,
-		Message: http.StatusText(http.StatusBadRequest),
+		Message: msg,
 	}
 }
 
-func NewHttpErrorNotFound() *echo.HTTPError {
+func NewHttpErrorNotFound(msgs ...string) *echo.HTTPError {
+	msg := http.StatusText(http.StatusNotFound)
+	if len(msg) > 0 {
+		msg = strings.Join(msgs, "\n")
+	}
+
 	return &echo.HTTPError{
 		Code:    http.StatusNotFound,
-		Message: http.StatusText(http.StatusNotFound),
+		Message: msg,
 	}
 }
 
@@ -71,12 +63,16 @@ func ErrorHandler(err error, c echo.Context) {
 		}
 	} else {
 		statusCode = http.StatusInternalServerError
-		message = http.StatusText(statusCode)
+
+		message = err.Error()
+		if message == "" {
+			message = http.StatusText(statusCode)
+		}
 	}
 
 	if err2 := c.JSON(statusCode, &ErrorResponse{
-		Status:  statusCode,
-		Message: message,
+		Status: statusCode,
+		Error:  message,
 	}); err2 != nil {
 		e.Logger.Error(err2)
 	}
