@@ -93,6 +93,7 @@ func configureServer(app *server.App) error {
 	// handlers
 	e.Any("/", server.InfoHandler)
 	e.POST("/job", server.CreateJobHandler)
+	e.GET("/job", server.ListJobHandler)
 	e.GET("/job/:id", server.FetchJobHandler)
 	e.DELETE("/job/:id", server.DeleteJobHandler)
 

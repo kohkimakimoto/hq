@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/binary"
 	"fmt"
 	"github.com/boltdb/bolt"
 	"github.com/kayac/go-katsubushi"
@@ -156,7 +157,7 @@ func (s *Store) FetchJob(id uint64, job *structs.Job) error {
 	})
 }
 
-func (s *Store) ListJobs(query *ListJobsQuery, ret *structs.JobList) error {
+func (s *Store) ListJobs(query *structs.ListJobsQuery, ret *structs.JobList) error {
 	return s.db.View(func(tx *bolt.Tx) error {
 		c, err := boltutil.Cursor(tx, []interface{}{BucketNameForJobs})
 		if err != nil {
@@ -168,25 +169,84 @@ func (s *Store) ListJobs(query *ListJobsQuery, ret *structs.JobList) error {
 		}
 
 		if query.Reverse {
-			for k, v := c.Last(); k != nil; k, v = c.Prev() {
-				if err := s.appendJob(v, query, ret); err != nil {
+			if query.HasBegin {
+				beginB, err := boltutil.ToKeyBytes(query.Begin)
+				if err != nil {
 					return err
 				}
+
+				for k, v := c.Seek(beginB); k != nil; k, v = c.Prev() {
+					if err := s.appendJob(v, query, ret); err != nil {
+						return err
+					}
+
+					if len(ret.Jobs) >= query.Limit {
+						break
+					}
+				}
+			} else {
+				for k, v := c.Last(); k != nil; k, v = c.Prev() {
+					if err := s.appendJob(v, query, ret); err != nil {
+						return err
+					}
+
+					if len(ret.Jobs) >= query.Limit {
+						break
+					}
+				}
+			}
+
+			if k, _ := c.Prev(); k != nil {
+				ret.HasNext = true
+				n := binary.BigEndian.Uint64(k)
+				ret.NextJob = &n
+			} else {
+				ret.HasNext = false
 			}
 		} else {
-			for k, v := c.First(); k != nil; k, v = c.Next() {
-				if err := s.appendJob(v, query, ret); err != nil {
+			if query.HasBegin {
+				beginB, err := boltutil.ToKeyBytes(query.Begin)
+				if err != nil {
 					return err
 				}
+
+				for k, v := c.Seek(beginB); k != nil; k, v = c.Next() {
+					if err := s.appendJob(v, query, ret); err != nil {
+						return err
+					}
+
+					if len(ret.Jobs) >= query.Limit {
+						break
+					}
+				}
+			} else {
+				for k, v := c.First(); k != nil; k, v = c.Next() {
+					if err := s.appendJob(v, query, ret); err != nil {
+						return err
+					}
+
+					if len(ret.Jobs) >= query.Limit {
+						break
+					}
+				}
+			}
+
+			if k, _ := c.Next(); k != nil {
+				ret.HasNext = true
+				n := binary.BigEndian.Uint64(k)
+				ret.NextJob = &n
+			} else {
+				ret.HasNext = false
 			}
 		}
+
+		ret.Count = len(ret.Jobs)
 
 		return nil
 	})
 }
 
-func (s *Store) appendJob(v []byte, query *ListJobsQuery, ret *structs.JobList) error {
-	logger := s.logger
+func (s *Store) appendJob(v []byte, query *structs.ListJobsQuery, ret *structs.JobList) error {
 	// jm := s.srv.RuntimeJobManager
 
 	in := &structs.J{}
@@ -209,30 +269,21 @@ func (s *Store) appendJob(v []byte, query *ListJobsQuery, ret *structs.JobList) 
 
 	//job = jm.SetRuntimeInfo(job)
 
-	if len(query.Name) == 0 {
+	if query.Name == "" {
 		ret.Jobs = append(ret.Jobs, job)
 		return nil
 	}
 
 	// filter job name
-	matched := false
-	for _, n := range query.Name {
-		r, err := regexp.Compile(n)
-		if err != nil {
-			return err
-		}
-
-		logger.Debugf("matching '%s' and '%s'", n, job.Name)
-		if matched = r.MatchString(job.Name); !matched {
-			break
-		}
+	r, err := regexp.Compile(query.Name)
+	if err != nil {
+		return err
 	}
 
-	if !matched {
+	if r.MatchString(job.Name) {
+		ret.Jobs = append(ret.Jobs, job)
 		return nil
 	}
-
-	ret.Jobs = append(ret.Jobs, job)
 
 	return nil
 }

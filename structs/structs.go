@@ -15,6 +15,18 @@ type RegisterJobRequest struct {
 	Code    string `json:"code" form:"code" query:"code"`
 }
 
+type ListJobsQuery struct {
+	Name     string `json:"-" form:"-" query:"-"`
+	Begin    uint64 `json:"-" form:"-" query:"-"`
+	HasBegin bool   `json:"-" form:"-" query:"-"`
+	Reverse  bool   `json:"-" form:"-" query:"-"`
+	Limit    int    `json:"-" form:"-" query:"-"`
+}
+
+var (
+	ListJobsRequestDefaultLimit = 100
+)
+
 type Job struct {
 	ID         uint64     `json:"id,string" gluamapper:"id"`
 	Name       string     `json:"name" gluamapper:"name"`
@@ -29,7 +41,6 @@ type Job struct {
 	active     bool
 	lockWait   bool
 }
-
 
 type DeletedJob struct {
 	ID uint64 `json:"id,string"`
@@ -50,5 +61,8 @@ type J struct {
 }
 
 type JobList struct {
-	Jobs []*Job `json:"jobs" gluamapper:"jobs"`
+	Jobs    []*Job  `json:"jobs"`
+	HasNext bool    `json:"hasNext"`
+	NextJob *uint64 `json:"nextJob,omitempty"`
+	Count   int     `json:"count"`
 }

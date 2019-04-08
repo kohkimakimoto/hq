@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/json"
 	"github.com/kayac/go-katsubushi"
+	"github.com/kohkimakimoto/boltutil"
 	"github.com/kohkimakimoto/hq/hq"
 	"github.com/pkg/errors"
 	"net/http"
@@ -64,14 +65,14 @@ func FetchJobHandler(c echo.Context) error {
 
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return NewErrorValidationFailed("The job id  must be a number but '"+c.Param("id")+"'.")
+		return NewErrorValidationFailed("The job id  must be a number but '" + c.Param("id") + "'.")
 	}
 
 	job := &structs.Job{}
 	if err := app.Store.FetchJob(id, job); err != nil {
 		if _, ok := err.(*ErrJobNotFound); ok {
 			return NewErrorValidationFailed(err.Error())
-		} else{
+		} else {
 			return err
 		}
 	}
@@ -79,19 +80,18 @@ func FetchJobHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, job)
 }
 
-
 func DeleteJobHandler(c echo.Context) error {
 	app := c.(*AppContext).App()
 
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return NewErrorValidationFailed("The job id  must be a number but '"+c.Param("id")+"'.")
+		return NewErrorValidationFailed("The job id  must be a number but '" + c.Param("id") + "'.")
 	}
 
 	if err := app.Store.DeleteJob(id); err != nil {
 		if _, ok := err.(*ErrJobNotFound); ok {
 			return NewErrorValidationFailed(err.Error())
-		} else{
+		} else {
 			return err
 		}
 	}
@@ -99,6 +99,58 @@ func DeleteJobHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, &structs.DeletedJob{
 		ID: id,
 	})
+}
+
+func ListJobHandler(c echo.Context) error {
+	app := c.(*AppContext).App()
+
+	query := &structs.ListJobsQuery{}
+	if err := bindRequest(query, c); err != nil {
+		c.Logger().Warn(errors.Wrap(err, "failed to bind request"))
+		return NewHttpErrorBadRequest()
+	}
+
+	// Parse query strings
+	query.HasBegin = false
+	if c.QueryParam("begin") != "" {
+		i, err := strconv.ParseUint(c.QueryParam("begin"), 10, 64)
+		if err != nil {
+			return NewErrorValidationFailed("The 'begin' must be a number but '" + c.QueryParam("begin") + "'.")
+		}
+		query.Begin = i
+		query.HasBegin = true
+	}
+
+	query.Reverse = false
+	if c.QueryParam("reverse") != "" {
+		query.Reverse = true
+	}
+
+	query.Limit = structs.ListJobsRequestDefaultLimit
+	if c.QueryParam("limit") != "" {
+		l, err := strconv.Atoi(c.QueryParam("limit"))
+		if err != nil {
+			return NewErrorValidationFailed("The 'limit' must be a number but '" + c.QueryParam("limit") + "'.")
+		}
+		query.Limit = l
+	}
+
+	query.Name = c.QueryParam("name")
+
+	list := &structs.JobList{
+		Jobs:    []*structs.Job{},
+		HasNext: false,
+	}
+
+	if err := app.Store.ListJobs(query, list); err != nil {
+		if err == boltutil.ErrNotFound {
+			return NewHttpErrorNotFound()
+		} else {
+			return errors.Wrap(err, "failed to fetch objects")
+		}
+	}
+
+	return c.JSON(http.StatusOK, list)
 }
 
 func bindRequest(req interface{}, c echo.Context) error {
