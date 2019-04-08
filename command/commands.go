@@ -1,9 +1,9 @@
 package command
 
 import (
+	"github.com/urfave/cli"
 	"os"
 	"runtime"
-	"github.com/urfave/cli"
 )
 
 // Command set

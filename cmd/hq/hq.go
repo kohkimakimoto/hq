@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/kohkimakimoto/hq/hq"
 	"github.com/kohkimakimoto/hq/command"
-	"os"
+	"github.com/kohkimakimoto/hq/hq"
 	"github.com/urfave/cli"
+	"os"
 )
 
 func main() {
@@ -24,7 +24,7 @@ func realMain() (status int) {
 	app.Name = hq.Name
 	app.HelpName = hq.DisplayName
 	app.Version = hq.Version + " (" + hq.CommitHash + ")"
-	app.Usage = "Server Management Framework"
+	app.Usage = "HTTP Job Queue Engine"
 	app.Commands = command.Commands
 
 	if err := app.Run(os.Args); err != nil {
@@ -38,4 +38,3 @@ func realMain() (status int) {
 func printError(err interface{}) {
 	fmt.Fprintf(os.Stderr, "%s %v\n", "ERROR", err)
 }
-
