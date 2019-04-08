@@ -1,0 +1,24 @@
+[Unit]
+Description=HQ
+Documentation=https://github.com/kohkimakimoto/hq
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+WorkingDirectory=/
+User=hq
+Group=hq
+EnvironmentFile=-/etc/sysconfig/hq
+ExecStart=/usr/bin/hq serve $SKYFORGE_OPTS
+StandardOutput=journal
+StandardError=inherit
+
+# Disable timeout logic and wait until process is stopped
+TimeoutStopSec=0
+
+KillSignal=SIGTERM
+SendSIGKILL=no
+SuccessExitStatus=0
+
+[Install]
+WantedBy=multi-user.target

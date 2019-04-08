@@ -1,0 +1,1 @@
+HQ_OPTS="--config-file=/etc/hq/hq.toml"
