@@ -9,7 +9,6 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
 	"github.com/pkg/errors"
-	"html/template"
 	"io/ioutil"
 	"os"
 	"os/signal"
@@ -43,8 +42,8 @@ type App struct {
 	Background *Background
 	// katsubushi
 	Gen katsubushi.Generator
-	// View
-	View *template.Template
+	// JobWorkerManager
+	JobWorkerManager *JobWorkerManager
 }
 
 func NewApp(config ...*Config) *App {
@@ -147,8 +146,13 @@ func (app *App) Open() error {
 		return err
 	}
 
+	// worker
+	app.JobWorkerManager = NewJobWorkerManager(app)
+	app.JobWorkerManager.Start()
+
 	// background
 	app.Background = NewBackground(app)
+	app.Background.Start()
 
 	return nil
 }
@@ -190,14 +194,17 @@ func (app *App) ListenAndServe() error {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	timeout := time.Duration(app.Config.ShutdownTimeout) * time.Second
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
 	e.Logger.Info("Shutting down the server")
 
 	if err := e.Shutdown(ctx); err != nil {
-		return errors.Wrap(err, "fail to shutdown")
+		return errors.Wrap(err, "fail to shutdown echo")
 	}
+
+	// TODO: implement shutdown logic
 
 	return nil
 }

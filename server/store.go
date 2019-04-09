@@ -63,6 +63,7 @@ func (s *Store) CreateJob(job *structs.Job) error {
 			Name:       job.Name,
 			Comment:    job.Comment,
 			Code:       job.Code,
+			Timeout:    job.Timeout,
 			CreatedAt:  job.CreatedAt,
 			FinishedAt: job.FinishedAt,
 			Failure:    job.Failure,
@@ -94,6 +95,7 @@ func (s *Store) UpdateJob(job *structs.Job) error {
 			Name:       job.Name,
 			Comment:    job.Comment,
 			Code:       job.Code,
+			Timeout:    job.Timeout,
 			CreatedAt:  job.CreatedAt,
 			FinishedAt: job.FinishedAt,
 			Failure:    job.Failure,
@@ -144,6 +146,7 @@ func (s *Store) FetchJob(id uint64, job *structs.Job) error {
 		job.Name = out.Name
 		job.Comment = out.Comment
 		job.Code = out.Code
+		job.Timeout = out.Timeout
 		job.CreatedAt = out.CreatedAt
 		job.Failure = out.Failure
 		job.FinishedAt = out.FinishedAt
@@ -259,6 +262,7 @@ func (s *Store) appendJob(v []byte, query *structs.ListJobsQuery, ret *structs.J
 		Name:       in.Name,
 		Comment:    in.Comment,
 		Code:       in.Code,
+		Timeout:    in.Timeout,
 		CreatedAt:  in.CreatedAt,
 		FinishedAt: in.FinishedAt,
 		Failure:    in.Failure,

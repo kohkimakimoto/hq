@@ -3,28 +3,39 @@ package server
 import (
 	"fmt"
 	"github.com/BurntSushi/toml"
+	"runtime"
 	"time"
 )
 
 type Config struct {
-	ServerId      uint   `toml:"server_id"`
-	LogLevel      string `toml:"log_level"`
-	Addr          string `toml:"addr"`
-	Logfile       string `toml:"log_file"`
-	DataDir       string `toml:"data_dir"`
-	AccessLogfile string `toml:"access_log_file"`
-	IDEpoch       []int  `toml:"id_epoch"`
+	ServerId        uint   `toml:"server_id"`
+	LogLevel        string `toml:"log_level"`
+	Addr            string `toml:"addr"`
+	Logfile         string `toml:"log_file"`
+	DataDir         string `toml:"data_dir"`
+	AccessLogfile   string `toml:"access_log_file"`
+	Queues          int64  `toml:"queues"`
+	Workers         int64  `toml:"workers"`
+	MaxExecutors    int64  `toml:"max_executors"`
+	ShutdownTimeout int64  `toml:"shutdown_timeout"`
+	IDEpoch         []int  `toml:"id_epoch"`
 }
 
 func NewConfig() *Config {
+	numCPU := runtime.NumCPU()
+
 	return &Config{
-		ServerId:      0,
-		LogLevel:      "info",
-		Addr:          ":9000",
-		Logfile:       "",
-		DataDir:       "",
-		AccessLogfile: "",
-		IDEpoch:       []int{2019, 1, 1},
+		ServerId:        0,
+		LogLevel:        "info",
+		Addr:            ":9000",
+		Logfile:         "",
+		DataDir:         "",
+		AccessLogfile:   "",
+		Queues:          8192,
+		Workers:         int64(numCPU),
+		MaxExecutors:    0,
+		ShutdownTimeout: 10,
+		IDEpoch:         []int{2019, 1, 1},
 	}
 }
 

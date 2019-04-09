@@ -9,10 +9,11 @@ type Info struct {
 	DataDir    string `json:"dataDir"`
 }
 
-type RegisterJobRequest struct {
+type CreateJobRequest struct {
 	Name    string `json:"name" form:"name" query:"name"`
 	Comment string `json:"comment" form:"comment" query:"comment"`
 	Code    string `json:"code" form:"code" query:"code"`
+	Timeout int64  `json:"timeout" form:"timeout" query:"timeout"`
 }
 
 type ListJobsQuery struct {
@@ -32,6 +33,7 @@ type Job struct {
 	Name       string     `json:"name" gluamapper:"name"`
 	Comment    string     `json:"comment" gluamapper:"comment"`
 	Code       string     `json:"code" gluamapper:"code"`
+	Timeout    int64      `json:"timeout"`
 	CreatedAt  time.Time  `json:"created_at" gluamapper:"created_at"`
 	FinishedAt *time.Time `json:"finished_at" gluamapper:"finished_at"`
 	Failure    bool       `json:"failure" gluamapper:"failure"`
@@ -52,6 +54,7 @@ type J struct {
 	Name       string
 	Comment    string
 	Code       string
+	Timeout    int64
 	CreatedAt  time.Time
 	FinishedAt *time.Time
 	Failure    bool

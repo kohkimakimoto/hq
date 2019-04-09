@@ -27,7 +27,7 @@ func InfoHandler(c echo.Context) error {
 func CreateJobHandler(c echo.Context) error {
 	app := c.(*AppContext).App()
 
-	req := &structs.RegisterJobRequest{}
+	req := &structs.CreateJobRequest{}
 	if err := bindRequest(req, c); err != nil {
 		c.Logger().Warn(errors.Wrap(err, "failed to bind request"))
 		return NewHttpErrorBadRequest()
@@ -51,11 +51,14 @@ func CreateJobHandler(c echo.Context) error {
 	job.Name = req.Name
 	job.Comment = req.Comment
 	job.Code = req.Code
+	job.Timeout = req.Timeout
 	job.CreatedAt = katsubushi.ToTime(id)
 
 	if err := app.Store.CreateJob(job); err != nil {
 		return err
 	}
+
+	go app.JobWorkerManager.Enqueue(job)
 
 	return c.JSON(http.StatusOK, job)
 }
