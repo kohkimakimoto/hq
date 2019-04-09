@@ -178,12 +178,25 @@ func (s *Store) ListJobs(query *structs.ListJobsQuery, ret *structs.JobList) err
 					return err
 				}
 
-				for k, v := c.Seek(beginB); k != nil; k, v = c.Prev() {
+				var k, v []byte
+				if c.Bucket().Get(beginB) != nil {
+					k, v = c.Seek(beginB)
+				} else {
+					// If the seeking key does not exist then the next key is used.
+					k, v = c.Seek(beginB)
+					if k == nil {
+						k, v = c.Last()
+					} else {
+						k, v = c.Prev()
+					}
+				}
+
+				for ; k != nil; k, v = c.Prev() {
 					if err := s.appendJob(v, query, ret); err != nil {
 						return err
 					}
 
-					if len(ret.Jobs) >= query.Limit {
+					if query.Limit > 0 && len(ret.Jobs) >= query.Limit {
 						break
 					}
 				}
@@ -193,7 +206,7 @@ func (s *Store) ListJobs(query *structs.ListJobsQuery, ret *structs.JobList) err
 						return err
 					}
 
-					if len(ret.Jobs) >= query.Limit {
+					if query.Limit > 0 && len(ret.Jobs) >= query.Limit {
 						break
 					}
 				}
@@ -218,7 +231,7 @@ func (s *Store) ListJobs(query *structs.ListJobsQuery, ret *structs.JobList) err
 						return err
 					}
 
-					if len(ret.Jobs) >= query.Limit {
+					if query.Limit > 0 && len(ret.Jobs) >= query.Limit {
 						break
 					}
 				}
@@ -228,7 +241,7 @@ func (s *Store) ListJobs(query *structs.ListJobsQuery, ret *structs.JobList) err
 						return err
 					}
 
-					if len(ret.Jobs) >= query.Limit {
+					if query.Limit > 0 && len(ret.Jobs) >= query.Limit {
 						break
 					}
 				}

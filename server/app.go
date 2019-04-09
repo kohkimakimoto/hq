@@ -186,9 +186,6 @@ func (app *App) ListenAndServe() error {
 
 	app.Logger.Infof("The server Listening on %s (pid: %d)", e.Server.Addr, os.Getpid())
 
-	// start background process
-	app.Background.Start()
-
 	// see https://echo.labstack.com/cookbook/graceful-shutdown
 	// Wait for interrupt signal to gracefully shutdown the server with a timeout of 5 seconds.
 	quit := make(chan os.Signal)
@@ -204,12 +201,14 @@ func (app *App) ListenAndServe() error {
 		return errors.Wrap(err, "fail to shutdown echo")
 	}
 
-	// TODO: implement shutdown logic
-
 	return nil
 }
 
 func (app *App) Close() error {
+	if app.Background != nil {
+		app.Background.Close()
+	}
+
 	if app.DB != nil {
 		if err := app.DB.Close(); err != nil {
 			return err
@@ -222,6 +221,8 @@ func (app *App) Close() error {
 		}
 		app.Logger.Warnf("Removed temporary directory: %s", app.DataDir)
 	}
+
+	// TODO: implement shutdown logic
 
 	return nil
 }

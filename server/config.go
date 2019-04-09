@@ -18,6 +18,7 @@ type Config struct {
 	Workers         int64  `toml:"workers"`
 	MaxExecutors    int64  `toml:"max_executors"`
 	ShutdownTimeout int64  `toml:"shutdown_timeout"`
+	KeepJobs        int64  `toml:"keep_jobs" json:"keep_jobs"`
 	IDEpoch         []int  `toml:"id_epoch"`
 }
 
@@ -35,7 +36,9 @@ func NewConfig() *Config {
 		Workers:         int64(numCPU),
 		MaxExecutors:    0,
 		ShutdownTimeout: 10,
-		IDEpoch:         []int{2019, 1, 1},
+		// KeepJobs's unit is second
+		KeepJobs: 60 * 60 * 24 * 30,
+		IDEpoch:  []int{2019, 1, 1},
 	}
 }
 
