@@ -8,7 +8,9 @@ import (
 
 // Command set
 var Commands = []cli.Command{
+	InfoCommand,
 	ServeCommand,
+	DispatchCommand,
 }
 
 // Flags
@@ -26,6 +28,14 @@ var (
 		Usage:  "Load config from the `FILE`",
 		EnvVar: "HQ_CONFIG",
 	}
+
+	// client flag
+	addressFlag = cli.StringFlag{
+		Name:   "address, a",
+		Usage:  "The address of the HQ server.",
+		Value:  "http://127.0.0.1:9000",
+	}
+
 )
 
 func userHomeDir() string {
