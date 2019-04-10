@@ -42,8 +42,8 @@ type App struct {
 	Background *Background
 	// katsubushi
 	Gen katsubushi.Generator
-	// JobWorkerManager
-	JobWorkerManager *JobWorkerManager
+	// QueueManager
+	QueueManager *QueueManager
 }
 
 func NewApp(config ...*Config) *App {
@@ -139,16 +139,15 @@ func (app *App) Open() error {
 		app:    app,
 		db:     db,
 		logger: logger,
-		gen:    gen,
 	}
 
 	if err := app.Store.Init(); err != nil {
 		return err
 	}
 
-	// worker
-	app.JobWorkerManager = NewJobWorkerManager(app)
-	app.JobWorkerManager.Start()
+	// queue
+	app.QueueManager = NewQueueManager(app)
+	app.QueueManager.Start()
 
 	// background
 	app.Background = NewBackground(app)

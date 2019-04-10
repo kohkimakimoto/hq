@@ -9,30 +9,30 @@ import (
 )
 
 type Background struct {
-	App  *App
-	Cron *cron.Cron
+	app  *App
+	cron *cron.Cron
 }
 
 func NewBackground(app *App) *Background {
 	return &Background{
-		App:  app,
-		Cron: cron.New(),
+		app:  app,
+		cron: cron.New(),
 	}
 }
 
 func (bg *Background) Start() {
-	logger := bg.App.Logger
+	logger := bg.app.Logger
 	logger.Debug("Starting background.")
 
-	app := bg.App
-	// bg.Cron.AddFunc("* * * * * *", cleanupJobs(app))
-	bg.Cron.AddFunc("@hourly", cleanupJobs(app))
-	bg.Cron.Start()
+	app := bg.app
+	// bg.cron.AddFunc("* * * * * *", cleanupJobs(app))
+	bg.cron.AddFunc("@hourly", cleanupJobs(app))
+	bg.cron.Start()
 }
 
 func (bg *Background) Close() {
-	if bg.Cron != nil {
-		bg.Cron.Stop()
+	if bg.cron != nil {
+		bg.cron.Stop()
 	}
 }
 

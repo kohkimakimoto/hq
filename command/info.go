@@ -15,6 +15,5 @@ var InfoCommand = cli.Command{
 
 func infoAction(ctx *cli.Context) error {
 
-
 	return nil
 }

@@ -42,15 +42,16 @@ func CreateJobHandler(c echo.Context) error {
 		return NewErrorValidationFailed("'name' is required")
 	}
 
-	if req.Code == "" {
-		return NewErrorValidationFailed("'code' is required")
+	if req.URL == "" {
+		return NewErrorValidationFailed("'url' is required")
 	}
 
 	job := &structs.Job{}
 	job.ID = id
 	job.Name = req.Name
 	job.Comment = req.Comment
-	job.Code = req.Code
+	job.URL = req.URL
+	job.Payload = req.Payload
 	job.Timeout = req.Timeout
 	job.CreatedAt = katsubushi.ToTime(id)
 
@@ -58,7 +59,7 @@ func CreateJobHandler(c echo.Context) error {
 		return err
 	}
 
-	go app.JobWorkerManager.Enqueue(job)
+	go app.QueueManager.Enqueue(job)
 
 	return c.JSON(http.StatusOK, job)
 }
@@ -104,6 +105,10 @@ func DeleteJobHandler(c echo.Context) error {
 	})
 }
 
+var (
+	ListJobsRequestDefaultLimit = 100
+)
+
 func ListJobHandler(c echo.Context) error {
 	app := c.(*AppContext).App()
 
@@ -129,7 +134,7 @@ func ListJobHandler(c echo.Context) error {
 		query.Reverse = true
 	}
 
-	query.Limit = structs.ListJobsRequestDefaultLimit
+	query.Limit = ListJobsRequestDefaultLimit
 	if c.QueryParam("limit") != "" {
 		l, err := strconv.Atoi(c.QueryParam("limit"))
 		if err != nil {

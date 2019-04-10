@@ -26,7 +26,6 @@ func (c *Client) do(method, url string, payload interface{}) error {
 		return err
 	}
 
-	
 	return nil
 }
 
@@ -35,8 +34,6 @@ func (c *Client) Info() error {
 	return nil
 }
 
-
 func (c *Client) CreateJob(req *structs.CreateJobRequest) error {
 	return nil
 }
-

@@ -15,6 +15,5 @@ var DispatchCommand = cli.Command{
 
 func dispatchAction(ctx *cli.Context) error {
 
-
 	return nil
 }

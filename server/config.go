@@ -15,8 +15,8 @@ type Config struct {
 	DataDir         string `toml:"data_dir"`
 	AccessLogfile   string `toml:"access_log_file"`
 	Queues          int64  `toml:"queues"`
-	Workers         int64  `toml:"workers"`
-	MaxExecutors    int64  `toml:"max_executors"`
+	Dispatchers     int64  `toml:"dispatchers"`
+	MaxWorkers      int64  `toml:"max_workers"`
 	ShutdownTimeout int64  `toml:"shutdown_timeout"`
 	KeepJobs        int64  `toml:"keep_jobs" json:"keep_jobs"`
 	IDEpoch         []int  `toml:"id_epoch"`
@@ -33,8 +33,8 @@ func NewConfig() *Config {
 		DataDir:         "",
 		AccessLogfile:   "",
 		Queues:          8192,
-		Workers:         int64(numCPU),
-		MaxExecutors:    0,
+		Dispatchers:     int64(numCPU),
+		MaxWorkers:      0,
 		ShutdownTimeout: 10,
 		// KeepJobs's unit is second
 		KeepJobs: 60 * 60 * 24 * 30,

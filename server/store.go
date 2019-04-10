@@ -4,7 +4,6 @@ import (
 	"encoding/binary"
 	"fmt"
 	"github.com/boltdb/bolt"
-	"github.com/kayac/go-katsubushi"
 	"github.com/kohkimakimoto/boltutil"
 	"github.com/kohkimakimoto/hq/structs"
 	"github.com/labstack/echo"
@@ -15,7 +14,6 @@ type Store struct {
 	app    *App
 	db     *bolt.DB
 	logger echo.Logger
-	gen    katsubushi.Generator
 }
 
 const (
@@ -62,7 +60,8 @@ func (s *Store) CreateJob(job *structs.Job) error {
 			ID:         job.ID,
 			Name:       job.Name,
 			Comment:    job.Comment,
-			Code:       job.Code,
+			URL:        job.URL,
+			Payload:    job.Payload,
 			Timeout:    job.Timeout,
 			CreatedAt:  job.CreatedAt,
 			FinishedAt: job.FinishedAt,
@@ -94,7 +93,8 @@ func (s *Store) UpdateJob(job *structs.Job) error {
 			ID:         job.ID,
 			Name:       job.Name,
 			Comment:    job.Comment,
-			Code:       job.Code,
+			URL:        job.URL,
+			Payload:    job.Payload,
 			Timeout:    job.Timeout,
 			CreatedAt:  job.CreatedAt,
 			FinishedAt: job.FinishedAt,
@@ -145,7 +145,8 @@ func (s *Store) FetchJob(id uint64, job *structs.Job) error {
 		job.ID = out.ID
 		job.Name = out.Name
 		job.Comment = out.Comment
-		job.Code = out.Code
+		job.URL = out.URL
+		job.Payload = out.Payload
 		job.Timeout = out.Timeout
 		job.CreatedAt = out.CreatedAt
 		job.Failure = out.Failure
@@ -274,7 +275,8 @@ func (s *Store) appendJob(v []byte, query *structs.ListJobsQuery, ret *structs.J
 		ID:         in.ID,
 		Name:       in.Name,
 		Comment:    in.Comment,
-		Code:       in.Code,
+		URL:        in.URL,
+		Payload:    in.Payload,
 		Timeout:    in.Timeout,
 		CreatedAt:  in.CreatedAt,
 		FinishedAt: in.FinishedAt,

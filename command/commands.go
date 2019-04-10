@@ -31,11 +31,10 @@ var (
 
 	// client flag
 	addressFlag = cli.StringFlag{
-		Name:   "address, a",
-		Usage:  "The address of the HQ server.",
-		Value:  "http://127.0.0.1:9000",
+		Name:  "address, a",
+		Usage: "The address of the HQ server.",
+		Value: "http://127.0.0.1:9000",
 	}
-
 )
 
 func userHomeDir() string {
