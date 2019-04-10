@@ -8,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 	"net/http"
 	"strconv"
+	"sync/atomic"
 
 	"github.com/kohkimakimoto/hq/structs"
 	"github.com/labstack/echo"
@@ -151,6 +152,32 @@ func ListJobsHandler(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, list)
+}
+
+func StatsHandler(c echo.Context) error {
+	app := c.(*AppContext).App()
+
+	config := app.Config
+	queueManger := app.QueueManager
+
+	var numAllWorkers int64 = 0
+	for _, d := range queueManger.dispatchers {
+		numAllWorkers = numAllWorkers + atomic.LoadInt64(&d.numWorkers)
+	}
+
+	stats := &structs.Stats{
+		ServerId:        config.ServerId,
+		Queues:          config.Queues,
+		Dispatchers:     config.Dispatchers,
+		MaxWorkers:      config.MaxWorkers,
+		ShutdownTimeout: config.ShutdownTimeout,
+		JobLifetime:     config.JobLifetime,
+		QueueMax:        cap(queueManger.queue),
+		QueueUsage:      len(queueManger.queue),
+		NumWorkers:      numAllWorkers,
+	}
+
+	return c.JSON(http.StatusOK, stats)
 }
 
 func bindRequest(req interface{}, c echo.Context) error {

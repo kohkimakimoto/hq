@@ -40,6 +40,7 @@ func (m *QueueManager) Start() {
 			manager:    m,
 			numWorkers: 0,
 		}
+		m.dispatchers = append(m.dispatchers, d)
 
 		go d.loop()
 	}
@@ -127,7 +128,11 @@ func (d *Dispatcher) dispatch(job *structs.Job) {
 	m := d.manager
 
 	m.wg.Add(1)
-	defer m.wg.Done()
+	atomic.AddInt64(&d.numWorkers, 1)
+	defer func() {
+		m.wg.Done()
+		atomic.AddInt64(&d.numWorkers, -1)
+	}()
 
 	d.work(job)
 }

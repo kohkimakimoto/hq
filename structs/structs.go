@@ -11,6 +11,20 @@ type Info struct {
 	CommitHash string `json:"commitHash"`
 }
 
+type Stats struct {
+	// config
+	ServerId        uint  `json:"serverId"`
+	Queues          int64 `json:"queues"`
+	Dispatchers     int64 `json:"dispatchers"`
+	MaxWorkers      int64 `json:"maxWorkers"`
+	ShutdownTimeout int64 `json:"shutdownTimeout"`
+	JobLifetime     int64 `json:"jobLifetime"`
+	// queue stats
+	QueueMax   int `json:"queueMax"`
+	QueueUsage int `json:"queueUsage"`
+	NumWorkers int64 `json:"numWorkers"`
+}
+
 type CreateJobRequest struct {
 	Name    string          `json:"name" form:"name" query:"name"`
 	Comment string          `json:"comment" form:"comment" query:"comment"`
@@ -20,10 +34,10 @@ type CreateJobRequest struct {
 }
 
 type ListJobsRequest struct {
-	Name    string  `json:"name" form:"name" query:"name"`
-	Begin   string  `json:"begin"`
-	Reverse bool    `json:"reverse"`
-	Limit   uint64  `json:"limit"`
+	Name    string `json:"name" form:"name" query:"name"`
+	Begin   string `json:"begin"`
+	Reverse bool   `json:"reverse"`
+	Limit   uint64 `json:"limit"`
 }
 
 type ListJobsQuery struct {

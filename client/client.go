@@ -194,7 +194,6 @@ func (c *Client) ListJobs(payload *structs.ListJobsRequest) (*structs.JobList, e
 	return ret, nil
 }
 
-
 func (c *Client) GetJob(id uint64) (*structs.Job, error) {
 	resp, err := c.get(fmt.Sprintf("/job/%d", id), nil)
 	if err != nil {
@@ -208,6 +207,26 @@ func (c *Client) GetJob(id uint64) (*structs.Job, error) {
 	}
 
 	ret := &structs.Job{}
+	if err := json.Unmarshal(body, ret); err != nil {
+		return nil, err
+	}
+
+	return ret, nil
+}
+
+func (c *Client) Stats() (*structs.Stats, error) {
+	resp, err := c.get("/stats", nil)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	ret := &structs.Stats{}
 	if err := json.Unmarshal(body, ret); err != nil {
 		return nil, err
 	}

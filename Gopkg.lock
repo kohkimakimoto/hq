@@ -42,6 +42,14 @@
   version = "v3.2.0"
 
 [[projects]]
+  digest = "1:e846038327cd6adb9b52a34c8f2056bd76e1e382ab45b3ccc0308754b6bb1e41"
+  name = "github.com/fukata/golang-stats-api-handler"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "90f0b59102629831cc109845475a8d77043412ec"
+  version = "v1.0.0"
+
+[[projects]]
   digest = "1:523e7bda2a76ca00f197a434031580eaf2f29e4270c0e24939cad32ca910a72e"
   name = "github.com/kayac/go-katsubushi"
   packages = ["."]
@@ -194,10 +202,12 @@
     "github.com/BurntSushi/toml",
     "github.com/boltdb/bolt",
     "github.com/cheynewallace/tabby",
+    "github.com/fukata/golang-stats-api-handler",
     "github.com/kayac/go-katsubushi",
     "github.com/kohkimakimoto/boltutil",
     "github.com/labstack/echo",
     "github.com/labstack/echo/middleware",
+    "github.com/labstack/gommon/color",
     "github.com/labstack/gommon/log",
     "github.com/pkg/errors",
     "github.com/robfig/cron",

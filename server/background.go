@@ -42,7 +42,7 @@ func cleanupJobs(app *App) func() {
 	config := app.Config
 
 	return func() {
-		if config.KeepJobs <= 0 {
+		if config.JobLifetime <= 0 {
 			return
 		}
 
@@ -51,7 +51,7 @@ func cleanupJobs(app *App) func() {
 
 		logger.Debug("Run the background task to clean up jobs")
 
-		tt := time.Now().Add(time.Duration(-1*config.KeepJobs) * time.Second)
+		tt := time.Now().Add(time.Duration(-1*config.JobLifetime) * time.Second)
 		begin := katsubushi.ToID(tt)
 		query := &structs.ListJobsQuery{
 			Reverse:  true,
@@ -64,7 +64,7 @@ func cleanupJobs(app *App) func() {
 			HasNext: false,
 		}
 
-		logger.Debugf("Try to get before %v (%d) jobs to delete (keep %d sec)", tt, begin, config.KeepJobs)
+		logger.Debugf("Try to get before %v (%d) jobs to delete (keep %d sec)", tt, begin, config.JobLifetime)
 
 		if err := app.Store.ListJobs(query, list); err != nil {
 			logger.Error(err)

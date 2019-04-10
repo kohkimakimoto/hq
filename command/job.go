@@ -129,8 +129,8 @@ func jobListAction(ctx *cli.Context) error {
 	if len(ids) == 0 {
 		payload := &structs.ListJobsRequest{
 			Reverse: ctx.Bool("reverse"),
-			Begin: ctx.String("begin"),
-			Limit: ctx.Uint64("limit"),
+			Begin:   ctx.String("begin"),
+			Limit:   ctx.Uint64("limit"),
 		}
 
 		list, err := c.ListJobs(payload)
@@ -187,7 +187,6 @@ func jobListAction(ctx *cli.Context) error {
 
 	t.Print()
 	return nil
-
 
 	return nil
 }

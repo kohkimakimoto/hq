@@ -14,6 +14,7 @@ var Commands = []cli.Command{
 	InfoCommand,
 	ServeCommand,
 	JobCommand,
+	StatsCommand,
 }
 
 // Flags
