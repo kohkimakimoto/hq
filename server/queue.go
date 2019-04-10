@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/kohkimakimoto/hq/structs"
+	"io/ioutil"
 	"net/http"
 	"sync/atomic"
 	"time"
@@ -134,144 +135,14 @@ func (d *Dispatcher) work(job *structs.Job) {
 		return
 	}
 	defer resp.Body.Close()
-	//body, err := ioutil.ReadAll(resp.Body)
-	//if err != nil {
-	//	return
-	//}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return
+	}
+	output = string(body)
 
 	if resp.StatusCode != http.StatusOK {
 		err = fmt.Errorf(http.StatusText(resp.StatusCode))
 		return
 	}
 }
-
-//
-//
-//type Worker struct {
-//	app *App
-//	job *structs.Job
-//	Err error
-//}
-//
-//
-//func (w *Dispatcher) aa(job *structs.Job) {
-//	logger := w.m.app.Logger
-//
-//	L := lua.NewState()
-//	defer L.Close()
-//
-//	// modules
-//	glualibs.Preload(L)
-//	L.PreloadModule("env", gluaenv.Loader)
-//	L.PreloadModule("sh", gluash.Loader)
-//	L.PreloadModule("httpclient", gluahttp.NewHttpModule(&http.Client{}).Loader)
-//
-//	e := &Executor{
-//		App:       w.m.app,
-//		L:         L,
-//		Job:       job,
-//		OutBuffer: &bytes.Buffer{},
-//		Logger:    logger,
-//	}
-//
-//	L.SetGlobal("print", L.NewFunction(luaPrint(e)))
-//	if err := L.DoString(`
-//-- disabled os.exit
-//os.exit = nil
-//`); err != nil {
-//		logger.Error(err)
-//	}
-//
-//	// set context
-//	var ctx context.Context
-//	var cancel context.CancelFunc
-//	if job.Timeout > 0 {
-//		ctx, cancel = context.WithTimeout(context.Background(), time.Duration(job.Timeout)*time.Second)
-//	} else {
-//		ctx, cancel = context.WithCancel(context.Background())
-//	}
-//	L.SetContext(ctx)
-//	e.CancelFunc = cancel
-//
-//	defer e.Close()
-//	if err := e.Run(); err != nil {
-//		e.Err = err
-//		logger.Error(err)
-//	}
-//}
-//
-//type Executor struct {
-//	App        *App
-//	L          *lua.LState
-//	Job        *structs.Job
-//	OutBuffer  *bytes.Buffer
-//	Err        error
-//	Logger     echo.Logger
-//	CancelFunc func()
-//}
-//
-//func (e *Executor) Run() error {
-//	e.Logger.Infof("job: %d executing", e.Job.ID)
-//	defer e.Logger.Infof("job: %d executed", e.Job.ID)
-//
-//	if err := e.L.DoString(e.Job.Code); err != nil {
-//		return err
-//	}
-//	return nil
-//}
-//
-//func (e *Executor) Close() {
-//	logger := e.Logger
-//	logger.Debugf("job: %d closing", e.Job.ID)
-//
-//	err := e.Err
-//	job := e.Job
-//	outBuffer := e.OutBuffer
-//	store := e.App.Store
-//
-//	// Update result status (success or failure).
-//	// If the evaluator has an error, write it to the output buf.
-//	if err != nil {
-//		job.Success = false
-//		job.Failure = true
-//
-//		if outBuffer != nil {
-//			job.Err = strings.Replace(err.Error(), "\n", "", -1)
-//			fmt.Fprintf(outBuffer, err.Error())
-//		}
-//	} else {
-//		job.Success = true
-//		job.Failure = false
-//	}
-//
-//	// Truncate millisecond. It is compatible time for katsubushi ID generator time stamp.
-//	now := time.Now().UTC().Truncate(time.Millisecond)
-//
-//	// update finishedAt
-//	job.FinishedAt = &now
-//	if outBuffer != nil {
-//		job.Output = outBuffer.String()
-//	}
-//
-//	if e := store.UpdateJob(job); e != nil {
-//		err = e
-//	}
-//
-//	e.CancelFunc()
-//
-//	logger.Debugf("job: %d closed", e.Job.ID)
-//}
-//
-//func luaPrint(e *Executor) func(*lua.LState) int {
-//	return func(L *lua.LState) int {
-//		top := L.GetTop()
-//		for i := 1; i <= top; i++ {
-//			fmt.Fprint(e.OutBuffer, L.ToStringMeta(L.Get(i)).String())
-//			if i != top {
-//				fmt.Fprint(e.OutBuffer, "\t")
-//			}
-//		}
-//		fmt.Fprintln(e.OutBuffer, "")
-//		return 0
-//	}
-//}

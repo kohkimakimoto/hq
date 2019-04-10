@@ -41,7 +41,6 @@ type Job struct {
 	Success    bool            `json:"success"`
 	Err        string          `json:"err"`
 	Output     string          `json:"output"`
-	active     bool
 }
 
 type DeletedJob struct {
