@@ -73,7 +73,11 @@ func (j *Job) Status() string {
 		} else if j.Success {
 			return "success"
 		} else {
-			return "unknown"
+			if j.FinishedAt == nil {
+				return "waiting"
+			} else {
+				return "unknown"
+			}
 		}
 	}
 }

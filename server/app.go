@@ -197,8 +197,11 @@ func (app *App) ListenAndServe() error {
 	e.Logger.Info("Shutting down the server")
 
 	if err := e.Shutdown(ctx); err != nil {
-		return errors.Wrap(err, "fail to shutdown echo")
+		return errors.Wrap(err, "fail to shutdown echo http server")
 	}
+
+	// wait for running jobs finishing.
+	app.QueueManager.Wait()
 
 	return nil
 }
