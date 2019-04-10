@@ -129,6 +129,8 @@ func (d *Dispatcher) work(job *structs.Job) {
 		// Update result status (success or failure).
 		// If the evaluator has an error, write it to the output buf.
 		if err != nil {
+			logger.Errorf("worker error: %v", err)
+
 			job.Success = false
 			job.Failure = true
 			job.Err = err.Error()
