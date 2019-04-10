@@ -13,7 +13,7 @@ import (
 var Commands = []cli.Command{
 	InfoCommand,
 	ServeCommand,
-	RunCommand,
+	JobCommand,
 }
 
 // Flags

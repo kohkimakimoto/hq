@@ -105,14 +105,10 @@ var (
 	ListJobsRequestDefaultLimit = 100
 )
 
-func ListJobHandler(c echo.Context) error {
+func ListJobsHandler(c echo.Context) error {
 	app := c.(*AppContext).App()
 
 	query := &structs.ListJobsQuery{}
-	if err := bindRequest(query, c); err != nil {
-		c.Logger().Warn(errors.Wrap(err, "failed to bind request"))
-		return NewHttpErrorBadRequest()
-	}
 
 	// Parse query strings
 	query.HasBegin = false

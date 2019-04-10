@@ -19,6 +19,13 @@ type CreateJobRequest struct {
 	Timeout int64           `json:"timeout" form:"timeout" query:"timeout"`
 }
 
+type ListJobsRequest struct {
+	Name    string  `json:"name" form:"name" query:"name"`
+	Begin   *uint64 `json:"begin,string"`
+	Reverse *bool   `json:"reverse"`
+	Limit   *int    `json:"limit"`
+}
+
 type ListJobsQuery struct {
 	Name     string `json:"-" form:"-" query:"-"`
 	Begin    uint64 `json:"-" form:"-" query:"-"`
@@ -106,7 +113,7 @@ type J struct {
 type JobList struct {
 	Jobs    []*Job  `json:"jobs"`
 	HasNext bool    `json:"hasNext"`
-	NextJob *uint64 `json:"nextJob,omitempty"`
+	NextJob *uint64 `json:"nextJob,string,omitempty"`
 	Count   int     `json:"count"`
 }
 
