@@ -1,11 +1,11 @@
 package command
 
 import (
+	"github.com/cheynewallace/tabby"
 	"github.com/kohkimakimoto/hq/client"
 	"github.com/urfave/cli"
 	"os"
 	"runtime"
-	"github.com/cheynewallace/tabby"
 	"text/tabwriter"
 )
 
@@ -13,7 +13,7 @@ import (
 var Commands = []cli.Command{
 	InfoCommand,
 	ServeCommand,
-	DispatchCommand,
+	RunCommand,
 }
 
 // Flags

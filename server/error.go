@@ -1,15 +1,11 @@
 package server
 
 import (
+	"github.com/kohkimakimoto/hq/structs"
 	"github.com/labstack/echo"
 	"net/http"
 	"strings"
 )
-
-type ErrorResponse struct {
-	Status int    `json:"status"`
-	Error  string `json:"error"`
-}
 
 // NewErrorResponseWithValidatorReport creates new error response with ValidationReport.
 func NewErrorValidationFailed(msgs ...string) *echo.HTTPError {
@@ -70,7 +66,7 @@ func ErrorHandler(err error, c echo.Context) {
 		}
 	}
 
-	if err2 := c.JSON(statusCode, &ErrorResponse{
+	if err2 := c.JSON(statusCode, &structs.ErrorResponse{
 		Status: statusCode,
 		Error:  message,
 	}); err2 != nil {

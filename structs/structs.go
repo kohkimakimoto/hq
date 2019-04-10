@@ -28,20 +28,20 @@ type ListJobsQuery struct {
 }
 
 type Job struct {
-	ID         uint64
-	Name       string
-	Comment    string
-	URL        string
-	Payload    json.RawMessage
-	Timeout    int64
-	CreatedAt  time.Time
-	FinishedAt *time.Time
-	Failure    bool
-	Success    bool
-	StatusCode int
-	Err        string
-	Output     string
-	Running    bool
+	ID         uint64          `json:"id,string"`
+	Name       string          `json:"name"`
+	Comment    string          `json:"comment"`
+	URL        string          `json:"url"`
+	Payload    json.RawMessage `json:"payload"`
+	Timeout    int64           `json:"timeout"`
+	CreatedAt  time.Time       `json:"createdAt"`
+	FinishedAt *time.Time      `json:"finishedAt"`
+	Failure    bool            `json:"failure"`
+	Success    bool            `json:"success"`
+	StatusCode int             `json:"statusCode"`
+	Err        string          `json:"err"`
+	Output     string          `json:"output"`
+	Running    bool            `json:"running"`
 }
 
 func (j *Job) MarshalJSON() ([]byte, error) {
@@ -51,6 +51,7 @@ func (j *Job) MarshalJSON() ([]byte, error) {
 		"comment":    j.Comment,
 		"url":        j.URL,
 		"payload":    j.Payload,
+		"timeout":    j.Timeout,
 		"createdAt":  j.CreatedAt,
 		"finishedAt": j.FinishedAt,
 		"failure":    j.Failure,
@@ -58,6 +59,7 @@ func (j *Job) MarshalJSON() ([]byte, error) {
 		"statusCode": j.StatusCode,
 		"err":        j.Err,
 		"output":     j.Output,
+		"running":    j.Running,
 		"status":     j.Status(),
 	})
 }
@@ -106,4 +108,9 @@ type JobList struct {
 	HasNext bool    `json:"hasNext"`
 	NextJob *uint64 `json:"nextJob,omitempty"`
 	Count   int     `json:"count"`
+}
+
+type ErrorResponse struct {
+	Status int    `json:"status"`
+	Error  string `json:"error"`
 }

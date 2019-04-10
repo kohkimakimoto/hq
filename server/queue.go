@@ -13,22 +13,22 @@ import (
 )
 
 type QueueManager struct {
-	app           *App
-	queue         chan *structs.Job
-	dispatchers   []*Dispatcher
-	mutex         *sync.Mutex
-	runningJobs   map[uint64]*structs.Job
-	wg            *sync.WaitGroup
+	app         *App
+	queue       chan *structs.Job
+	dispatchers []*Dispatcher
+	mutex       *sync.Mutex
+	runningJobs map[uint64]*structs.Job
+	wg          *sync.WaitGroup
 }
 
 func NewQueueManager(app *App) *QueueManager {
 	return &QueueManager{
-		app:           app,
-		queue:         make(chan *structs.Job, app.Config.Queues),
-		dispatchers:   []*Dispatcher{},
-		mutex:         new(sync.Mutex),
-		runningJobs:   map[uint64]*structs.Job{},
-		wg:            &sync.WaitGroup{},
+		app:         app,
+		queue:       make(chan *structs.Job, app.Config.Queues),
+		dispatchers: []*Dispatcher{},
+		mutex:       new(sync.Mutex),
+		runningJobs: map[uint64]*structs.Job{},
+		wg:          &sync.WaitGroup{},
 	}
 }
 
@@ -106,7 +106,6 @@ func (d *Dispatcher) loop() {
 		}
 	}
 }
-
 
 func (d *Dispatcher) dispatchAsync(job *structs.Job) {
 	m := d.manager

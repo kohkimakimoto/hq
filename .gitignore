@@ -11,9 +11,7 @@ Thumbs.db
 
 /build/outputs/*
 
-/.skyforge.toml
 /vendor
-/.skyforge
 
 /res/static/bindata.go
 /res/views/bindata.go
