@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/kayac/go-katsubushi"
 	"github.com/kohkimakimoto/boltutil"
+	"fmt"
 	"github.com/kohkimakimoto/hq/hq"
 	"github.com/pkg/errors"
 	"net/http"
@@ -87,6 +88,19 @@ func DeleteJobHandler(c echo.Context) error {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
 		return NewErrorValidationFailed("The job id  must be a number but '" + c.Param("id") + "'.")
+	}
+
+	job := &structs.Job{}
+	if err := app.Store.FetchJob(id, job); err != nil {
+		if _, ok := err.(*ErrJobNotFound); ok {
+			return NewErrorValidationFailed(err.Error())
+		} else {
+			return err
+		}
+	}
+
+	if job.FinishedAt != nil {
+		return NewErrorValidationFailed(fmt.Sprintf("The job %d is not finished", job.ID))
 	}
 
 	if err := app.Store.DeleteJob(id); err != nil {

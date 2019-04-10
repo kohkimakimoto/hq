@@ -10,6 +10,7 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
+	"context"
 )
 
 type QueueManager struct {
@@ -17,8 +18,13 @@ type QueueManager struct {
 	queue       chan *structs.Job
 	dispatchers []*Dispatcher
 	mutex       *sync.Mutex
-	runningJobs map[uint64]*structs.Job
+	runningJobs map[uint64]*RunningJob
 	wg          *sync.WaitGroup
+}
+
+type RunningJob struct {
+	Job *structs.Job
+	Cancel context.CancelFunc
 }
 
 func NewQueueManager(app *App) *QueueManager {
@@ -27,7 +33,7 @@ func NewQueueManager(app *App) *QueueManager {
 		queue:       make(chan *structs.Job, app.Config.Queues),
 		dispatchers: []*Dispatcher{},
 		mutex:       new(sync.Mutex),
-		runningJobs: map[uint64]*structs.Job{},
+		runningJobs: map[uint64]*RunningJob{},
 		wg:          &sync.WaitGroup{},
 	}
 }
@@ -54,11 +60,14 @@ func (m *QueueManager) Enqueue(job *structs.Job) {
 	m.queue <- job
 }
 
-func (m *QueueManager) SetRunningJob(job *structs.Job) {
+func (m *QueueManager) SetRunningJob(job *structs.Job, cancel context.CancelFunc) {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
-	m.runningJobs[job.ID] = job
+	m.runningJobs[job.ID] = &RunningJob{
+		Job: job,
+		Cancel: cancel,
+	}
 }
 
 func (m *QueueManager) RemoveRunningJob(job *structs.Job) {
@@ -179,14 +188,11 @@ func (d *Dispatcher) work(job *structs.Job) {
 		logger.Debugf("job: %d closed", job.ID)
 	}()
 
-	// change status running.
-	manager.SetRunningJob(job)
-	defer manager.RemoveRunningJob(job)
-
 	// worker
 	client := &http.Client{
 		Timeout: time.Duration(job.Timeout) * time.Second,
 	}
+
 	req, err := http.NewRequest(
 		"POST",
 		job.URL,
@@ -195,6 +201,16 @@ func (d *Dispatcher) work(job *structs.Job) {
 	if err != nil {
 		return
 	}
+
+	// context
+	ctx, cancel := context.WithCancel(context.Background())
+	req = req.WithContext(ctx)
+
+	// keep running job.
+	manager.SetRunningJob(job, cancel)
+	defer manager.RemoveRunningJob(job)
+
+	// headers
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("User-Agent", WorkerDefaultUserAgent)
 
