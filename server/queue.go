@@ -6,6 +6,7 @@ import (
 	"github.com/kohkimakimoto/hq/structs"
 	"io/ioutil"
 	"net/http"
+	"sync"
 	"sync/atomic"
 	"time"
 )
@@ -15,6 +16,8 @@ type QueueManager struct {
 	queue         chan *structs.Job
 	dispatchers   []*Dispatcher
 	numWorkersAll int64
+	mutex       *sync.Mutex
+	runningJobs    map[uint64]*structs.Job
 }
 
 func NewQueueManager(app *App) *QueueManager {
@@ -23,6 +26,8 @@ func NewQueueManager(app *App) *QueueManager {
 		queue:         make(chan *structs.Job, app.Config.Queues),
 		dispatchers:   []*Dispatcher{},
 		numWorkersAll: 0,
+		mutex:       new(sync.Mutex),
+		runningJobs: map[uint64]*structs.Job{},
 	}
 }
 
@@ -41,6 +46,29 @@ func (m *QueueManager) Start() {
 
 func (m *QueueManager) Enqueue(job *structs.Job) {
 	m.queue <- job
+}
+
+func (m *QueueManager) SetRunningJob(job *structs.Job) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	m.runningJobs[job.ID] = job
+}
+
+func (m *QueueManager) RemoveRunningJob(job *structs.Job) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	delete(m.runningJobs, job.ID)
+}
+
+func (m *QueueManager) SetRunningStatus(job *structs.Job) *structs.Job {
+	if _, ok := m.runningJobs[job.ID]; ok {
+		job.Running = true
+	} else {
+		job.Running = false
+	}
+	return job
 }
 
 type Dispatcher struct {
@@ -78,6 +106,7 @@ func (d *Dispatcher) loop() {
 }
 
 func (d *Dispatcher) work(job *structs.Job) {
+	manager := d.manager
 	app := d.manager.app
 	logger := app.Logger
 	store := app.Store
@@ -115,6 +144,10 @@ func (d *Dispatcher) work(job *structs.Job) {
 
 		logger.Debugf("job: %d closed", job.ID)
 	}()
+
+	// change status running.
+	manager.SetRunningJob(job)
+	defer manager.RemoveRunningJob(job)
 
 	// worker
 	client := &http.Client{

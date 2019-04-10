@@ -67,6 +67,7 @@ func (s *Store) CreateJob(job *structs.Job) error {
 			FinishedAt: job.FinishedAt,
 			Failure:    job.Failure,
 			Success:    job.Success,
+			StatusCode: job.StatusCode,
 			Err:        job.Err,
 			Output:     job.Output,
 		}
@@ -100,6 +101,7 @@ func (s *Store) UpdateJob(job *structs.Job) error {
 			FinishedAt: job.FinishedAt,
 			Failure:    job.Failure,
 			Success:    job.Success,
+			StatusCode: job.StatusCode,
 			Err:        job.Err,
 			Output:     job.Output,
 		}
@@ -131,7 +133,7 @@ func (s *Store) DeleteJob(id uint64) error {
 }
 
 func (s *Store) FetchJob(id uint64, job *structs.Job) error {
-	//jm := s.srv.RuntimeJobManager
+	qm := s.app.QueueManager
 	return s.db.View(func(tx *bolt.Tx) error {
 		out := &structs.J{}
 		if err := boltutil.Get(tx, []interface{}{BucketNameForJobs}, id, out); err != nil {
@@ -152,10 +154,11 @@ func (s *Store) FetchJob(id uint64, job *structs.Job) error {
 		job.Failure = out.Failure
 		job.FinishedAt = out.FinishedAt
 		job.Success = out.Success
+		job.StatusCode = out.StatusCode
 		job.Err = out.Err
 		job.Output = out.Output
 
-		//		job = jm.SetRuntimeInfo(job)
+		job = qm.SetRunningStatus(job)
 
 		return nil
 	})
@@ -264,7 +267,7 @@ func (s *Store) ListJobs(query *structs.ListJobsQuery, ret *structs.JobList) err
 }
 
 func (s *Store) appendJob(v []byte, query *structs.ListJobsQuery, ret *structs.JobList) error {
-	// jm := s.srv.RuntimeJobManager
+	qm := s.app.QueueManager
 
 	in := &structs.J{}
 	if err := boltutil.Deserialize(v, in); err != nil {
@@ -282,11 +285,12 @@ func (s *Store) appendJob(v []byte, query *structs.ListJobsQuery, ret *structs.J
 		FinishedAt: in.FinishedAt,
 		Failure:    in.Failure,
 		Success:    in.Success,
+		StatusCode: in.StatusCode,
 		Err:        in.Err,
 		Output:     in.Output,
 	}
 
-	//job = jm.SetRuntimeInfo(job)
+	job = qm.SetRunningStatus(job)
 
 	if query.Name == "" {
 		ret.Jobs = append(ret.Jobs, job)

@@ -2,6 +2,7 @@ package structs
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -29,20 +30,54 @@ type ListJobsQuery struct {
 }
 
 type Job struct {
-	ID         uint64          `json:"id,string"`
-	Name       string          `json:"name"`
-	Comment    string          `json:"comment,omitempty"`
-	URL        string          `json:"url"`
-	Payload    json.RawMessage `json:"payload,omitempty"`
-	Timeout    int64           `json:"timeout,omitempty"`
-	CreatedAt  time.Time       `json:"created_at"`
-	FinishedAt *time.Time      `json:"finished_at,omitempty"`
-	Failure    bool            `json:"failure"`
-	Success    bool            `json:"success"`
-	StatusCode int             `json:"statusCode,omitempty"`
-	Err        string          `json:"err,omitempty"`
-	Output     string          `json:"output,omitempty"`
+	ID         uint64
+	Name       string
+	Comment    string
+	URL        string
+	Payload    json.RawMessage
+	Timeout    int64
+	CreatedAt  time.Time
+	FinishedAt *time.Time
+	Failure    bool
+	Success    bool
+	StatusCode int
+	Err        string
+	Output     string
+	Running    bool
 }
+
+func (j *Job) MarshalJSON() ([]byte, error) {
+	return json.Marshal(map[string]interface{}{
+		"id":          fmt.Sprintf("%d", j.ID),
+		"name":        j.Name,
+		"comment":     j.Comment,
+		"url":         j.URL,
+		"payload":     j.Payload,
+		"createdAt":   j.CreatedAt,
+		"finishedAt":  j.FinishedAt,
+		"failure":     j.Failure,
+		"success":     j.Success,
+		"statusCode":  j.StatusCode,
+		"err":         j.Err,
+		"output":      j.Output,
+		"status":      j.Status(),
+	})
+}
+
+func (j *Job) Status() string {
+	if j.Running {
+		return "running"
+	} else {
+		if j.Failure {
+			return "failure"
+		} else if j.Success {
+			return "success"
+		} else {
+			return "unknown"
+		}
+	}
+}
+
 
 type DeletedJob struct {
 	ID uint64 `json:"id,string"`
