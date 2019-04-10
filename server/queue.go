@@ -82,10 +82,10 @@ func (d *Dispatcher) work(job *structs.Job) {
 	logger := app.Logger
 	store := app.Store
 
-	// worker variables
-	var err error
-	var output string
 	logger.Infof("job: %d working", job.ID)
+
+	// worker error
+	var err error
 
 	// the terminating logic
 	defer func() {
@@ -108,7 +108,6 @@ func (d *Dispatcher) work(job *structs.Job) {
 
 		// update finishedAt
 		job.FinishedAt = &now
-		job.Output = output
 
 		if e := store.UpdateJob(job); e != nil {
 			logger.Error(e)
@@ -135,11 +134,13 @@ func (d *Dispatcher) work(job *structs.Job) {
 		return
 	}
 	defer resp.Body.Close()
+
+	job.StatusCode = resp.StatusCode
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return
 	}
-	output = string(body)
+	job.Output = string(body)
 
 	if resp.StatusCode != http.StatusOK {
 		err = fmt.Errorf(http.StatusText(resp.StatusCode))

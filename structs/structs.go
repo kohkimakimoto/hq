@@ -31,16 +31,17 @@ type ListJobsQuery struct {
 type Job struct {
 	ID         uint64          `json:"id,string"`
 	Name       string          `json:"name"`
-	Comment    string          `json:"comment"`
+	Comment    string          `json:"comment,omitempty"`
 	URL        string          `json:"url"`
-	Payload    json.RawMessage `json:"payload"`
-	Timeout    int64           `json:"timeout"`
+	Payload    json.RawMessage `json:"payload,omitempty"`
+	Timeout    int64           `json:"timeout,omitempty"`
 	CreatedAt  time.Time       `json:"created_at"`
-	FinishedAt *time.Time      `json:"finished_at"`
+	FinishedAt *time.Time      `json:"finished_at,omitempty"`
 	Failure    bool            `json:"failure"`
 	Success    bool            `json:"success"`
-	Err        string          `json:"err"`
-	Output     string          `json:"output"`
+	StatusCode int             `json:"statusCode,omitempty"`
+	Err        string          `json:"err,omitempty"`
+	Output     string          `json:"output,omitempty"`
 }
 
 type DeletedJob struct {
@@ -59,6 +60,7 @@ type J struct {
 	FinishedAt *time.Time
 	Failure    bool
 	Success    bool
+	StatusCode int
 	Err        string
 	Output     string
 }
