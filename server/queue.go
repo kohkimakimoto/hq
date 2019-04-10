@@ -16,7 +16,6 @@ type QueueManager struct {
 	app           *App
 	queue         chan *structs.Job
 	dispatchers   []*Dispatcher
-	numWorkersAll int64
 	mutex         *sync.Mutex
 	runningJobs   map[uint64]*structs.Job
 	wg            *sync.WaitGroup
@@ -27,7 +26,6 @@ func NewQueueManager(app *App) *QueueManager {
 		app:           app,
 		queue:         make(chan *structs.Job, app.Config.Queues),
 		dispatchers:   []*Dispatcher{},
-		numWorkersAll: 0,
 		mutex:         new(sync.Mutex),
 		runningJobs:   map[uint64]*structs.Job{},
 		wg:            &sync.WaitGroup{},
@@ -98,30 +96,44 @@ func (d *Dispatcher) loop() {
 
 		if atomic.LoadInt64(&config.MaxWorkers) <= 0 {
 			// sync
-			m.wg.Add(1)
-			d.work(job)
+			d.dispatch(job)
 		} else if atomic.LoadInt64(&d.numWorkers) < atomic.LoadInt64(&config.MaxWorkers) {
 			// async
-			atomic.AddInt64(&d.numWorkers, 1)
-			atomic.AddInt64(&m.numWorkersAll, 1)
-
-			m.wg.Add(1)
-			go func(job *structs.Job) {
-				d.work(job)
-				atomic.AddInt64(&d.numWorkers, -1)
-				atomic.AddInt64(&m.numWorkersAll, -1)
-			}(job)
+			d.dispatchAsync(job)
 		} else {
 			// sync
-			m.wg.Add(1)
-			d.work(job)
+			d.dispatch(job)
 		}
 	}
 }
 
-func (d *Dispatcher) work(job *structs.Job) {
-	defer d.manager.wg.Done()
 
+func (d *Dispatcher) dispatchAsync(job *structs.Job) {
+	m := d.manager
+
+	m.wg.Add(1)
+	atomic.AddInt64(&d.numWorkers, 1)
+
+	go func() {
+		defer func() {
+			m.wg.Done()
+			atomic.AddInt64(&d.numWorkers, -1)
+		}()
+
+		d.work(job)
+	}()
+}
+
+func (d *Dispatcher) dispatch(job *structs.Job) {
+	m := d.manager
+
+	m.wg.Add(1)
+	defer m.wg.Done()
+
+	d.work(job)
+}
+
+func (d *Dispatcher) work(job *structs.Job) {
 	manager := d.manager
 	app := d.manager.app
 	logger := app.Logger

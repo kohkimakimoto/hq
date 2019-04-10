@@ -1,9 +1,12 @@
 package command
 
 import (
+	"github.com/kohkimakimoto/hq/client"
 	"github.com/urfave/cli"
 	"os"
 	"runtime"
+	"github.com/cheynewallace/tabby"
+	"text/tabwriter"
 )
 
 // Command set
@@ -33,7 +36,7 @@ var (
 	addressFlag = cli.StringFlag{
 		Name:  "address, a",
 		Usage: "The address of the HQ server.",
-		Value: "http://127.0.0.1:9000",
+		Value: "http://127.0.0.1:19900",
 	}
 )
 
@@ -57,6 +60,15 @@ func applyLogLevel(ctx *cli.Context, setter LogLevelSetter) {
 		setter.SetLogLevel(v)
 	}
 }
+
+func newClient(ctx *cli.Context) *client.Client {
+	return client.New(ctx.String("address"))
+}
+
+func newTabby() *tabby.Tabby {
+	return tabby.NewCustom(tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0))
+}
+
 func init() {
 	cli.AppHelpTemplate = `Usage: {{.Name}}{{if .VisibleFlags}} [<options...>]{{end}} <command>
 

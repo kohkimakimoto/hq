@@ -14,13 +14,9 @@ import (
 )
 
 func InfoHandler(c echo.Context) error {
-	app := c.(*AppContext).App()
-
 	return c.JSON(http.StatusOK, &structs.Info{
-		ServerId:   app.Config.ServerId,
 		Version:    hq.Version,
 		CommitHash: hq.CommitHash,
-		DataDir:    app.DataDir,
 	})
 }
 

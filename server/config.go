@@ -28,7 +28,7 @@ func NewConfig() *Config {
 	return &Config{
 		ServerId:        0,
 		LogLevel:        "info",
-		Addr:            ":9000",
+		Addr:            "0.0.0.0:19900",
 		Logfile:         "",
 		DataDir:         "",
 		AccessLogfile:   "",
