@@ -35,9 +35,9 @@ type CreateJobRequest struct {
 
 type ListJobsRequest struct {
 	Name    string `json:"name" form:"name" query:"name"`
-	Begin   string `json:"begin"`
-	Reverse bool   `json:"reverse"`
-	Limit   uint64 `json:"limit"`
+	Begin   string `json:"begin" form:"begin" query:"begin"`
+	Reverse bool   `json:"reverse" form:"reverse" query:"reverse"`
+	Limit   uint64 `json:"limit" form:"limit" query:"limit"`
 }
 
 type ListJobsQuery struct {

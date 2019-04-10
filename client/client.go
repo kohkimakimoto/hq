@@ -101,7 +101,7 @@ func (c *Client) setHeaders(req *http.Request) {
 }
 
 func (c *Client) checkStatusCode(resp *http.Response) error {
-	if resp.StatusCode != 200 {
+	if resp.StatusCode != http.StatusOK {
 		defer resp.Body.Close()
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {

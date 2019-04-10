@@ -104,11 +104,11 @@ var JobListCommand = cli.Command{
 		},
 		cli.StringFlag{
 			Name:  "begin, b",
-			Usage: "Only display the id and after.",
+			Usage: "Load the jobs from `ID`.",
 		},
 		cli.Uint64Flag{
 			Name:  "limit, l",
-			Usage: "Only display `N` ID(s).",
+			Usage: "Only display `N` job(s).",
 			Value: 100,
 		},
 	},
@@ -128,6 +128,7 @@ func jobListAction(ctx *cli.Context) error {
 
 	if len(ids) == 0 {
 		payload := &structs.ListJobsRequest{
+			Name: ctx.String("name"),
 			Reverse: ctx.Bool("reverse"),
 			Begin:   ctx.String("begin"),
 			Limit:   ctx.Uint64("limit"),
