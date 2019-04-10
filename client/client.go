@@ -75,11 +75,13 @@ func (c *Client) get(url string, params map[string]string) (*http.Response, erro
 
 	c.setHeaders(req)
 
-	q := req.URL.Query()
-	for k, v := range params {
-		q.Add(k, v)
+	if params != nil {
+		q := req.URL.Query()
+		for k, v := range params {
+			q.Add(k, v)
+		}
+		req.URL.RawQuery = q.Encode()
 	}
-	req.URL.RawQuery = q.Encode()
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
@@ -185,6 +187,27 @@ func (c *Client) ListJobs(payload *structs.ListJobsRequest) (*structs.JobList, e
 	ret := &structs.JobList{
 		Jobs: []*structs.Job{},
 	}
+	if err := json.Unmarshal(body, ret); err != nil {
+		return nil, err
+	}
+
+	return ret, nil
+}
+
+
+func (c *Client) GetJob(id uint64) (*structs.Job, error) {
+	resp, err := c.get(fmt.Sprintf("/job/%d", id), nil)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	ret := &structs.Job{}
 	if err := json.Unmarshal(body, ret); err != nil {
 		return nil, err
 	}

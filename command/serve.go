@@ -94,7 +94,7 @@ func configureServer(app *server.App) error {
 	e.Any("/", server.InfoHandler)
 	e.POST("/job", server.CreateJobHandler)
 	e.GET("/job", server.ListJobsHandler)
-	e.GET("/job/:id", server.FetchJobHandler)
+	e.GET("/job/:id", server.GetJobHandler)
 	e.DELETE("/job/:id", server.DeleteJobHandler)
 
 	return nil
@@ -103,10 +103,6 @@ func configureServer(app *server.App) error {
 func errorHandler(app *server.App) echo.HTTPErrorHandler {
 	return func(err error, c echo.Context) {
 		e := c.Echo()
-		//req := c.Request()
-		//url := req.URL
-		//path := url.Path
-
 		if c.Response().Committed {
 			goto ERROR
 		}

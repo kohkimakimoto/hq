@@ -8,6 +8,7 @@ import (
 	"github.com/urfave/cli"
 	"io/ioutil"
 	"os"
+	"strconv"
 )
 
 var JobCommand = cli.Command{
@@ -116,18 +117,38 @@ var JobListCommand = cli.Command{
 func jobListAction(ctx *cli.Context) error {
 	c := newClient(ctx)
 
-	payload := &structs.ListJobsRequest{
-		Reverse: ctx.Bool("reverse"),
-		Begin: ctx.String("begin"),
-		Limit: ctx.Uint64("limit"),
-	}
-
-	list, err := c.ListJobs(payload)
-	if err != nil {
-		return err
+	ids := []string{}
+	if ctx.NArg() > 0 {
+		ids = ctx.Args()
 	}
 
 	quiet := ctx.Bool("quiet")
+
+	jobs := []*structs.Job{}
+
+	if len(ids) == 0 {
+		payload := &structs.ListJobsRequest{
+			Reverse: ctx.Bool("reverse"),
+			Begin: ctx.String("begin"),
+			Limit: ctx.Uint64("limit"),
+		}
+
+		list, err := c.ListJobs(payload)
+		if err != nil {
+			return err
+		}
+		jobs = list.Jobs
+	} else {
+		for _, idstr := range ids {
+			id, err := strconv.ParseUint(idstr, 10, 64)
+			job, err := c.GetJob(id)
+			if err != nil {
+				return err
+			}
+
+			jobs = append(jobs, job)
+		}
+	}
 
 	t := newTabby()
 
@@ -135,8 +156,7 @@ func jobListAction(ctx *cli.Context) error {
 		t.AddLine("ID", "NAME", "URL", "STATUS", "CREATED_AT", "FINISHED_AT", "ERROR")
 	}
 
-	for _, job := range list.Jobs {
-
+	for _, job := range jobs {
 		if quiet {
 			t.AddLine(job.ID)
 			continue
@@ -166,5 +186,8 @@ func jobListAction(ctx *cli.Context) error {
 	}
 
 	t.Print()
+	return nil
+
+
 	return nil
 }

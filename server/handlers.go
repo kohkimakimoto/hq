@@ -60,7 +60,7 @@ func CreateJobHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, job)
 }
 
-func FetchJobHandler(c echo.Context) error {
+func GetJobHandler(c echo.Context) error {
 	app := c.(*AppContext).App()
 
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
