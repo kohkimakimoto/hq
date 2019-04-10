@@ -48,19 +48,19 @@ type Job struct {
 
 func (j *Job) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]interface{}{
-		"id":          fmt.Sprintf("%d", j.ID),
-		"name":        j.Name,
-		"comment":     j.Comment,
-		"url":         j.URL,
-		"payload":     j.Payload,
-		"createdAt":   j.CreatedAt,
-		"finishedAt":  j.FinishedAt,
-		"failure":     j.Failure,
-		"success":     j.Success,
-		"statusCode":  j.StatusCode,
-		"err":         j.Err,
-		"output":      j.Output,
-		"status":      j.Status(),
+		"id":         fmt.Sprintf("%d", j.ID),
+		"name":       j.Name,
+		"comment":    j.Comment,
+		"url":        j.URL,
+		"payload":    j.Payload,
+		"createdAt":  j.CreatedAt,
+		"finishedAt": j.FinishedAt,
+		"failure":    j.Failure,
+		"success":    j.Success,
+		"statusCode": j.StatusCode,
+		"err":        j.Err,
+		"output":     j.Output,
+		"status":     j.Status(),
 	})
 }
 
@@ -77,7 +77,6 @@ func (j *Job) Status() string {
 		}
 	}
 }
-
 
 type DeletedJob struct {
 	ID uint64 `json:"id,string"`

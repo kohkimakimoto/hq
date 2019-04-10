@@ -3,6 +3,7 @@ package server
 import (
 	"bytes"
 	"fmt"
+	"github.com/kohkimakimoto/hq/hq"
 	"github.com/kohkimakimoto/hq/structs"
 	"io/ioutil"
 	"net/http"
@@ -16,8 +17,8 @@ type QueueManager struct {
 	queue         chan *structs.Job
 	dispatchers   []*Dispatcher
 	numWorkersAll int64
-	mutex       *sync.Mutex
-	runningJobs    map[uint64]*structs.Job
+	mutex         *sync.Mutex
+	runningJobs   map[uint64]*structs.Job
 }
 
 func NewQueueManager(app *App) *QueueManager {
@@ -26,8 +27,8 @@ func NewQueueManager(app *App) *QueueManager {
 		queue:         make(chan *structs.Job, app.Config.Queues),
 		dispatchers:   []*Dispatcher{},
 		numWorkersAll: 0,
-		mutex:       new(sync.Mutex),
-		runningJobs: map[uint64]*structs.Job{},
+		mutex:         new(sync.Mutex),
+		runningJobs:   map[uint64]*structs.Job{},
 	}
 }
 
@@ -70,6 +71,10 @@ func (m *QueueManager) SetRunningStatus(job *structs.Job) *structs.Job {
 	}
 	return job
 }
+
+var (
+	WorkerDefaultUserAgent = fmt.Sprintf("%s/%s", hq.DisplayName, hq.Version)
+)
 
 type Dispatcher struct {
 	manager    *QueueManager
@@ -162,6 +167,8 @@ func (d *Dispatcher) work(job *structs.Job) {
 		return
 	}
 	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("User-Agent", WorkerDefaultUserAgent)
+
 	resp, err := client.Do(req)
 	if err != nil {
 		return
