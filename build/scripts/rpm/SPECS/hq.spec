@@ -32,7 +32,6 @@ mkdir -p %{buildroot}/var/lib/hq
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
 mkdir -p %{buildroot}/%{_unitdir}
 cp %{SOURCE3} %{buildroot}/%{_unitdir}/
-cp %{SOURCE5} %{buildroot}/%{_unitdir}/
 %endif
 
 %pre

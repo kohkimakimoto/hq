@@ -9,7 +9,7 @@ WorkingDirectory=/
 User=hq
 Group=hq
 EnvironmentFile=-/etc/sysconfig/hq
-ExecStart=/usr/bin/hq serve $SKYFORGE_OPTS
+ExecStart=/usr/bin/hq serve $HQ_OPTS
 StandardOutput=journal
 StandardError=inherit
 
