@@ -202,6 +202,7 @@ func (app *App) ListenAndServe() error {
 
 	// wait for running jobs finishing.
 	app.QueueManager.Wait()
+	app.Logger.Infof("Successfully shutdown")
 
 	return nil
 }
@@ -223,8 +224,6 @@ func (app *App) Close() error {
 		}
 		app.Logger.Warnf("Removed temporary directory: %s", app.DataDir)
 	}
-
-	// TODO: implement shutdown logic
 
 	return nil
 }
