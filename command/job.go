@@ -101,22 +101,46 @@ var JobListCommand = cli.Command{
 			Name:  "reverse, r",
 			Usage: "Sort by descending ID.",
 		},
+		cli.StringFlag{
+			Name:  "begin, b",
+			Usage: "Only display the id and after.",
+		},
+		cli.Uint64Flag{
+			Name:  "limit, l",
+			Usage: "Only display `N` ID(s).",
+			Value: 100,
+		},
 	},
 }
 
 func jobListAction(ctx *cli.Context) error {
 	c := newClient(ctx)
-	payload := &structs.ListJobsRequest{}
+
+	payload := &structs.ListJobsRequest{
+		Reverse: ctx.Bool("reverse"),
+		Begin: ctx.String("begin"),
+		Limit: ctx.Uint64("limit"),
+	}
 
 	list, err := c.ListJobs(payload)
 	if err != nil {
 		return err
 	}
 
+	quiet := ctx.Bool("quiet")
+
 	t := newTabby()
 
-	t.AddLine("ID", "NAME", "URL", "STATUS", "CREATED_AT", "FINISHED_AT", "ERROR")
+	if !quiet {
+		t.AddLine("ID", "NAME", "URL", "STATUS", "CREATED_AT", "FINISHED_AT", "ERROR")
+	}
+
 	for _, job := range list.Jobs {
+
+		if quiet {
+			t.AddLine(job.ID)
+			continue
+		}
 
 		status := job.Status()
 		switch status {

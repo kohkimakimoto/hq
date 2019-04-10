@@ -160,14 +160,15 @@ func (c *Client) CreateJob(payload *structs.CreateJobRequest) (*structs.Job, err
 func (c *Client) ListJobs(payload *structs.ListJobsRequest) (*structs.JobList, error) {
 	params := map[string]string{}
 	params["name"] = payload.Name
-	if payload.Begin != nil {
-		params["begin"] = fmt.Sprintf("%d", *payload.Begin)
+
+	if payload.Begin != "" {
+		params["begin"] = payload.Begin
 	}
-	if payload.Reverse != nil {
-		params["reverse"] = fmt.Sprintf("%v", *payload.Reverse)
+	if payload.Reverse {
+		params["reverse"] = fmt.Sprintf("%v", payload.Reverse)
 	}
-	if payload.Limit != nil {
-		params["limit"] = fmt.Sprintf("%d", *payload.Limit)
+	if payload.Limit != 0 {
+		params["limit"] = fmt.Sprintf("%d", payload.Limit)
 	}
 
 	resp, err := c.get("/job", params)
