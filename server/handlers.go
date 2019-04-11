@@ -123,40 +123,53 @@ var (
 func ListJobsHandler(c echo.Context) error {
 	app := c.(*AppContext).App()
 
-	query := &structs.ListJobsQuery{}
-
-	// Parse query strings
-	query.HasBegin = false
-	if c.QueryParam("begin") != "" {
-		i, err := strconv.ParseUint(c.QueryParam("begin"), 10, 64)
-		if err != nil {
-			return NewErrorValidationFailed("The 'begin' must be a number but '" + c.QueryParam("begin") + "'.")
-		}
-		query.Begin = i
-		query.HasBegin = true
+	req := &structs.ListJobsRequest{}
+	if err := bindRequest(req, c); err != nil {
+		c.Logger().Warn(errors.Wrap(err, "failed to bind request"))
+		return NewHttpErrorBadRequest()
 	}
 
-	query.Reverse = false
-	if c.QueryParam("reverse") != "" {
-		query.Reverse = true
+
+	//// Parse query strings
+	//query.HasBegin = false
+	//if c.QueryParam("begin") != "" {
+	//	i, err := strconv.ParseUint(c.QueryParam("begin"), 10, 64)
+	//	if err != nil {
+	//		return NewErrorValidationFailed("The 'begin' must be a number but '" + c.QueryParam("begin") + "'.")
+	//	}
+	//	query.Begin = i
+	//	query.HasBegin = true
+	//}
+	//
+	//query.Reverse = false
+	//if c.QueryParam("reverse") != "" {
+	//	query.Reverse = true
+	//}
+	//
+	//query.Limit = ListJobsRequestDefaultLimit
+	//if c.QueryParam("limit") != "" {
+	//	l, err := strconv.Atoi(c.QueryParam("limit"))
+	//	if err != nil {
+	//		return NewErrorValidationFailed("The 'limit' must be a number but '" + c.QueryParam("limit") + "'.")
+	//	}
+	//	query.Limit = l
+	//}
+	//
+	//query.Name = c.QueryParam("name")
+
+	if req.Limit == 0 {
+		req.Limit = ListJobsRequestDefaultLimit
 	}
 
-	query.Limit = ListJobsRequestDefaultLimit
-	if c.QueryParam("limit") != "" {
-		l, err := strconv.Atoi(c.QueryParam("limit"))
-		if err != nil {
-			return NewErrorValidationFailed("The 'limit' must be a number but '" + c.QueryParam("limit") + "'.")
-		}
-		query.Limit = l
+	query := &ListJobsQuery{
+		Reverse: req.Reverse,
+		Limit: req.Limit,
 	}
-
-	query.Name = c.QueryParam("name")
 
 	list := &structs.JobList{
 		Jobs:    []*structs.Job{},
 		HasNext: false,
 	}
-
 	if err := app.Store.ListJobs(query, list); err != nil {
 		if err == boltutil.ErrNotFound {
 			return NewHttpErrorNotFound()

@@ -9,6 +9,7 @@ import (
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -64,7 +65,7 @@ func (c *Client) post(url string, payload interface{}) (*http.Response, error) {
 	return resp, nil
 }
 
-func (c *Client) get(url string, params map[string]string) (*http.Response, error) {
+func (c *Client) get(url string, values url.Values) (*http.Response, error) {
 	req, err := http.NewRequest("GET", c.address+url, nil)
 	if err != nil {
 		return nil, err
@@ -75,10 +76,12 @@ func (c *Client) get(url string, params map[string]string) (*http.Response, erro
 
 	c.setHeaders(req)
 
-	if params != nil {
+	if values != nil {
 		q := req.URL.Query()
-		for k, v := range params {
-			q.Add(k, v)
+		for k, v := range values {
+			for _, vs := range v {
+				q.Add(k, vs)
+			}
 		}
 		req.URL.RawQuery = q.Encode()
 	}
@@ -161,11 +164,11 @@ func (c *Client) CreateJob(payload *structs.CreateJobRequest) (*structs.Job, err
 
 func (c *Client) ListJobs(payload *structs.ListJobsRequest) (*structs.JobList, error) {
 	params := map[string]string{}
-	params["name"] = payload.Name
+//	params["name"] = payload.Name
 
-	if payload.Begin != "" {
-		params["begin"] = payload.Begin
-	}
+	//if payload.Begin != "" {
+	//	params["begin"] = payload.Begin
+	//}
 	if payload.Reverse {
 		params["reverse"] = fmt.Sprintf("%v", payload.Reverse)
 	}
@@ -173,7 +176,7 @@ func (c *Client) ListJobs(payload *structs.ListJobsRequest) (*structs.JobList, e
 		params["limit"] = fmt.Sprintf("%d", payload.Limit)
 	}
 
-	resp, err := c.get("/job", params)
+	resp, err := c.get("/job", nil)
 	if err != nil {
 		return nil, err
 	}

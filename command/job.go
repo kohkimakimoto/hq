@@ -96,17 +96,17 @@ var JobListCommand = cli.Command{
 		},
 		cli.StringSliceFlag{
 			Name:  "name, n",
-			Usage: "Regular expression to filter the jobs with job's name",
+			Usage: "Regular expression `STRING` to filter the jobs with job's name",
 		},
 		cli.BoolFlag{
 			Name:  "reverse, r",
 			Usage: "Sort by descending ID.",
 		},
-		cli.StringFlag{
+		cli.Uint64Flag{
 			Name:  "begin, b",
 			Usage: "Load the jobs from `ID`.",
 		},
-		cli.Uint64Flag{
+		cli.IntFlag{
 			Name:  "limit, l",
 			Usage: "Only display `N` job(s).",
 			Value: 100,
@@ -128,10 +128,14 @@ func jobListAction(ctx *cli.Context) error {
 
 	if len(ids) == 0 {
 		payload := &structs.ListJobsRequest{
-			Name: ctx.String("name"),
+			Name: ctx.StringSlice("name"),
 			Reverse: ctx.Bool("reverse"),
-			Begin:   ctx.String("begin"),
-			Limit:   ctx.Uint64("limit"),
+			Limit:   ctx.Int("limit"),
+		}
+
+		if ctx.Uint64("begin") != 0 {
+			b := ctx.Uint64("begin")
+			payload.Begin = &b
 		}
 
 		list, err := c.ListJobs(payload)

@@ -164,7 +164,15 @@ func (s *Store) FetchJob(id uint64, job *structs.Job) error {
 	})
 }
 
-func (s *Store) ListJobs(query *structs.ListJobsQuery, ret *structs.JobList) error {
+type ListJobsQuery struct {
+	Name     string
+	Begin    uint64
+	HasBegin bool
+	Reverse  bool
+	Limit    int
+}
+
+func (s *Store) ListJobs(query *ListJobsQuery, ret *structs.JobList) error {
 	return s.db.View(func(tx *bolt.Tx) error {
 		c, err := boltutil.Cursor(tx, []interface{}{BucketNameForJobs})
 		if err != nil {
@@ -219,7 +227,7 @@ func (s *Store) ListJobs(query *structs.ListJobsQuery, ret *structs.JobList) err
 			if k, _ := c.Prev(); k != nil {
 				ret.HasNext = true
 				n := binary.BigEndian.Uint64(k)
-				ret.NextJob = &n
+				ret.Next = &n
 			} else {
 				ret.HasNext = false
 			}
@@ -254,7 +262,7 @@ func (s *Store) ListJobs(query *structs.ListJobsQuery, ret *structs.JobList) err
 			if k, _ := c.Next(); k != nil {
 				ret.HasNext = true
 				n := binary.BigEndian.Uint64(k)
-				ret.NextJob = &n
+				ret.Next = &n
 			} else {
 				ret.HasNext = false
 			}
@@ -266,7 +274,7 @@ func (s *Store) ListJobs(query *structs.ListJobsQuery, ret *structs.JobList) err
 	})
 }
 
-func (s *Store) appendJob(v []byte, query *structs.ListJobsQuery, ret *structs.JobList) error {
+func (s *Store) appendJob(v []byte, query *ListJobsQuery, ret *structs.JobList) error {
 	qm := s.app.QueueManager
 
 	in := &structs.J{}

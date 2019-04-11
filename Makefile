@@ -18,6 +18,9 @@ test: ## Run all tests
 testv: ## Run all tests with verbose outputing.
 	go test -v -cover $$(go list ./... | grep -v vendor)
 
+testcov:
+	gocov test $$(go list ./... | grep -v vendor) | gocov-html > coverage-report.html
+
 .PHONY:dev
 dev: ## Build dev binary
 	@bash -c $(CURDIR)/build/scripts/dev.sh

@@ -36,7 +36,7 @@ var (
 	// client flag
 	addressFlag = cli.StringFlag{
 		Name:  "address, a",
-		Usage: "The address of the HQ server.",
+		Usage: "The `ADDRESS` of the HQ server.",
 		Value: "http://127.0.0.1:19900",
 	}
 )

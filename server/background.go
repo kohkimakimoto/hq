@@ -53,7 +53,7 @@ func cleanupJobs(app *App) func() {
 
 		tt := time.Now().Add(time.Duration(-1*config.JobLifetime) * time.Second)
 		begin := katsubushi.ToID(tt)
-		query := &structs.ListJobsQuery{
+		query := &ListJobsQuery{
 			Reverse:  true,
 			Begin:    begin,
 			HasBegin: true,
