@@ -34,7 +34,7 @@ type CreateJobRequest struct {
 }
 
 type ListJobsRequest struct {
-	Name    []string `query:"name"`
+	Name    string `query:"name"`
 	Begin   *uint64 `query:"begin"`
 	Reverse bool   `query:"reverse"`
 	Limit   int `query:"limit"`

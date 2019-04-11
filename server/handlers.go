@@ -129,39 +129,13 @@ func ListJobsHandler(c echo.Context) error {
 		return NewHttpErrorBadRequest()
 	}
 
-
-	//// Parse query strings
-	//query.HasBegin = false
-	//if c.QueryParam("begin") != "" {
-	//	i, err := strconv.ParseUint(c.QueryParam("begin"), 10, 64)
-	//	if err != nil {
-	//		return NewErrorValidationFailed("The 'begin' must be a number but '" + c.QueryParam("begin") + "'.")
-	//	}
-	//	query.Begin = i
-	//	query.HasBegin = true
-	//}
-	//
-	//query.Reverse = false
-	//if c.QueryParam("reverse") != "" {
-	//	query.Reverse = true
-	//}
-	//
-	//query.Limit = ListJobsRequestDefaultLimit
-	//if c.QueryParam("limit") != "" {
-	//	l, err := strconv.Atoi(c.QueryParam("limit"))
-	//	if err != nil {
-	//		return NewErrorValidationFailed("The 'limit' must be a number but '" + c.QueryParam("limit") + "'.")
-	//	}
-	//	query.Limit = l
-	//}
-	//
-	//query.Name = c.QueryParam("name")
-
 	if req.Limit == 0 {
 		req.Limit = ListJobsRequestDefaultLimit
 	}
 
 	query := &ListJobsQuery{
+		Name: req.Name,
+		Begin: req.Begin,
 		Reverse: req.Reverse,
 		Limit: req.Limit,
 	}

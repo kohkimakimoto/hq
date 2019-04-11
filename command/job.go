@@ -94,7 +94,7 @@ var JobListCommand = cli.Command{
 			Name:  "quiet, q",
 			Usage: "Only display IDs",
 		},
-		cli.StringSliceFlag{
+		cli.StringFlag{
 			Name:  "name, n",
 			Usage: "Regular expression `STRING` to filter the jobs with job's name",
 		},
@@ -128,7 +128,7 @@ func jobListAction(ctx *cli.Context) error {
 
 	if len(ids) == 0 {
 		payload := &structs.ListJobsRequest{
-			Name: ctx.StringSlice("name"),
+			Name: ctx.String("name"),
 			Reverse: ctx.Bool("reverse"),
 			Limit:   ctx.Int("limit"),
 		}
@@ -158,7 +158,7 @@ func jobListAction(ctx *cli.Context) error {
 	t := newTabby()
 
 	if !quiet {
-		t.AddLine("ID", "NAME", "URL", "STATUS", "CREATED_AT", "FINISHED_AT", "ERROR")
+		t.AddLine("ID", "NAME", "URL", "STATUS", "CREATED_AT", "FINISHED_AT")
 	}
 
 	for _, job := range jobs {
@@ -187,7 +187,7 @@ func jobListAction(ctx *cli.Context) error {
 			finishedAt = fmt.Sprintf("%v", job.FinishedAt)
 		}
 
-		t.AddLine(job.ID, job.Name, job.URL, status, createdAt, finishedAt, job.Err)
+		t.AddLine(job.ID, job.Name, job.URL, status, createdAt, finishedAt)
 	}
 
 	t.Print()

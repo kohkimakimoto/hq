@@ -42,21 +42,24 @@ packaging: ## Create packages (now support RPM only)
 	@bash -c $(CURDIR)/build/scripts/packaging.sh
 
 .PHONY:clean
-clean:
+clean: ## Clean build outputs
 	rm -rf build/outputs/*
 
-.PHONY:deps
-deps: ## Install dependences.
+.PHONY: installtools
+installtools: ## Install dev tools
 	GOPATH=$(CURDIR)/.go-packages && \
       go get -u github.com/mattn/go-bindata/... && \
       go get -u github.com/golang/dep/cmd/dep && \
       go get -u github.com/mitchellh/gox && \
       go get -u github.com/axw/gocov/gocov && \
       go get -u gopkg.in/matm/v1/gocov-html
+
+.PHONY:deps
+deps: ## Install dependences.
 	dep ensure
 
-.PHONY:resetdeps
-resetdeps: ## reset dependences.
+.PHONY:updatedeps
+updatedeps: ## update all dependences.
 	rm -rf Gopkg.*
 	rm -rf vendor
 	dep init

@@ -166,8 +166,7 @@ func (s *Store) FetchJob(id uint64, job *structs.Job) error {
 
 type ListJobsQuery struct {
 	Name     string
-	Begin    uint64
-	HasBegin bool
+	Begin    *uint64
 	Reverse  bool
 	Limit    int
 }
@@ -184,8 +183,9 @@ func (s *Store) ListJobs(query *ListJobsQuery, ret *structs.JobList) error {
 		}
 
 		if query.Reverse {
-			if query.HasBegin {
-				beginB, err := boltutil.ToKeyBytes(query.Begin)
+			if query.Begin != nil {
+				begin := *query.Begin
+				beginB, err := boltutil.ToKeyBytes(begin)
 				if err != nil {
 					return err
 				}
@@ -232,8 +232,9 @@ func (s *Store) ListJobs(query *ListJobsQuery, ret *structs.JobList) error {
 				ret.HasNext = false
 			}
 		} else {
-			if query.HasBegin {
-				beginB, err := boltutil.ToKeyBytes(query.Begin)
+			if query.Begin != nil {
+				begin := *query.Begin
+				beginB, err := boltutil.ToKeyBytes(begin)
 				if err != nil {
 					return err
 				}

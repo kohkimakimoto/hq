@@ -55,8 +55,7 @@ func cleanupJobs(app *App) func() {
 		begin := katsubushi.ToID(tt)
 		query := &ListJobsQuery{
 			Reverse:  true,
-			Begin:    begin,
-			HasBegin: true,
+			Begin:    &begin,
 		}
 
 		list := &structs.JobList{
