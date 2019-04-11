@@ -8,6 +8,7 @@ import (
 	"github.com/urfave/cli"
 	"io/ioutil"
 	"os"
+	"github.com/dustin/go-humanize"
 	"strconv"
 )
 
@@ -17,6 +18,7 @@ var JobCommand = cli.Command{
 	Subcommands: cli.Commands{
 		JobRunCommand,
 		JobListCommand,
+		JobInfoCommand,
 	},
 }
 
@@ -158,7 +160,7 @@ func jobListAction(ctx *cli.Context) error {
 	t := newTabby()
 
 	if !quiet {
-		t.AddLine("ID", "NAME", "URL", "STATUS", "CREATED_AT", "FINISHED_AT")
+		t.AddLine("ID", "NAME", "URL","CREATED", "FINISHED", "DURATION", "STATUS")
 	}
 
 	for _, job := range jobs {
@@ -181,17 +183,32 @@ func jobListAction(ctx *cli.Context) error {
 			status = color.Yellow(status)
 		}
 
-		createdAt := fmt.Sprintf("%v", job.CreatedAt)
+		createdAt := humanize.Time(job.CreatedAt)
 		finishedAt := ""
+		duration := ""
 		if job.FinishedAt != nil {
-			finishedAt = fmt.Sprintf("%v", job.FinishedAt)
+			finishedAt = humanize.Time(*job.FinishedAt)
+			duration = fmt.Sprintf("%v", job.FinishedAt.Sub(job.CreatedAt))
 		}
 
-		t.AddLine(job.ID, job.Name, job.URL, status, createdAt, finishedAt)
+		t.AddLine(job.ID, job.Name, job.URL, createdAt, finishedAt, duration, status)
 	}
 
 	t.Print()
 	return nil
+}
+
+var JobInfoCommand = cli.Command{
+	Name:      "info",
+	Usage:     `Display job detail`,
+	ArgsUsage: `<job_id>`,
+	Action:    jobInfoAction,
+	Flags: []cli.Flag{
+		addressFlag,
+	},
+}
+
+func jobInfoAction(ctx *cli.Context) error {
 
 	return nil
 }
