@@ -19,6 +19,7 @@ var JobCommand = cli.Command{
 		JobRunCommand,
 		JobListCommand,
 		JobInfoCommand,
+		JobDeleteCommand,
 	},
 }
 
@@ -153,6 +154,9 @@ func jobListAction(ctx *cli.Context) error {
 	} else {
 		for _, idstr := range ids {
 			id, err := strconv.ParseUint(idstr, 10, 64)
+			if err != nil {
+				return err
+			}
 			job, err := c.GetJob(id)
 			if err != nil {
 				return err
@@ -166,9 +170,9 @@ func jobListAction(ctx *cli.Context) error {
 
 	if !quiet {
 		if detail {
-			t.AddLine("ID", "NAME", "URL", "CREATED", "FINISHED", "DURATION", "STATUS")
+			t.AddLine("ID", "NAME", "COMMENT", "URL", "CREATED", "FINISHED", "DURATION", "STATUS")
 		} else {
-			t.AddLine("ID", "NAME", "CREATED", "DURATION", "STATUS")
+			t.AddLine("ID", "NAME", "COMMENT", "CREATED", "DURATION", "STATUS")
 		}
 	}
 
@@ -201,9 +205,9 @@ func jobListAction(ctx *cli.Context) error {
 		}
 
 		if detail {
-			t.AddLine(job.ID, job.Name, job.URL, createdAt, finishedAt, duration, status)
+			t.AddLine(job.ID, job.Name, job.Comment, job.URL, createdAt, finishedAt, duration, status)
 		} else {
-			t.AddLine(job.ID, job.Name, createdAt, duration, status)
+			t.AddLine(job.ID, job.Name, job.Comment, createdAt, duration, status)
 		}
 	}
 
@@ -222,6 +226,65 @@ var JobInfoCommand = cli.Command{
 }
 
 func jobInfoAction(ctx *cli.Context) error {
+	c := newClient(ctx)
 
+	if ctx.NArg() != 1 {
+		return fmt.Errorf("require just one argument as a job ID")
+	}
+
+	id, err := strconv.ParseUint(ctx.Args()[0], 10, 64)
+	if err != nil {
+		return err
+	}
+
+	job, err := c.GetJob(id)
+	if err != nil {
+		return err
+	}
+
+	b, err := json.MarshalIndent(job, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(string(b))
+
+	return nil
+}
+
+var JobDeleteCommand = cli.Command{
+	Name:      "delete",
+	Usage:     `Delete a job`,
+	ArgsUsage: `<job_id...>`,
+	Action:    jobDeleteAction,
+	Flags: []cli.Flag{
+		addressFlag,
+	},
+}
+
+func jobDeleteAction(ctx *cli.Context) error {
+	c := newClient(ctx)
+
+	if ctx.NArg() < 1 {
+		return fmt.Errorf("require one id at least")
+	}
+
+	t := newTabby()
+
+	args := ctx.Args()
+	for _, idstr := range args {
+		id, err := strconv.ParseUint(idstr, 10, 64)
+		if err != nil {
+			return err
+		}
+
+		deletedJob, err := c.DeleteJob(id)
+		if err != nil {
+			return err
+		}
+
+		t.AddLine(fmt.Sprintf("%d", deletedJob.ID))
+	}
+	t.Print()
 	return nil
 }

@@ -98,6 +98,39 @@ func (c *Client) get(url string, values url.Values) (*http.Response, error) {
 	return resp, nil
 }
 
+func (c *Client) delete(url string, values url.Values) (*http.Response, error) {
+	req, err := http.NewRequest("DELETE", c.address+url, nil)
+	if err != nil {
+		return nil, err
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	c.setHeaders(req)
+
+	if values != nil {
+		q := req.URL.Query()
+		for k, v := range values {
+			for _, vs := range v {
+				q.Add(k, vs)
+			}
+		}
+		req.URL.RawQuery = q.Encode()
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := c.checkStatusCode(resp); err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
 func (c *Client) setHeaders(req *http.Request) {
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("User-Agent", DefaultUserAgent)
@@ -106,13 +139,9 @@ func (c *Client) setHeaders(req *http.Request) {
 func (c *Client) checkStatusCode(resp *http.Response) error {
 	if resp.StatusCode != http.StatusOK {
 		defer resp.Body.Close()
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			return errors.Wrap(err, http.StatusText(resp.StatusCode))
-		}
 
 		ret := &structs.ErrorResponse{}
-		if err := json.Unmarshal(body, ret); err != nil {
+		if err := respUnmarshal(resp, ret); err != nil {
 			return errors.Wrap(err, http.StatusText(resp.StatusCode))
 		}
 
@@ -129,13 +158,8 @@ func (c *Client) Info() (*structs.Info, error) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
 	ret := &structs.Info{}
-	if err := json.Unmarshal(body, ret); err != nil {
+	if err := respUnmarshal(resp, ret); err != nil {
 		return nil, err
 	}
 
@@ -149,13 +173,38 @@ func (c *Client) CreateJob(payload *structs.CreateJobRequest) (*structs.Job, err
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
+	ret := &structs.Job{}
+	if err := respUnmarshal(resp, ret); err != nil {
 		return nil, err
 	}
 
+	return ret, nil
+}
+
+func (c *Client) GetJob(id uint64) (*structs.Job, error) {
+	resp, err := c.get(fmt.Sprintf("/job/%d", id), nil)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
 	ret := &structs.Job{}
-	if err := json.Unmarshal(body, ret); err != nil {
+	if err := respUnmarshal(resp, ret); err != nil {
+		return nil, err
+	}
+
+	return ret, nil
+}
+
+func (c *Client) DeleteJob(id uint64) (*structs.DeletedJob, error) {
+	resp, err := c.delete(fmt.Sprintf("/job/%d", id), nil)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	ret := &structs.DeletedJob{}
+	if err := respUnmarshal(resp, ret); err != nil {
 		return nil, err
 	}
 
@@ -187,35 +236,10 @@ func (c *Client) ListJobs(payload *structs.ListJobsRequest) (*structs.JobList, e
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
 	ret := &structs.JobList{
 		Jobs: []*structs.Job{},
 	}
-	if err := json.Unmarshal(body, ret); err != nil {
-		return nil, err
-	}
-
-	return ret, nil
-}
-
-func (c *Client) GetJob(id uint64) (*structs.Job, error) {
-	resp, err := c.get(fmt.Sprintf("/job/%d", id), nil)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	ret := &structs.Job{}
-	if err := json.Unmarshal(body, ret); err != nil {
+	if err := respUnmarshal(resp, ret); err != nil {
 		return nil, err
 	}
 
@@ -229,15 +253,23 @@ func (c *Client) Stats() (*structs.Stats, error) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
 	ret := &structs.Stats{}
-	if err := json.Unmarshal(body, ret); err != nil {
+	if err := respUnmarshal(resp, ret); err != nil {
 		return nil, err
 	}
 
 	return ret, nil
+}
+
+func respUnmarshal(resp *http.Response, v interface{}) error {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	if err := json.Unmarshal(body, v); err != nil {
+		return err
+	}
+
+	return nil
 }

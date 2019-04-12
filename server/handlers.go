@@ -103,8 +103,8 @@ func DeleteJobHandler(c echo.Context) error {
 		}
 	}
 
-	if job.FinishedAt != nil {
-		return NewErrorValidationFailed(fmt.Sprintf("The job %d is not finished", job.ID))
+	if job.Running {
+		return NewErrorValidationFailed(fmt.Sprintf("The job %d is running now", job.ID))
 	}
 
 	if err := app.Store.DeleteJob(id); err != nil {
