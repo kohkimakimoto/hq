@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/kohkimakimoto/hq/hq"
-	"github.com/kohkimakimoto/hq/structs"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
@@ -140,7 +139,7 @@ func (c *Client) checkStatusCode(resp *http.Response) error {
 	if resp.StatusCode != http.StatusOK {
 		defer resp.Body.Close()
 
-		ret := &structs.ErrorResponse{}
+		ret := &hq.ErrorResponse{}
 		if err := respUnmarshal(resp, ret); err != nil {
 			return errors.Wrap(err, http.StatusText(resp.StatusCode))
 		}
@@ -151,14 +150,14 @@ func (c *Client) checkStatusCode(resp *http.Response) error {
 	return nil
 }
 
-func (c *Client) Info() (*structs.Info, error) {
+func (c *Client) Info() (*hq.Info, error) {
 	resp, err := c.post("/", nil)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	ret := &structs.Info{}
+	ret := &hq.Info{}
 	if err := respUnmarshal(resp, ret); err != nil {
 		return nil, err
 	}
@@ -166,14 +165,14 @@ func (c *Client) Info() (*structs.Info, error) {
 	return ret, nil
 }
 
-func (c *Client) CreateJob(payload *structs.CreateJobRequest) (*structs.Job, error) {
+func (c *Client) CreateJob(payload *hq.CreateJobRequest) (*hq.Job, error) {
 	resp, err := c.post("/job", payload)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	ret := &structs.Job{}
+	ret := &hq.Job{}
 	if err := respUnmarshal(resp, ret); err != nil {
 		return nil, err
 	}
@@ -181,14 +180,14 @@ func (c *Client) CreateJob(payload *structs.CreateJobRequest) (*structs.Job, err
 	return ret, nil
 }
 
-func (c *Client) GetJob(id uint64) (*structs.Job, error) {
+func (c *Client) GetJob(id uint64) (*hq.Job, error) {
 	resp, err := c.get(fmt.Sprintf("/job/%d", id), nil)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	ret := &structs.Job{}
+	ret := &hq.Job{}
 	if err := respUnmarshal(resp, ret); err != nil {
 		return nil, err
 	}
@@ -196,14 +195,14 @@ func (c *Client) GetJob(id uint64) (*structs.Job, error) {
 	return ret, nil
 }
 
-func (c *Client) DeleteJob(id uint64) (*structs.DeletedJob, error) {
+func (c *Client) DeleteJob(id uint64) (*hq.DeletedJob, error) {
 	resp, err := c.delete(fmt.Sprintf("/job/%d", id), nil)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	ret := &structs.DeletedJob{}
+	ret := &hq.DeletedJob{}
 	if err := respUnmarshal(resp, ret); err != nil {
 		return nil, err
 	}
@@ -211,7 +210,7 @@ func (c *Client) DeleteJob(id uint64) (*structs.DeletedJob, error) {
 	return ret, nil
 }
 
-func (c *Client) ListJobs(payload *structs.ListJobsRequest) (*structs.JobList, error) {
+func (c *Client) ListJobs(payload *hq.ListJobsRequest) (*hq.JobList, error) {
 	var values url.Values = url.Values{}
 
 	if payload.Name != "" {
@@ -236,8 +235,8 @@ func (c *Client) ListJobs(payload *structs.ListJobsRequest) (*structs.JobList, e
 	}
 	defer resp.Body.Close()
 
-	ret := &structs.JobList{
-		Jobs: []*structs.Job{},
+	ret := &hq.JobList{
+		Jobs: []*hq.Job{},
 	}
 	if err := respUnmarshal(resp, ret); err != nil {
 		return nil, err
@@ -246,14 +245,14 @@ func (c *Client) ListJobs(payload *structs.ListJobsRequest) (*structs.JobList, e
 	return ret, nil
 }
 
-func (c *Client) Stats() (*structs.Stats, error) {
+func (c *Client) Stats() (*hq.Stats, error) {
 	resp, err := c.get("/stats", nil)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	ret := &structs.Stats{}
+	ret := &hq.Stats{}
 	if err := respUnmarshal(resp, ret); err != nil {
 		return nil, err
 	}

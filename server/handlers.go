@@ -5,18 +5,16 @@ import (
 	"fmt"
 	"github.com/kayac/go-katsubushi"
 	"github.com/kohkimakimoto/boltutil"
-	"github.com/kohkimakimoto/hq/hq"
 	"github.com/pkg/errors"
 	"net/http"
 	"strconv"
 	"sync/atomic"
-
-	"github.com/kohkimakimoto/hq/structs"
+	"github.com/kohkimakimoto/hq/hq"
 	"github.com/labstack/echo"
 )
 
 func InfoHandler(c echo.Context) error {
-	return c.JSON(http.StatusOK, &structs.Info{
+	return c.JSON(http.StatusOK, &hq.Info{
 		Version:    hq.Version,
 		CommitHash: hq.CommitHash,
 	})
@@ -29,7 +27,7 @@ var (
 func CreateJobHandler(c echo.Context) error {
 	app := c.(*AppContext).App()
 
-	req := &structs.CreateJobRequest{}
+	req := &hq.CreateJobRequest{}
 	if err := bindRequest(req, c); err != nil {
 		c.Logger().Warn(errors.Wrap(err, "failed to bind request"))
 		return NewHttpErrorBadRequest()
@@ -48,7 +46,7 @@ func CreateJobHandler(c echo.Context) error {
 		return errors.Wrap(err, "failed to generate uniq id")
 	}
 
-	job := &structs.Job{}
+	job := &hq.Job{}
 	job.ID = id
 	job.Name = req.Name
 	job.Comment = req.Comment
@@ -74,7 +72,7 @@ func GetJobHandler(c echo.Context) error {
 		return NewErrorValidationFailed("The job id  must be a number but '" + c.Param("id") + "'.")
 	}
 
-	job := &structs.Job{}
+	job := &hq.Job{}
 	if err := app.Store.FetchJob(id, job); err != nil {
 		if _, ok := err.(*ErrJobNotFound); ok {
 			return NewErrorValidationFailed(err.Error())
@@ -98,7 +96,7 @@ func DeleteJobHandler(c echo.Context) error {
 		return NewErrorValidationFailed("The job id  must be a number but '" + c.Param("id") + "'.")
 	}
 
-	job := &structs.Job{}
+	job := &hq.Job{}
 	if err := app.Store.FetchJob(id, job); err != nil {
 		if _, ok := err.(*ErrJobNotFound); ok {
 			return NewErrorValidationFailed(err.Error())
@@ -119,7 +117,7 @@ func DeleteJobHandler(c echo.Context) error {
 		}
 	}
 
-	return c.JSON(http.StatusOK, &structs.DeletedJob{
+	return c.JSON(http.StatusOK, &hq.DeletedJob{
 		ID: id,
 	})
 }
@@ -131,7 +129,7 @@ var (
 func ListJobsHandler(c echo.Context) error {
 	app := c.(*AppContext).App()
 
-	req := &structs.ListJobsRequest{}
+	req := &hq.ListJobsRequest{}
 	if err := bindRequest(req, c); err != nil {
 		c.Logger().Warn(errors.Wrap(err, "failed to bind request"))
 		return NewHttpErrorBadRequest()
@@ -148,8 +146,8 @@ func ListJobsHandler(c echo.Context) error {
 		Limit:   req.Limit,
 	}
 
-	list := &structs.JobList{
-		Jobs:    []*structs.Job{},
+	list := &hq.JobList{
+		Jobs:    []*hq.Job{},
 		HasNext: false,
 	}
 	if err := app.Store.ListJobs(query, list); err != nil {
@@ -174,7 +172,7 @@ func StatsHandler(c echo.Context) error {
 		numAllWorkers = numAllWorkers + atomic.LoadInt64(&d.NumWorkers)
 	}
 
-	stats := &structs.Stats{
+	stats := &hq.Stats{
 		ServerId:        config.ServerId,
 		Queues:          config.Queues,
 		Dispatchers:     config.Dispatchers,

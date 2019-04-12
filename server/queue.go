@@ -2,13 +2,13 @@ package server
 
 import (
 	"context"
-	"github.com/kohkimakimoto/hq/structs"
+	"github.com/kohkimakimoto/hq/hq"
 	"sync"
 )
 
 type QueueManager struct {
 	App         *App
-	Queue       chan *structs.Job
+	Queue       chan *hq.Job
 	Dispatchers []*Dispatcher
 	WorkerWg    *sync.WaitGroup
 	mutex       *sync.Mutex
@@ -18,7 +18,7 @@ type QueueManager struct {
 func NewQueueManager(app *App) *QueueManager {
 	return &QueueManager{
 		App:         app,
-		Queue:       make(chan *structs.Job, app.Config.Queues),
+		Queue:       make(chan *hq.Job, app.Config.Queues),
 		Dispatchers: []*Dispatcher{},
 		WorkerWg:    &sync.WaitGroup{},
 		mutex:       new(sync.Mutex),
@@ -44,13 +44,13 @@ func (m *QueueManager) Wait() {
 	m.WorkerWg.Wait()
 }
 
-func (m *QueueManager) EnqueueAsync(job *structs.Job) {
+func (m *QueueManager) EnqueueAsync(job *hq.Job) {
 	go func() {
 		m.Queue <- job
 	}()
 }
 
-func (m *QueueManager) SetRunningJob(job *structs.Job, cancel context.CancelFunc) {
+func (m *QueueManager) SetRunningJob(job *hq.Job, cancel context.CancelFunc) {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
@@ -60,14 +60,14 @@ func (m *QueueManager) SetRunningJob(job *structs.Job, cancel context.CancelFunc
 	}
 }
 
-func (m *QueueManager) RemoveRunningJob(job *structs.Job) {
+func (m *QueueManager) RemoveRunningJob(job *hq.Job) {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
 	delete(m.runningJobs, job.ID)
 }
 
-func (m *QueueManager) UpdateRunningStatus(job *structs.Job) *structs.Job {
+func (m *QueueManager) UpdateRunningStatus(job *hq.Job) *hq.Job {
 	if _, ok := m.runningJobs[job.ID]; ok {
 		job.Running = true
 	} else {
@@ -77,6 +77,6 @@ func (m *QueueManager) UpdateRunningStatus(job *structs.Job) *structs.Job {
 }
 
 type RunningJob struct {
-	Job    *structs.Job
+	Job    *hq.Job
 	Cancel context.CancelFunc
 }

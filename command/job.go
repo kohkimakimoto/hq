@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/dustin/go-humanize"
-	"github.com/kohkimakimoto/hq/structs"
+	"github.com/kohkimakimoto/hq/hq"
 	"github.com/labstack/gommon/color"
 	"github.com/urfave/cli"
 	"io/ioutil"
@@ -49,7 +49,7 @@ func jobRunAction(ctx *cli.Context) error {
 			return err
 		}
 
-		payload := &structs.CreateJobRequest{}
+		payload := &hq.CreateJobRequest{}
 		if err := json.Unmarshal(b, payload); err != nil {
 			return err
 		}
@@ -70,7 +70,7 @@ func jobRunAction(ctx *cli.Context) error {
 			return err
 		}
 
-		payload := &structs.CreateJobRequest{}
+		payload := &hq.CreateJobRequest{}
 		if err := json.Unmarshal(b, payload); err != nil {
 			return err
 		}
@@ -132,10 +132,10 @@ func jobListAction(ctx *cli.Context) error {
 	quiet := ctx.Bool("quiet")
 	detail := ctx.Bool("detail")
 
-	jobs := []*structs.Job{}
+	jobs := []*hq.Job{}
 
 	if len(ids) == 0 {
-		payload := &structs.ListJobsRequest{
+		payload := &hq.ListJobsRequest{
 			Name:    ctx.String("name"),
 			Reverse: ctx.Bool("reverse"),
 			Limit:   ctx.Int("limit"),

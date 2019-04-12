@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/boltdb/bolt"
 	"github.com/kohkimakimoto/boltutil"
-	"github.com/kohkimakimoto/hq/structs"
+	"github.com/kohkimakimoto/hq/hq"
 	"github.com/labstack/echo"
 	"regexp"
 )
@@ -50,13 +50,13 @@ func (s *Store) Init() error {
 	return nil
 }
 
-func (s *Store) CreateJob(job *structs.Job) error {
+func (s *Store) CreateJob(job *hq.Job) error {
 	return s.db.Update(func(tx *bolt.Tx) error {
-		if err := boltutil.Get(tx, []interface{}{BucketNameForJobs}, job.ID, &structs.J{}); err == nil {
+		if err := boltutil.Get(tx, []interface{}{BucketNameForJobs}, job.ID, &hq.J{}); err == nil {
 			return &ErrJobAlreadyExisted{ID: job.ID, Name: job.Name}
 		}
 
-		in := &structs.J{
+		in := &hq.J{
 			ID:         job.ID,
 			Name:       job.Name,
 			Comment:    job.Comment,
@@ -80,9 +80,9 @@ func (s *Store) CreateJob(job *structs.Job) error {
 	})
 }
 
-func (s *Store) UpdateJob(job *structs.Job) error {
+func (s *Store) UpdateJob(job *hq.Job) error {
 	return s.db.Update(func(tx *bolt.Tx) error {
-		if err := boltutil.Get(tx, []interface{}{BucketNameForJobs}, job.ID, &structs.J{}); err != nil {
+		if err := boltutil.Get(tx, []interface{}{BucketNameForJobs}, job.ID, &hq.J{}); err != nil {
 			if err == boltutil.ErrNotFound {
 				return &ErrJobNotFound{ID: job.ID}
 			} else {
@@ -90,7 +90,7 @@ func (s *Store) UpdateJob(job *structs.Job) error {
 			}
 		}
 
-		in := &structs.J{
+		in := &hq.J{
 			ID:         job.ID,
 			Name:       job.Name,
 			Comment:    job.Comment,
@@ -116,7 +116,7 @@ func (s *Store) UpdateJob(job *structs.Job) error {
 
 func (s *Store) DeleteJob(id uint64) error {
 	return s.db.Update(func(tx *bolt.Tx) error {
-		if err := boltutil.Get(tx, []interface{}{BucketNameForJobs}, id, &structs.J{}); err != nil {
+		if err := boltutil.Get(tx, []interface{}{BucketNameForJobs}, id, &hq.J{}); err != nil {
 			if err == boltutil.ErrNotFound {
 				return &ErrJobNotFound{ID: id}
 			} else {
@@ -132,10 +132,10 @@ func (s *Store) DeleteJob(id uint64) error {
 	})
 }
 
-func (s *Store) FetchJob(id uint64, job *structs.Job) error {
+func (s *Store) FetchJob(id uint64, job *hq.Job) error {
 	qm := s.app.QueueManager
 	return s.db.View(func(tx *bolt.Tx) error {
-		out := &structs.J{}
+		out := &hq.J{}
 		if err := boltutil.Get(tx, []interface{}{BucketNameForJobs}, id, out); err != nil {
 			if err == boltutil.ErrNotFound {
 				return &ErrJobNotFound{ID: id}
@@ -171,7 +171,7 @@ type ListJobsQuery struct {
 	Limit   int
 }
 
-func (s *Store) ListJobs(query *ListJobsQuery, ret *structs.JobList) error {
+func (s *Store) ListJobs(query *ListJobsQuery, ret *hq.JobList) error {
 	return s.db.View(func(tx *bolt.Tx) error {
 		c, err := boltutil.Cursor(tx, []interface{}{BucketNameForJobs})
 		if err != nil {
@@ -275,15 +275,15 @@ func (s *Store) ListJobs(query *ListJobsQuery, ret *structs.JobList) error {
 	})
 }
 
-func (s *Store) appendJob(v []byte, query *ListJobsQuery, ret *structs.JobList) error {
+func (s *Store) appendJob(v []byte, query *ListJobsQuery, ret *hq.JobList) error {
 	qm := s.app.QueueManager
 
-	in := &structs.J{}
+	in := &hq.J{}
 	if err := boltutil.Deserialize(v, in); err != nil {
 		return err
 	}
 
-	job := &structs.Job{
+	job := &hq.Job{
 		ID:         in.ID,
 		Name:       in.Name,
 		Comment:    in.Comment,

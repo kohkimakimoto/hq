@@ -2,7 +2,7 @@ package server
 
 import (
 	"github.com/kayac/go-katsubushi"
-	"github.com/kohkimakimoto/hq/structs"
+	"github.com/kohkimakimoto/hq/hq"
 	"github.com/robfig/cron"
 	"sync"
 	"time"
@@ -58,8 +58,8 @@ func cleanupJobs(app *App) func() {
 			Begin:   &begin,
 		}
 
-		list := &structs.JobList{
-			Jobs:    []*structs.Job{},
+		list := &hq.JobList{
+			Jobs:    []*hq.Job{},
 			HasNext: false,
 		}
 

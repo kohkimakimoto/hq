@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/kohkimakimoto/hq/structs"
+	"github.com/kohkimakimoto/hq/hq"
 	"github.com/labstack/echo"
 	"net/http"
 	"strings"
@@ -66,7 +66,7 @@ func ErrorHandler(err error, c echo.Context) {
 		}
 	}
 
-	if err2 := c.JSON(statusCode, &structs.ErrorResponse{
+	if err2 := c.JSON(statusCode, &hq.ErrorResponse{
 		Status: statusCode,
 		Error:  message,
 	}); err2 != nil {

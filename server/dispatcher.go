@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/kohkimakimoto/hq/hq"
-	"github.com/kohkimakimoto/hq/structs"
 	"io/ioutil"
 	"net/http"
 	"sync/atomic"
@@ -43,7 +42,7 @@ func (d *Dispatcher) loop() {
 	}
 }
 
-func (d *Dispatcher) dispatchAsync(job *structs.Job) {
+func (d *Dispatcher) dispatchAsync(job *hq.Job) {
 	manager := d.manager
 
 	manager.WorkerWg.Add(1)
@@ -59,7 +58,7 @@ func (d *Dispatcher) dispatchAsync(job *structs.Job) {
 	}()
 }
 
-func (d *Dispatcher) dispatch(job *structs.Job) {
+func (d *Dispatcher) dispatch(job *hq.Job) {
 	manager := d.manager
 
 	manager.WorkerWg.Add(1)
@@ -72,7 +71,7 @@ func (d *Dispatcher) dispatch(job *structs.Job) {
 	d.work(job)
 }
 
-func (d *Dispatcher) work(job *structs.Job) {
+func (d *Dispatcher) work(job *hq.Job) {
 	manager := d.manager
 	app := d.manager.App
 	logger := app.Logger
