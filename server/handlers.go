@@ -109,6 +109,10 @@ func DeleteJobHandler(c echo.Context) error {
 		return NewErrorValidationFailed(fmt.Sprintf("The job %d is running now", job.ID))
 	}
 
+	if job.Waiting {
+		return NewErrorValidationFailed(fmt.Sprintf("The job %d is waiting now", job.ID))
+	}
+	
 	if err := app.Store.DeleteJob(id); err != nil {
 		if _, ok := err.(*ErrJobNotFound); ok {
 			return NewErrorValidationFailed(err.Error())
