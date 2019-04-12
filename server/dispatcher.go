@@ -114,10 +114,6 @@ func (d *Dispatcher) work(job *hq.Job) {
 	}()
 
 	// worker
-	client := &http.Client{
-		Timeout: time.Duration(job.Timeout) * time.Second,
-	}
-
 	req, err := http.NewRequest(
 		"POST",
 		job.URL,
@@ -131,14 +127,19 @@ func (d *Dispatcher) work(job *hq.Job) {
 	ctx, cancel := context.WithCancel(context.Background())
 	req = req.WithContext(ctx)
 
-	// keep running job.
-	manager.SetRunningJob(job, cancel)
+	// keep running job status.
+	manager.RegisterRunningJob(job, cancel)
 	defer manager.RemoveRunningJob(job)
 
 	// headers
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("User-Agent", WorkerDefaultUserAgent)
 	req.Header.Add("X-Hq-Job", fmt.Sprintf("%d", job.ID))
+
+	// http client
+	client := &http.Client{
+		Timeout: time.Duration(job.Timeout) * time.Second,
+	}
 
 	resp, err := client.Do(req)
 	if err != nil {

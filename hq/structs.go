@@ -53,12 +53,16 @@ type Job struct {
 	StatusCode int             `json:"statusCode"`
 	Err        string          `json:"err"`
 	Output     string          `json:"output"`
+	// status properties.
+	Waiting    bool            `json:"waiting"`
 	Running    bool            `json:"running"`
 }
 
 func (j *Job) Status() string {
 	if j.Running {
 		return "running"
+	} else if j.Waiting {
+		return "waiting"
 	} else {
 		if j.Failure {
 			return "failure"
@@ -66,7 +70,7 @@ func (j *Job) Status() string {
 			return "success"
 		} else {
 			if j.FinishedAt == nil {
-				return "waiting"
+				return "stopped"
 			} else {
 				return "unknown"
 			}

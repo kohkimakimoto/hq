@@ -158,7 +158,7 @@ func (s *Store) FetchJob(id uint64, job *hq.Job) error {
 		job.Err = out.Err
 		job.Output = out.Output
 
-		job = qm.UpdateRunningStatus(job)
+		job = qm.UpdateJobStatus(job)
 
 		return nil
 	})
@@ -299,7 +299,7 @@ func (s *Store) appendJob(v []byte, query *ListJobsQuery, ret *hq.JobList) error
 		Output:     in.Output,
 	}
 
-	job = qm.UpdateRunningStatus(job)
+	job = qm.UpdateJobStatus(job)
 
 	if query.Name == "" {
 		ret.Jobs = append(ret.Jobs, job)

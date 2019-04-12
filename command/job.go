@@ -191,6 +191,8 @@ func jobListAction(ctx *cli.Context) error {
 		case "running":
 			status = color.Cyan(status)
 		case "waiting":
+			status = color.Reset(status)
+		case "stopped":
 			status = color.Dim(status)
 		case "unknown":
 			status = color.Yellow(status)
