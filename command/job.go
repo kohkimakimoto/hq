@@ -113,6 +113,10 @@ var JobListCommand = cli.Command{
 			Usage: "Only display `N` job(s).",
 			Value: 100,
 		},
+		cli.BoolFlag{
+			Name:  "detail, d",
+			Usage: "Display detail info.",
+		},
 	},
 }
 
@@ -125,6 +129,7 @@ func jobListAction(ctx *cli.Context) error {
 	}
 
 	quiet := ctx.Bool("quiet")
+	detail := ctx.Bool("detail")
 
 	jobs := []*structs.Job{}
 
@@ -160,7 +165,11 @@ func jobListAction(ctx *cli.Context) error {
 	t := newTabby()
 
 	if !quiet {
-		t.AddLine("ID", "NAME", "URL", "CREATED", "FINISHED", "DURATION", "STATUS")
+		if detail {
+			t.AddLine("ID", "NAME", "URL", "CREATED", "FINISHED", "DURATION", "STATUS")
+		} else {
+			t.AddLine("ID", "NAME", "CREATED", "DURATION", "STATUS")
+		}
 	}
 
 	for _, job := range jobs {
@@ -191,7 +200,11 @@ func jobListAction(ctx *cli.Context) error {
 			duration = fmt.Sprintf("%v", job.FinishedAt.Sub(job.CreatedAt))
 		}
 
-		t.AddLine(job.ID, job.Name, job.URL, createdAt, finishedAt, duration, status)
+		if detail {
+			t.AddLine(job.ID, job.Name, job.URL, createdAt, finishedAt, duration, status)
+		} else {
+			t.AddLine(job.ID, job.Name, createdAt, duration, status)
+		}
 	}
 
 	t.Print()
