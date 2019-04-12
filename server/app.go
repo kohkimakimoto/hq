@@ -201,6 +201,7 @@ func (app *App) ListenAndServe() error {
 	}
 
 	// wait for running jobs finishing.
+	e.Logger.Info("Waiting for finishing the jobs.")
 	app.QueueManager.Wait()
 	app.Logger.Infof("Successfully shutdown")
 

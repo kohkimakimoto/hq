@@ -95,6 +95,7 @@ func configureServer(app *server.App) error {
 	e.POST("/job", server.CreateJobHandler)
 	e.GET("/job", server.ListJobsHandler)
 	e.GET("/job/:id", server.GetJobHandler)
+	e.POST("/job/:id/stop", server.StopJobHandler)
 	e.GET("/stats", server.StatsHandler)
 	e.DELETE("/job/:id", server.DeleteJobHandler)
 

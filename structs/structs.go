@@ -2,7 +2,6 @@ package structs
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 )
 
@@ -55,26 +54,6 @@ type Job struct {
 	Err        string          `json:"err"`
 	Output     string          `json:"output"`
 	Running    bool            `json:"running"`
-}
-
-func (j *Job) MarshalJSON() ([]byte, error) {
-	return json.Marshal(map[string]interface{}{
-		"id":         fmt.Sprintf("%d", j.ID),
-		"name":       j.Name,
-		"comment":    j.Comment,
-		"url":        j.URL,
-		"payload":    j.Payload,
-		"timeout":    j.Timeout,
-		"createdAt":  j.CreatedAt,
-		"finishedAt": j.FinishedAt,
-		"failure":    j.Failure,
-		"success":    j.Success,
-		"statusCode": j.StatusCode,
-		"err":        j.Err,
-		"output":     j.Output,
-		"running":    j.Running,
-		"status":     j.Status(),
-	})
 }
 
 func (j *Job) Status() string {

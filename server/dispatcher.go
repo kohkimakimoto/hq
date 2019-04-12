@@ -18,22 +18,22 @@ var (
 
 type Dispatcher struct {
 	manager    *QueueManager
-	numWorkers int64
+	NumWorkers int64
 }
 
 func (d *Dispatcher) loop() {
 	m := d.manager
-	logger := m.app.Logger
-	config := m.app.Config
+	logger := m.App.Logger
+	config := m.App.Config
 
 	for {
-		job := <-m.queue
+		job := <-m.Queue
 		logger.Debugf("dequeue job: %d", job.ID)
 
 		if atomic.LoadInt64(&config.MaxWorkers) <= 0 {
 			// sync
 			d.dispatch(job)
-		} else if atomic.LoadInt64(&d.numWorkers) < atomic.LoadInt64(&config.MaxWorkers) {
+		} else if atomic.LoadInt64(&d.NumWorkers) < atomic.LoadInt64(&config.MaxWorkers) {
 			// async
 			d.dispatchAsync(job)
 		} else {
@@ -44,15 +44,15 @@ func (d *Dispatcher) loop() {
 }
 
 func (d *Dispatcher) dispatchAsync(job *structs.Job) {
-	m := d.manager
+	manager := d.manager
 
-	m.wg.Add(1)
-	atomic.AddInt64(&d.numWorkers, 1)
+	manager.WorkerWg.Add(1)
+	atomic.AddInt64(&d.NumWorkers, 1)
 
 	go func() {
 		defer func() {
-			m.wg.Done()
-			atomic.AddInt64(&d.numWorkers, -1)
+			manager.WorkerWg.Done()
+			atomic.AddInt64(&d.NumWorkers, -1)
 		}()
 
 		d.work(job)
@@ -60,13 +60,13 @@ func (d *Dispatcher) dispatchAsync(job *structs.Job) {
 }
 
 func (d *Dispatcher) dispatch(job *structs.Job) {
-	m := d.manager
+	manager := d.manager
 
-	m.wg.Add(1)
-	atomic.AddInt64(&d.numWorkers, 1)
+	manager.WorkerWg.Add(1)
+	atomic.AddInt64(&d.NumWorkers, 1)
 	defer func() {
-		m.wg.Done()
-		atomic.AddInt64(&d.numWorkers, -1)
+		manager.WorkerWg.Done()
+		atomic.AddInt64(&d.NumWorkers, -1)
 	}()
 
 	d.work(job)
@@ -74,7 +74,7 @@ func (d *Dispatcher) dispatch(job *structs.Job) {
 
 func (d *Dispatcher) work(job *structs.Job) {
 	manager := d.manager
-	app := d.manager.app
+	app := d.manager.App
 	logger := app.Logger
 	store := app.Store
 

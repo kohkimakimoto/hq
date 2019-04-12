@@ -7,45 +7,47 @@ import (
 )
 
 type QueueManager struct {
-	app         *App
-	queue       chan *structs.Job
-	dispatchers []*Dispatcher
+	App         *App
+	Queue       chan *structs.Job
+	Dispatchers []*Dispatcher
+	WorkerWg    *sync.WaitGroup
 	mutex       *sync.Mutex
 	runningJobs map[uint64]*RunningJob
-	wg          *sync.WaitGroup
 }
 
 func NewQueueManager(app *App) *QueueManager {
 	return &QueueManager{
-		app:         app,
-		queue:       make(chan *structs.Job, app.Config.Queues),
-		dispatchers: []*Dispatcher{},
+		App:         app,
+		Queue:       make(chan *structs.Job, app.Config.Queues),
+		Dispatchers: []*Dispatcher{},
+		WorkerWg:    &sync.WaitGroup{},
 		mutex:       new(sync.Mutex),
 		runningJobs: map[uint64]*RunningJob{},
-		wg:          &sync.WaitGroup{},
 	}
 }
 
 func (m *QueueManager) Start() {
-	config := m.app.Config
+	config := m.App.Config
 
 	for i := int64(0); i < config.Dispatchers; i++ {
 		d := &Dispatcher{
 			manager:    m,
-			numWorkers: 0,
+			NumWorkers: 0,
 		}
-		m.dispatchers = append(m.dispatchers, d)
+		m.Dispatchers = append(m.Dispatchers, d)
 
 		go d.loop()
 	}
 }
 
 func (m *QueueManager) Wait() {
-	m.wg.Wait()
+	m.WorkerWg.Wait()
 }
 
-func (m *QueueManager) Enqueue(job *structs.Job) {
-	m.queue <- job
+func (m *QueueManager) EnqueueAsync(job *structs.Job) {
+	go func() {
+		m.Queue <- job
+	}()
 }
 
 func (m *QueueManager) SetRunningJob(job *structs.Job, cancel context.CancelFunc) {
@@ -65,7 +67,7 @@ func (m *QueueManager) RemoveRunningJob(job *structs.Job) {
 	delete(m.runningJobs, job.ID)
 }
 
-func (m *QueueManager) SetRunningStatus(job *structs.Job) *structs.Job {
+func (m *QueueManager) UpdateRunningStatus(job *structs.Job) *structs.Job {
 	if _, ok := m.runningJobs[job.ID]; ok {
 		job.Running = true
 	} else {

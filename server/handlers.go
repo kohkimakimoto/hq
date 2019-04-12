@@ -61,7 +61,7 @@ func CreateJobHandler(c echo.Context) error {
 		return err
 	}
 
-	go app.QueueManager.Enqueue(job)
+	app.QueueManager.EnqueueAsync(job)
 
 	return c.JSON(http.StatusOK, job)
 }
@@ -84,6 +84,10 @@ func GetJobHandler(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, job)
+}
+
+func StopJobHandler(c echo.Context) error {
+	return nil
 }
 
 func DeleteJobHandler(c echo.Context) error {
@@ -166,8 +170,8 @@ func StatsHandler(c echo.Context) error {
 	queueManger := app.QueueManager
 
 	var numAllWorkers int64 = 0
-	for _, d := range queueManger.dispatchers {
-		numAllWorkers = numAllWorkers + atomic.LoadInt64(&d.numWorkers)
+	for _, d := range queueManger.Dispatchers {
+		numAllWorkers = numAllWorkers + atomic.LoadInt64(&d.NumWorkers)
 	}
 
 	stats := &structs.Stats{
@@ -177,8 +181,8 @@ func StatsHandler(c echo.Context) error {
 		MaxWorkers:      config.MaxWorkers,
 		ShutdownTimeout: config.ShutdownTimeout,
 		JobLifetime:     config.JobLifetime,
-		QueueMax:        cap(queueManger.queue),
-		QueueUsage:      len(queueManger.queue),
+		QueueMax:        cap(queueManger.Queue),
+		QueueUsage:      len(queueManger.Queue),
 		NumWorkers:      numAllWorkers,
 	}
 
