@@ -20,8 +20,8 @@ type Stats struct {
 	ShutdownTimeout int64 `json:"shutdownTimeout"`
 	JobLifetime     int64 `json:"jobLifetime"`
 	// queue stats
-	QueueMax   int `json:"queueMax"`
-	QueueUsage int `json:"queueUsage"`
+	QueueMax   int   `json:"queueMax"`
+	QueueUsage int   `json:"queueUsage"`
 	NumWorkers int64 `json:"numWorkers"`
 }
 
@@ -34,10 +34,10 @@ type CreateJobRequest struct {
 }
 
 type ListJobsRequest struct {
-	Name    string `query:"name"`
+	Name    string  `query:"name"`
 	Begin   *uint64 `query:"begin"`
-	Reverse bool   `query:"reverse"`
-	Limit   int `query:"limit"`
+	Reverse bool    `query:"reverse"`
+	Limit   int     `query:"limit"`
 }
 
 type Job struct {

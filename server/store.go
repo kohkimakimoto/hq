@@ -165,10 +165,10 @@ func (s *Store) FetchJob(id uint64, job *structs.Job) error {
 }
 
 type ListJobsQuery struct {
-	Name     string
-	Begin    *uint64
-	Reverse  bool
-	Limit    int
+	Name    string
+	Begin   *uint64
+	Reverse bool
+	Limit   int
 }
 
 func (s *Store) ListJobs(query *ListJobsQuery, ret *structs.JobList) error {

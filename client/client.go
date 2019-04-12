@@ -163,18 +163,13 @@ func (c *Client) CreateJob(payload *structs.CreateJobRequest) (*structs.Job, err
 }
 
 func (c *Client) ListJobs(payload *structs.ListJobsRequest) (*structs.JobList, error) {
-	//params["name"] = payload.Name
-
-	//if payload.Begin != "" {
-	//	params["begin"] = payload.Begin
-	//}
 	var values url.Values = url.Values{}
 
-	if payload.Name != ""  {
+	if payload.Name != "" {
 		values.Add("name", payload.Name)
 	}
 
-	if payload.Begin != nil  {
+	if payload.Begin != nil {
 		values.Add("begin", fmt.Sprintf("%d", *payload.Begin))
 	}
 

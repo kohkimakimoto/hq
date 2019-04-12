@@ -3,12 +3,12 @@ package command
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/dustin/go-humanize"
 	"github.com/kohkimakimoto/hq/structs"
 	"github.com/labstack/gommon/color"
 	"github.com/urfave/cli"
 	"io/ioutil"
 	"os"
-	"github.com/dustin/go-humanize"
 	"strconv"
 )
 
@@ -130,7 +130,7 @@ func jobListAction(ctx *cli.Context) error {
 
 	if len(ids) == 0 {
 		payload := &structs.ListJobsRequest{
-			Name: ctx.String("name"),
+			Name:    ctx.String("name"),
 			Reverse: ctx.Bool("reverse"),
 			Limit:   ctx.Int("limit"),
 		}
@@ -160,7 +160,7 @@ func jobListAction(ctx *cli.Context) error {
 	t := newTabby()
 
 	if !quiet {
-		t.AddLine("ID", "NAME", "URL","CREATED", "FINISHED", "DURATION", "STATUS")
+		t.AddLine("ID", "NAME", "URL", "CREATED", "FINISHED", "DURATION", "STATUS")
 	}
 
 	for _, job := range jobs {

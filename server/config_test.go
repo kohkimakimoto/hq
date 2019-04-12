@@ -12,7 +12,6 @@ func TestConfig_SetLogLevel(t *testing.T) {
 	c.SetLogLevel("info")
 }
 
-
 func TestConfig_LoadConfigFile(t *testing.T) {
 	c := &Config{}
 
@@ -38,4 +37,3 @@ addr = "localhost:1234"
 		t.Errorf("c.Addr must be 1 but %s", c.Addr)
 	}
 }
-

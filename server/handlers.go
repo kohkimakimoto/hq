@@ -2,9 +2,9 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/kayac/go-katsubushi"
 	"github.com/kohkimakimoto/boltutil"
-	"fmt"
 	"github.com/kohkimakimoto/hq/hq"
 	"github.com/pkg/errors"
 	"net/http"
@@ -22,6 +22,10 @@ func InfoHandler(c echo.Context) error {
 	})
 }
 
+var (
+	DefaultJobName = "default"
+)
+
 func CreateJobHandler(c echo.Context) error {
 	app := c.(*AppContext).App()
 
@@ -31,17 +35,17 @@ func CreateJobHandler(c echo.Context) error {
 		return NewHttpErrorBadRequest()
 	}
 
-	id, err := app.Gen.NextID()
-	if err != nil {
-		return errors.Wrap(err, "failed to generate uniq id")
+	if req.URL == "" {
+		return NewErrorValidationFailed("'url' is required")
 	}
 
 	if req.Name == "" {
-		return NewErrorValidationFailed("'name' is required")
+		req.Name = DefaultJobName
 	}
 
-	if req.URL == "" {
-		return NewErrorValidationFailed("'url' is required")
+	id, err := app.Gen.NextID()
+	if err != nil {
+		return errors.Wrap(err, "failed to generate uniq id")
 	}
 
 	job := &structs.Job{}
@@ -134,10 +138,10 @@ func ListJobsHandler(c echo.Context) error {
 	}
 
 	query := &ListJobsQuery{
-		Name: req.Name,
-		Begin: req.Begin,
+		Name:    req.Name,
+		Begin:   req.Begin,
 		Reverse: req.Reverse,
-		Limit: req.Limit,
+		Limit:   req.Limit,
 	}
 
 	list := &structs.JobList{
