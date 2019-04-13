@@ -88,13 +88,10 @@ func (d *Dispatcher) work(job *hq.Job) {
 		logger.Infof("job: %d worked", job.ID)
 		logger.Debugf("job: %d closing", job.ID)
 
-		logger.Debugf("can2: %v", job.Canceled)
-		logger.Debugf("job: %v", job)
-
 		// Update result status (success, failure or canceled).
 		// If the evaluator has an error, write it to the output buf.
 		if err != nil {
-			logger.Errorf("worker error: %+v", err)
+			logger.Errorf("worker error: %v", err)
 			job.Success = false
 			job.Failure = true
 			job.Err = err.Error()

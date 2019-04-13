@@ -64,24 +64,20 @@ type Job struct {
 }
 
 func (j *Job) Status() string {
-	if j.Running {
+	if j.Failure {
+		return "failure"
+	} else if j.Canceled {
+		return "canceled"
+	} else if j.Running {
 		return "running"
 	} else if j.Waiting {
 		return "waiting"
+	} else if j.Success {
+		return "success"
+	} else if j.FinishedAt == nil {
+		return "unfinished"
 	} else {
-		if j.Failure {
-			return "failure"
-		} else if j.Canceled {
-			return "canceled"
-		} else if j.Success {
-			return "success"
-		} else {
-			if j.FinishedAt == nil {
-				return "unfinished"
-			} else {
-				return "unknown"
-			}
-		}
+		return "unknown"
 	}
 }
 

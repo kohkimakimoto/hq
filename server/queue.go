@@ -86,10 +86,12 @@ func (m *QueueManager) RegisterWaitingJob(job *hq.Job) {
 }
 
 func (m *QueueManager) UpdateJobStatus(job *hq.Job) *hq.Job {
-	if _, ok := m.RunningJobs[job.ID]; ok {
+	if rJob, ok := m.RunningJobs[job.ID]; ok {
 		job.Running = true
-	} else if _, ok := m.WaitingJobs[job.ID]; ok {
+		job.Canceled = rJob.Job.Canceled
+	} else if wJob, ok := m.WaitingJobs[job.ID]; ok {
 		job.Waiting = true
+		job.Canceled = wJob.Job.Canceled
 	}
 
 	return job
