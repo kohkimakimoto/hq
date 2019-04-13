@@ -8,9 +8,11 @@ import (
 	"github.com/kohkimakimoto/hq/hq"
 	"github.com/labstack/echo"
 	"github.com/pkg/errors"
+	"github.com/hako/durafmt"
 	"net/http"
 	"strconv"
 	"sync/atomic"
+	"time"
 )
 
 func InfoHandler(c echo.Context) error {
@@ -225,6 +227,7 @@ func StatsHandler(c echo.Context) error {
 		MaxWorkers:      config.MaxWorkers,
 		ShutdownTimeout: config.ShutdownTimeout,
 		JobLifetime:     config.JobLifetime,
+		JobLifetimeStr:  durafmt.Parse(time.Duration(time.Duration(config.JobLifetime) * time.Second)).String(),
 		QueueMax:        cap(queueManger.Queue),
 		QueueUsage:      len(queueManger.Queue),
 		NumWaitingJobs:  len(queueManger.WaitingJobs),

@@ -37,7 +37,7 @@ func NewConfig() *Config {
 		MaxWorkers:      0,
 		ShutdownTimeout: 10,
 		// JobLifetime's unit is second
-		JobLifetime: 60 * 60 * 24 * 30,
+		JobLifetime: 60 * 60 * 24 * 28,
 		IDEpoch:     []int{2019, 1, 1},
 	}
 }

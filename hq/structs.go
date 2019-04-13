@@ -18,6 +18,7 @@ type Stats struct {
 	MaxWorkers      int64 `json:"maxWorkers"`
 	ShutdownTimeout int64 `json:"shutdownTimeout"`
 	JobLifetime     int64 `json:"jobLifetime"`
+	JobLifetimeStr  string `json:"jobLifetime_str"`
 	// queue stats
 	QueueMax       int   `json:"queueMax"`
 	QueueUsage     int   `json:"queueUsage"`
