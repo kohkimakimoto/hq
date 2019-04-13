@@ -73,7 +73,8 @@ func (d *Dispatcher) dispatch(job *hq.Job) {
 }
 
 func (d *Dispatcher) work(job *hq.Job) {
-	app := d.manager.App
+	manager := d.manager
+	app := manager.App
 	logger := app.Logger
 	store := app.Store
 
@@ -87,14 +88,16 @@ func (d *Dispatcher) work(job *hq.Job) {
 		logger.Infof("job: %d worked", job.ID)
 		logger.Debugf("job: %d closing", job.ID)
 
-		// Update result status (success or failure).
+		logger.Debugf("can2: %v", job.Canceled)
+		logger.Debugf("job: %v", job)
+
+		// Update result status (success, failure or canceled).
 		// If the evaluator has an error, write it to the output buf.
 		if err != nil {
 			logger.Errorf("worker error: %+v", err)
-
 			job.Success = false
 			job.Failure = true
-			job.Err = fmt.Sprintf("%+v", err)
+			job.Err = err.Error()
 		} else {
 			job.Success = true
 			job.Failure = false
@@ -113,23 +116,31 @@ func (d *Dispatcher) work(job *hq.Job) {
 		logger.Debugf("job: %d closed", job.ID)
 	}()
 
+	// worker context
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	// keep running job status.
+	manager.RegisterRunningJob(job, cancel)
+	defer manager.RemoveRunningJob(job)
+
+	if job.Canceled {
+		return
+	}
+
 	// Truncate millisecond. It is compatible time for katsubushi ID generator time stamp.
 	now := time.Now().UTC().Truncate(time.Millisecond)
-
 	// update startedAt
 	job.StartedAt = &now
-
 	if e := store.UpdateJob(job); e != nil {
 		logger.Error(e)
 	}
 
 	// worker
-	err = d.runHttpWorker(job)
+	err = d.runHttpWorker(job, ctx)
 }
 
-func (d *Dispatcher) runHttpWorker(job *hq.Job) error {
-	manager := d.manager
-
+func (d *Dispatcher) runHttpWorker(job *hq.Job, ctx context.Context) error {
 	// worker
 	req, err := http.NewRequest(
 		"POST",
@@ -140,13 +151,8 @@ func (d *Dispatcher) runHttpWorker(job *hq.Job) error {
 		return errors.Wrap(err, "failed to create new request")
 	}
 
-	// context
-	ctx, cancel := context.WithCancel(context.Background())
+	// set context
 	req = req.WithContext(ctx)
-
-	// keep running job status.
-	manager.RegisterRunningJob(job, cancel)
-	defer manager.RemoveRunningJob(job)
 
 	// headers
 	req.Header.Add("Content-Type", "application/json")
@@ -164,7 +170,9 @@ func (d *Dispatcher) runHttpWorker(job *hq.Job) error {
 	}
 	defer resp.Body.Close()
 
-	job.StatusCode = resp.StatusCode
+	statusCode := resp.StatusCode
+
+	job.StatusCode = &statusCode
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return errors.Wrap(err, "failed to read http response body")

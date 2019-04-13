@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"github.com/kohkimakimoto/hq/hq"
 	"github.com/labstack/echo"
 	"net/http"
@@ -47,6 +48,8 @@ func NewHttpErrorNotFound(msgs ...string) *echo.HTTPError {
 func ErrorHandler(err error, c echo.Context) {
 	e := c.Echo()
 
+	e.Logger.Error(fmt.Sprintf("%+v", err))
+
 	var statusCode int
 	var message string
 
@@ -70,6 +73,6 @@ func ErrorHandler(err error, c echo.Context) {
 		Status: statusCode,
 		Error:  message,
 	}); err2 != nil {
-		e.Logger.Error(err2)
+		e.Logger.Error(fmt.Sprintf("%+v", err2))
 	}
 }

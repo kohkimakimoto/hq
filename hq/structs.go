@@ -12,12 +12,12 @@ type Info struct {
 
 type Stats struct {
 	// config
-	ServerId        uint  `json:"serverId"`
-	Queues          int64 `json:"queues"`
-	Dispatchers     int64 `json:"dispatchers"`
-	MaxWorkers      int64 `json:"maxWorkers"`
-	ShutdownTimeout int64 `json:"shutdownTimeout"`
-	JobLifetime     int64 `json:"jobLifetime"`
+	ServerId        uint   `json:"serverId"`
+	Queues          int64  `json:"queues"`
+	Dispatchers     int64  `json:"dispatchers"`
+	MaxWorkers      int64  `json:"maxWorkers"`
+	ShutdownTimeout int64  `json:"shutdownTimeout"`
+	JobLifetime     int64  `json:"jobLifetime"`
 	JobLifetimeStr  string `json:"jobLifetime_str"`
 	// queue stats
 	QueueMax       int   `json:"queueMax"`
@@ -50,11 +50,12 @@ type Job struct {
 	Payload    json.RawMessage `json:"payload"`
 	Timeout    int64           `json:"timeout"`
 	CreatedAt  time.Time       `json:"createdAt"`
-	StartedAt  *time.Time      `json:"startedAt"`
-	FinishedAt *time.Time      `json:"finishedAt"`
+	StartedAt  *time.Time      `json:"startedAt,omitempty"`
+	FinishedAt *time.Time      `json:"finishedAt,omitempty"`
 	Failure    bool            `json:"failure"`
 	Success    bool            `json:"success"`
-	StatusCode int             `json:"statusCode"`
+	Canceled   bool            `json:"canceled"`
+	StatusCode *int            `json:"statusCode,omitempty"`
 	Err        string          `json:"err"`
 	Output     string          `json:"output"`
 	// status properties.
@@ -70,11 +71,13 @@ func (j *Job) Status() string {
 	} else {
 		if j.Failure {
 			return "failure"
+		} else if j.Canceled {
+			return "canceled"
 		} else if j.Success {
 			return "success"
 		} else {
 			if j.FinishedAt == nil {
-				return "stopped"
+				return "unfinished"
 			} else {
 				return "unknown"
 			}
@@ -83,6 +86,10 @@ func (j *Job) Status() string {
 }
 
 type DeletedJob struct {
+	ID uint64 `json:"id,string"`
+}
+
+type StoppedJob struct {
 	ID uint64 `json:"id,string"`
 }
 
@@ -99,7 +106,8 @@ type J struct {
 	FinishedAt *time.Time
 	Failure    bool
 	Success    bool
-	StatusCode int
+	Canceled   bool
+	StatusCode *int
 	Err        string
 	Output     string
 }

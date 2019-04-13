@@ -22,6 +22,7 @@ var JobCommand = cli.Command{
 		JobListCommand,
 		JobRestartCommand,
 		JobRunCommand,
+		JobStopCommand,
 	},
 }
 
@@ -194,7 +195,9 @@ func jobListAction(ctx *cli.Context) error {
 			status = color.Cyan(status)
 		case "waiting":
 			status = color.Reset(status)
-		case "stopped":
+		case "canceled":
+			status = color.Grey(status)
+		case "unfinished":
 			status = color.Dim(status)
 		case "unknown":
 			status = color.Yellow(status)
@@ -327,6 +330,43 @@ func jobRestartAction(ctx *cli.Context) error {
 		}
 
 		job, err := c.RestartJob(id)
+		if err != nil {
+			return err
+		}
+
+		t.AddLine(fmt.Sprintf("%d", job.ID))
+	}
+	t.Print()
+	return nil
+}
+
+var JobStopCommand = cli.Command{
+	Name:      "stop",
+	Usage:     `Stop a job`,
+	ArgsUsage: `<job_id...>`,
+	Action:    jobStopAction,
+	Flags: []cli.Flag{
+		addressFlag,
+	},
+}
+
+func jobStopAction(ctx *cli.Context) error {
+	c := newClient(ctx)
+
+	if ctx.NArg() < 1 {
+		return fmt.Errorf("require one id at least")
+	}
+
+	t := newTabby()
+
+	args := ctx.Args()
+	for _, idstr := range args {
+		id, err := strconv.ParseUint(idstr, 10, 64)
+		if err != nil {
+			return err
+		}
+
+		job, err := c.StopJob(id)
 		if err != nil {
 			return err
 		}

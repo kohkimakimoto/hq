@@ -3,12 +3,12 @@ package server
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/hako/durafmt"
 	"github.com/kayac/go-katsubushi"
 	"github.com/kohkimakimoto/boltutil"
 	"github.com/kohkimakimoto/hq/hq"
 	"github.com/labstack/echo"
 	"github.com/pkg/errors"
-	"github.com/hako/durafmt"
 	"net/http"
 	"strconv"
 	"sync/atomic"
@@ -115,7 +115,8 @@ func RestartJobHandler(c echo.Context) error {
 	job.FinishedAt = nil
 	job.Failure = false
 	job.Success = false
-	job.StatusCode = 0
+	job.Canceled = false
+	job.StatusCode = nil
 	job.Err = ""
 	job.Output = ""
 
@@ -129,7 +130,33 @@ func RestartJobHandler(c echo.Context) error {
 }
 
 func StopJobHandler(c echo.Context) error {
-	return nil
+	app := c.(*AppContext).App()
+
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return NewErrorValidationFailed("The job id  must be a number but '" + c.Param("id") + "'.")
+	}
+
+	job := &hq.Job{}
+	if err := app.Store.FetchJob(id, job); err != nil {
+		if _, ok := err.(*ErrJobNotFound); ok {
+			return NewErrorValidationFailed(err.Error())
+		} else {
+			return err
+		}
+	}
+
+	if !job.Running && !job.Waiting {
+		return NewErrorValidationFailed(fmt.Sprintf("The job %d is not active", job.ID))
+	}
+
+	if err := app.QueueManager.CancelJob(job.ID); err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, &hq.StoppedJob{
+		ID: id,
+	})
 }
 
 func DeleteJobHandler(c echo.Context) error {

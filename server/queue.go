@@ -7,26 +7,26 @@ import (
 )
 
 type QueueManager struct {
-	App              *App
-	Queue            chan *hq.Job
-	Dispatchers      []*Dispatcher
-	WorkerWg         *sync.WaitGroup
-	WaitingJobs      map[uint64]*WaitingJob
-	waitingJobsMutex *sync.Mutex
-	RunningJobs      map[uint64]*RunningJob
-	runningJobsMutex *sync.Mutex
+	App         *App
+	Queue       chan *hq.Job
+	Dispatchers []*Dispatcher
+	WorkerWg    *sync.WaitGroup
+
+	// job status
+	statusMutex *sync.Mutex
+	WaitingJobs map[uint64]*WaitingJob
+	RunningJobs map[uint64]*RunningJob
 }
 
 func NewQueueManager(app *App) *QueueManager {
 	return &QueueManager{
-		App:              app,
-		Queue:            make(chan *hq.Job, app.Config.Queues),
-		Dispatchers:      []*Dispatcher{},
-		WorkerWg:         &sync.WaitGroup{},
-		WaitingJobs:      map[uint64]*WaitingJob{},
-		waitingJobsMutex: new(sync.Mutex),
-		RunningJobs:      map[uint64]*RunningJob{},
-		runningJobsMutex: new(sync.Mutex),
+		App:         app,
+		Queue:       make(chan *hq.Job, app.Config.Queues),
+		Dispatchers: []*Dispatcher{},
+		WorkerWg:    &sync.WaitGroup{},
+		statusMutex: new(sync.Mutex),
+		WaitingJobs: map[uint64]*WaitingJob{},
+		RunningJobs: map[uint64]*RunningJob{},
 	}
 }
 
@@ -57,39 +57,32 @@ func (m *QueueManager) EnqueueAsync(job *hq.Job) {
 }
 
 func (m *QueueManager) RegisterRunningJob(job *hq.Job, cancel context.CancelFunc) {
-	m.runningJobsMutex.Lock()
-	defer m.runningJobsMutex.Unlock()
+	m.statusMutex.Lock()
+	defer m.statusMutex.Unlock()
 
 	m.RunningJobs[job.ID] = &RunningJob{
 		Job:    job,
 		Cancel: cancel,
 	}
 
-	m.RemoveWaitingJob(job)
+	// remove waiting jobs
+	delete(m.WaitingJobs, job.ID)
 }
 
 func (m *QueueManager) RemoveRunningJob(job *hq.Job) {
-	m.runningJobsMutex.Lock()
-	defer m.runningJobsMutex.Unlock()
+	m.statusMutex.Lock()
+	defer m.statusMutex.Unlock()
 
 	delete(m.RunningJobs, job.ID)
 }
 
 func (m *QueueManager) RegisterWaitingJob(job *hq.Job) {
-	m.waitingJobsMutex.Lock()
-	defer m.waitingJobsMutex.Unlock()
+	m.statusMutex.Lock()
+	defer m.statusMutex.Unlock()
 
 	m.WaitingJobs[job.ID] = &WaitingJob{
-		Job:      job,
-		Canceled: false,
+		Job: job,
 	}
-}
-
-func (m *QueueManager) RemoveWaitingJob(job *hq.Job) {
-	m.waitingJobsMutex.Lock()
-	defer m.waitingJobsMutex.Unlock()
-
-	delete(m.WaitingJobs, job.ID)
 }
 
 func (m *QueueManager) UpdateJobStatus(job *hq.Job) *hq.Job {
@@ -102,9 +95,22 @@ func (m *QueueManager) UpdateJobStatus(job *hq.Job) *hq.Job {
 	return job
 }
 
+func (m *QueueManager) CancelJob(id uint64) error {
+	m.statusMutex.Lock()
+	defer m.statusMutex.Unlock()
+
+	if rJob, ok := m.RunningJobs[id]; ok {
+		rJob.Job.Canceled = true
+		rJob.Cancel()
+	} else if wJob, ok := m.WaitingJobs[id]; ok {
+		wJob.Job.Canceled = true
+	}
+
+	return nil
+}
+
 type WaitingJob struct {
-	Job      *hq.Job
-	Canceled bool
+	Job *hq.Job
 }
 
 type RunningJob struct {

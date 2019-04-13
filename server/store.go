@@ -68,6 +68,7 @@ func (s *Store) CreateJob(job *hq.Job) error {
 			FinishedAt: job.FinishedAt,
 			Failure:    job.Failure,
 			Success:    job.Success,
+			Canceled:   job.Canceled,
 			StatusCode: job.StatusCode,
 			Err:        job.Err,
 			Output:     job.Output,
@@ -103,6 +104,7 @@ func (s *Store) UpdateJob(job *hq.Job) error {
 			FinishedAt: job.FinishedAt,
 			Failure:    job.Failure,
 			Success:    job.Success,
+			Canceled:   job.Canceled,
 			StatusCode: job.StatusCode,
 			Err:        job.Err,
 			Output:     job.Output,
@@ -157,6 +159,7 @@ func (s *Store) FetchJob(id uint64, job *hq.Job) error {
 		job.Failure = out.Failure
 		job.FinishedAt = out.FinishedAt
 		job.Success = out.Success
+		job.Canceled = out.Canceled
 		job.StatusCode = out.StatusCode
 		job.Err = out.Err
 		job.Output = out.Output
@@ -298,6 +301,7 @@ func (s *Store) appendJob(v []byte, query *ListJobsQuery, ret *hq.JobList) error
 		FinishedAt: in.FinishedAt,
 		Failure:    in.Failure,
 		Success:    in.Success,
+		Canceled:   in.Canceled,
 		StatusCode: in.StatusCode,
 		Err:        in.Err,
 		Output:     in.Output,
