@@ -84,6 +84,36 @@ func GetJobHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, job)
 }
 
+func RestartJobHandler(c echo.Context) error {
+	app := c.(*AppContext).App()
+
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return NewErrorValidationFailed("The job id  must be a number but '" + c.Param("id") + "'.")
+	}
+
+	job := &hq.Job{}
+	if err := app.Store.FetchJob(id, job); err != nil {
+		if _, ok := err.(*ErrJobNotFound); ok {
+			return NewErrorValidationFailed(err.Error())
+		} else {
+			return err
+		}
+	}
+
+	if job.Running {
+		return NewErrorValidationFailed(fmt.Sprintf("The job %d is running now", job.ID))
+	}
+
+	if job.Waiting {
+		return NewErrorValidationFailed(fmt.Sprintf("The job %d is waiting now", job.ID))
+	}
+
+	app.QueueManager.EnqueueAsync(job)
+
+	return c.JSON(http.StatusOK, job)
+}
+
 func StopJobHandler(c echo.Context) error {
 	return nil
 }

@@ -210,6 +210,22 @@ func (c *Client) DeleteJob(id uint64) (*hq.DeletedJob, error) {
 	return ret, nil
 }
 
+func (c *Client) RestartJob(id uint64) (*hq.Job, error) {
+	resp, err := c.post(fmt.Sprintf("/job/%d/restart", id), nil)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	ret := &hq.Job{}
+	if err := respUnmarshal(resp, ret); err != nil {
+		return nil, err
+	}
+
+	return ret, nil
+}
+
+
 func (c *Client) ListJobs(payload *hq.ListJobsRequest) (*hq.JobList, error) {
 	var values url.Values = url.Values{}
 
