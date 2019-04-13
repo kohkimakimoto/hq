@@ -113,6 +113,16 @@ func (d *Dispatcher) work(job *hq.Job) {
 		logger.Debugf("job: %d closed", job.ID)
 	}()
 
+	// Truncate millisecond. It is compatible time for katsubushi ID generator time stamp.
+	now := time.Now().UTC().Truncate(time.Millisecond)
+
+	// update startedAt
+	job.StartedAt = &now
+
+	if e := store.UpdateJob(job); e != nil {
+		logger.Error(e)
+	}
+
 	// worker
 	err = d.runHttpWorker(job)
 }

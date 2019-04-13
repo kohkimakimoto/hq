@@ -225,7 +225,6 @@ func (c *Client) RestartJob(id uint64) (*hq.Job, error) {
 	return ret, nil
 }
 
-
 func (c *Client) ListJobs(payload *hq.ListJobsRequest) (*hq.JobList, error) {
 	var values url.Values = url.Values{}
 

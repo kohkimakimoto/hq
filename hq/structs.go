@@ -49,6 +49,7 @@ type Job struct {
 	Payload    json.RawMessage `json:"payload"`
 	Timeout    int64           `json:"timeout"`
 	CreatedAt  time.Time       `json:"createdAt"`
+	StartedAt  *time.Time      `json:"startedAt"`
 	FinishedAt *time.Time      `json:"finishedAt"`
 	Failure    bool            `json:"failure"`
 	Success    bool            `json:"success"`
@@ -93,6 +94,7 @@ type J struct {
 	Payload    json.RawMessage
 	Timeout    int64
 	CreatedAt  time.Time
+	StartedAt  *time.Time
 	FinishedAt *time.Time
 	Failure    bool
 	Success    bool

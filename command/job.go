@@ -172,7 +172,7 @@ func jobListAction(ctx *cli.Context) error {
 
 	if !quiet {
 		if detail {
-			t.AddLine("ID", "NAME", "COMMENT", "URL", "CREATED", "FINISHED", "DURATION", "STATUS")
+			t.AddLine("ID", "NAME", "COMMENT", "URL", "CREATED", "STARTED", "FINISHED", "DURATION", "STATUS")
 		} else {
 			t.AddLine("ID", "NAME", "COMMENT", "CREATED", "DURATION", "STATUS")
 		}
@@ -202,15 +202,21 @@ func jobListAction(ctx *cli.Context) error {
 
 		createdAt := humanize.Time(job.CreatedAt)
 		finishedAt := ""
+		startedAt := ""
 		duration := ""
+		if job.StartedAt != nil {
+			startedAt = humanize.Time(*job.StartedAt)
+		}
 		if job.FinishedAt != nil {
 			finishedAt = humanize.Time(*job.FinishedAt)
-			duration = fmt.Sprintf("%v", job.FinishedAt.Sub(job.CreatedAt))
+		}
+		if job.StartedAt != nil && job.FinishedAt != nil {
+			duration = fmt.Sprintf("%v", job.FinishedAt.Sub(*job.StartedAt))
 		}
 
 		comment := strings.Replace(job.Comment, "\n", " ", -1)
 		if detail {
-			t.AddLine(job.ID, job.Name, comment, job.URL, createdAt, finishedAt, duration, status)
+			t.AddLine(job.ID, job.Name, comment, job.URL, createdAt, startedAt, finishedAt, duration, status)
 		} else {
 			t.AddLine(job.ID, job.Name, comment, createdAt, duration, status)
 		}
