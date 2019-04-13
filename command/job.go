@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strconv"
+	"strings"
 )
 
 var JobCommand = cli.Command{
@@ -206,10 +207,11 @@ func jobListAction(ctx *cli.Context) error {
 			duration = fmt.Sprintf("%v", job.FinishedAt.Sub(job.CreatedAt))
 		}
 
+		comment := strings.Replace(job.Comment, "\n", " ", -1)
 		if detail {
-			t.AddLine(job.ID, job.Name, job.Comment, job.URL, createdAt, finishedAt, duration, status)
+			t.AddLine(job.ID, job.Name, comment, job.URL, createdAt, finishedAt, duration, status)
 		} else {
-			t.AddLine(job.ID, job.Name, job.Comment, createdAt, duration, status)
+			t.AddLine(job.ID, job.Name, comment, createdAt, duration, status)
 		}
 	}
 

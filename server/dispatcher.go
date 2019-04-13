@@ -94,7 +94,7 @@ func (d *Dispatcher) work(job *hq.Job) {
 
 			job.Success = false
 			job.Failure = true
-			job.Err = err.Error()
+			job.Err = fmt.Sprintf("%+v", err)
 		} else {
 			job.Success = true
 			job.Failure = false
