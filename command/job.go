@@ -115,7 +115,6 @@ var JobListCommand = cli.Command{
 		cli.IntFlag{
 			Name:  "limit, l",
 			Usage: "Only display `N` job(s).",
-			Value: 100,
 		},
 		cli.BoolFlag{
 			Name:  "detail, d",
@@ -196,6 +195,8 @@ func jobListAction(ctx *cli.Context) error {
 		case "waiting":
 			status = color.Reset(status)
 		case "canceled":
+			status = color.Grey(status)
+		case "canceling":
 			status = color.Grey(status)
 		case "unfinished":
 			status = color.Dim(status)

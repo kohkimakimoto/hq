@@ -197,10 +197,6 @@ func DeleteJobHandler(c echo.Context) error {
 	})
 }
 
-var (
-	ListJobsRequestDefaultLimit = 100
-)
-
 func ListJobsHandler(c echo.Context) error {
 	app := c.(*AppContext).App()
 
@@ -211,7 +207,7 @@ func ListJobsHandler(c echo.Context) error {
 	}
 
 	if req.Limit == 0 {
-		req.Limit = ListJobsRequestDefaultLimit
+		req.Limit = app.Config.JobListDefaultLimit
 	}
 
 	query := &ListJobsQuery{
@@ -247,19 +243,26 @@ func StatsHandler(c echo.Context) error {
 		numAllWorkers = numAllWorkers + atomic.LoadInt64(&d.NumWorkers)
 	}
 
+	jobStats, err := app.Store.JobsStats()
+	if err != nil {
+		return err
+	}
+
 	stats := &hq.Stats{
-		ServerId:        config.ServerId,
-		Queues:          config.Queues,
-		Dispatchers:     config.Dispatchers,
-		MaxWorkers:      config.MaxWorkers,
-		ShutdownTimeout: config.ShutdownTimeout,
-		JobLifetime:     config.JobLifetime,
-		JobLifetimeStr:  durafmt.Parse(time.Duration(time.Duration(config.JobLifetime) * time.Second)).String(),
-		QueueMax:        cap(queueManger.Queue),
-		QueueUsage:      len(queueManger.Queue),
-		NumWaitingJobs:  len(queueManger.WaitingJobs),
-		NumRunningJobs:  len(queueManger.RunningJobs),
-		NumWorkers:      numAllWorkers,
+		ServerId:            config.ServerId,
+		Queues:              config.Queues,
+		Dispatchers:         config.Dispatchers,
+		MaxWorkers:          config.MaxWorkers,
+		ShutdownTimeout:     config.ShutdownTimeout,
+		JobLifetime:         config.JobLifetime,
+		JobLifetimeStr:      durafmt.Parse(time.Duration(time.Duration(config.JobLifetime) * time.Second)).String(),
+		JobListDefaultLimit: config.JobListDefaultLimit,
+		QueueMax:            cap(queueManger.Queue),
+		QueueUsage:          len(queueManger.Queue),
+		NumWaitingJobs:      len(queueManger.WaitingJobs),
+		NumRunningJobs:      len(queueManger.RunningJobs),
+		NumWorkers:          numAllWorkers,
+		NumJobs:             jobStats.KeyN,
 	}
 
 	return c.JSON(http.StatusOK, stats)

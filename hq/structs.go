@@ -13,19 +13,21 @@ type Info struct {
 
 type Stats struct {
 	// config
-	ServerId        uint   `json:"serverId"`
-	Queues          int64  `json:"queues"`
-	Dispatchers     int64  `json:"dispatchers"`
-	MaxWorkers      int64  `json:"maxWorkers"`
-	ShutdownTimeout int64  `json:"shutdownTimeout"`
-	JobLifetime     int64  `json:"jobLifetime"`
-	JobLifetimeStr  string `json:"jobLifetime_str"`
+	ServerId            uint   `json:"serverId"`
+	Queues              int64  `json:"queues"`
+	Dispatchers         int64  `json:"dispatchers"`
+	MaxWorkers          int64  `json:"maxWorkers"`
+	ShutdownTimeout     int64  `json:"shutdownTimeout"`
+	JobLifetime         int64  `json:"jobLifetime"`
+	JobLifetimeStr      string `json:"jobLifetimeStr"`
+	JobListDefaultLimit int    `json:"jobListDefaultLimit"`
 	// queue stats
 	QueueMax       int   `json:"queueMax"`
 	QueueUsage     int   `json:"queueUsage"`
 	NumWaitingJobs int   `json:"numWaitingJobs"`
 	NumRunningJobs int   `json:"numRunningJobs"`
 	NumWorkers     int64 `json:"numWorkers"`
+	NumJobs        int   `json:"numJobs"`
 }
 
 type CreateJobRequest struct {
@@ -67,12 +69,20 @@ type Job struct {
 func (j *Job) Status() string {
 	if j.Failure {
 		return "failure"
+	} else if j.Running {
+		if j.Canceled {
+			return "canceling"
+		} else {
+			return "running"
+		}
+	} else if j.Waiting {
+		if j.Canceled {
+			return "canceling"
+		} else {
+			return "waiting"
+		}
 	} else if j.Canceled {
 		return "canceled"
-	} else if j.Running {
-		return "running"
-	} else if j.Waiting {
-		return "waiting"
 	} else if j.Success {
 		return "success"
 	} else if j.FinishedAt == nil {

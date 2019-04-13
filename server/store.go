@@ -170,6 +170,26 @@ func (s *Store) FetchJob(id uint64, job *hq.Job) error {
 	})
 }
 
+func (s *Store) JobsStats() (*bolt.BucketStats, error) {
+	var ret *bolt.BucketStats
+	err := s.db.View(func(tx *bolt.Tx) error {
+		bucket, err := boltutil.Bucket(tx, []interface{}{BucketNameForJobs})
+		if err != nil {
+			return err
+		}
+
+		stats := bucket.Stats()
+		ret = &stats
+
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return ret, nil
+}
+
 type ListJobsQuery struct {
 	Name    string
 	Begin   *uint64
