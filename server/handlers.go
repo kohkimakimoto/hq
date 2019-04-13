@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"github.com/kayac/go-katsubushi"
 	"github.com/kohkimakimoto/boltutil"
+	"github.com/kohkimakimoto/hq/hq"
+	"github.com/labstack/echo"
 	"github.com/pkg/errors"
 	"net/http"
 	"strconv"
 	"sync/atomic"
-	"github.com/kohkimakimoto/hq/hq"
-	"github.com/labstack/echo"
 )
 
 func InfoHandler(c echo.Context) error {
@@ -112,7 +112,7 @@ func DeleteJobHandler(c echo.Context) error {
 	if job.Waiting {
 		return NewErrorValidationFailed(fmt.Sprintf("The job %d is waiting now", job.ID))
 	}
-	
+
 	if err := app.Store.DeleteJob(id); err != nil {
 		if _, ok := err.(*ErrJobNotFound); ok {
 			return NewErrorValidationFailed(err.Error())
@@ -185,6 +185,8 @@ func StatsHandler(c echo.Context) error {
 		JobLifetime:     config.JobLifetime,
 		QueueMax:        cap(queueManger.Queue),
 		QueueUsage:      len(queueManger.Queue),
+		NumWaitingJobs:  len(queueManger.WaitingJobs),
+		NumRunningJobs:  len(queueManger.RunningJobs),
 		NumWorkers:      numAllWorkers,
 	}
 

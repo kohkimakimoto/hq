@@ -11,9 +11,9 @@ type QueueManager struct {
 	Queue            chan *hq.Job
 	Dispatchers      []*Dispatcher
 	WorkerWg         *sync.WaitGroup
-	waitingJobs      map[uint64]*WaitingJob
+	WaitingJobs      map[uint64]*WaitingJob
 	waitingJobsMutex *sync.Mutex
-	runningJobs      map[uint64]*RunningJob
+	RunningJobs      map[uint64]*RunningJob
 	runningJobsMutex *sync.Mutex
 }
 
@@ -23,9 +23,9 @@ func NewQueueManager(app *App) *QueueManager {
 		Queue:            make(chan *hq.Job, app.Config.Queues),
 		Dispatchers:      []*Dispatcher{},
 		WorkerWg:         &sync.WaitGroup{},
-		waitingJobs:      map[uint64]*WaitingJob{},
+		WaitingJobs:      map[uint64]*WaitingJob{},
 		waitingJobsMutex: new(sync.Mutex),
-		runningJobs:      map[uint64]*RunningJob{},
+		RunningJobs:      map[uint64]*RunningJob{},
 		runningJobsMutex: new(sync.Mutex),
 	}
 }
@@ -60,7 +60,7 @@ func (m *QueueManager) RegisterRunningJob(job *hq.Job, cancel context.CancelFunc
 	m.runningJobsMutex.Lock()
 	defer m.runningJobsMutex.Unlock()
 
-	m.runningJobs[job.ID] = &RunningJob{
+	m.RunningJobs[job.ID] = &RunningJob{
 		Job:    job,
 		Cancel: cancel,
 	}
@@ -72,15 +72,15 @@ func (m *QueueManager) RemoveRunningJob(job *hq.Job) {
 	m.runningJobsMutex.Lock()
 	defer m.runningJobsMutex.Unlock()
 
-	delete(m.runningJobs, job.ID)
+	delete(m.RunningJobs, job.ID)
 }
 
 func (m *QueueManager) RegisterWaitingJob(job *hq.Job) {
 	m.waitingJobsMutex.Lock()
 	defer m.waitingJobsMutex.Unlock()
 
-	m.waitingJobs[job.ID] = &WaitingJob{
-		Job:    job,
+	m.WaitingJobs[job.ID] = &WaitingJob{
+		Job:      job,
 		Canceled: false,
 	}
 }
@@ -89,13 +89,13 @@ func (m *QueueManager) RemoveWaitingJob(job *hq.Job) {
 	m.waitingJobsMutex.Lock()
 	defer m.waitingJobsMutex.Unlock()
 
-	delete(m.waitingJobs, job.ID)
+	delete(m.WaitingJobs, job.ID)
 }
 
 func (m *QueueManager) UpdateJobStatus(job *hq.Job) *hq.Job {
-	if _, ok := m.runningJobs[job.ID]; ok {
+	if _, ok := m.RunningJobs[job.ID]; ok {
 		job.Running = true
-	} else if _, ok := m.waitingJobs[job.ID]; ok {
+	} else if _, ok := m.WaitingJobs[job.ID]; ok {
 		job.Waiting = true
 	}
 
@@ -103,7 +103,7 @@ func (m *QueueManager) UpdateJobStatus(job *hq.Job) *hq.Job {
 }
 
 type WaitingJob struct {
-	Job    *hq.Job
+	Job      *hq.Job
 	Canceled bool
 }
 

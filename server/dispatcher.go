@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/kohkimakimoto/hq/hq"
+	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
 	"sync/atomic"
@@ -72,7 +73,6 @@ func (d *Dispatcher) dispatch(job *hq.Job) {
 }
 
 func (d *Dispatcher) work(job *hq.Job) {
-	manager := d.manager
 	app := d.manager.App
 	logger := app.Logger
 	store := app.Store
@@ -90,7 +90,7 @@ func (d *Dispatcher) work(job *hq.Job) {
 		// Update result status (success or failure).
 		// If the evaluator has an error, write it to the output buf.
 		if err != nil {
-			logger.Errorf("worker error: %v", err)
+			logger.Errorf("worker error: %+v", err)
 
 			job.Success = false
 			job.Failure = true
@@ -114,13 +114,20 @@ func (d *Dispatcher) work(job *hq.Job) {
 	}()
 
 	// worker
+	err = d.runHttpWorker(job)
+}
+
+func (d *Dispatcher) runHttpWorker(job *hq.Job) error {
+	manager := d.manager
+
+	// worker
 	req, err := http.NewRequest(
 		"POST",
 		job.URL,
 		bytes.NewReader(job.Payload),
 	)
 	if err != nil {
-		return
+		return errors.Wrap(err, "failed to create new request")
 	}
 
 	// context
@@ -134,7 +141,7 @@ func (d *Dispatcher) work(job *hq.Job) {
 	// headers
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("User-Agent", WorkerDefaultUserAgent)
-	req.Header.Add("X-Hq-Job", fmt.Sprintf("%d", job.ID))
+	req.Header.Add("X-Hq-Job-Id", fmt.Sprintf("%d", job.ID))
 
 	// http client
 	client := &http.Client{
@@ -143,19 +150,20 @@ func (d *Dispatcher) work(job *hq.Job) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return
+		return errors.Wrap(err, "failed to do http request")
 	}
 	defer resp.Body.Close()
 
 	job.StatusCode = resp.StatusCode
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return
+		return errors.Wrap(err, "failed to read http response body")
 	}
 	job.Output = string(body)
 
 	if resp.StatusCode != http.StatusOK {
-		err = fmt.Errorf(http.StatusText(resp.StatusCode))
-		return
+		return fmt.Errorf(http.StatusText(resp.StatusCode))
 	}
+
+	return nil
 }

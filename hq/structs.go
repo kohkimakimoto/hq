@@ -19,9 +19,11 @@ type Stats struct {
 	ShutdownTimeout int64 `json:"shutdownTimeout"`
 	JobLifetime     int64 `json:"jobLifetime"`
 	// queue stats
-	QueueMax   int   `json:"queueMax"`
-	QueueUsage int   `json:"queueUsage"`
-	NumWorkers int64 `json:"numWorkers"`
+	QueueMax       int   `json:"queueMax"`
+	QueueUsage     int   `json:"queueUsage"`
+	NumWaitingJobs int   `json:"numWaitingJobs"`
+	NumRunningJobs int   `json:"numRunningJobs"`
+	NumWorkers     int64 `json:"numWorkers"`
 }
 
 type CreateJobRequest struct {
@@ -54,8 +56,8 @@ type Job struct {
 	Err        string          `json:"err"`
 	Output     string          `json:"output"`
 	// status properties.
-	Waiting    bool            `json:"waiting"`
-	Running    bool            `json:"running"`
+	Waiting bool `json:"waiting"`
+	Running bool `json:"running"`
 }
 
 func (j *Job) Status() string {
