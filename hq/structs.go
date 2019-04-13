@@ -2,6 +2,7 @@ package hq
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -50,12 +51,12 @@ type Job struct {
 	Payload    json.RawMessage `json:"payload"`
 	Timeout    int64           `json:"timeout"`
 	CreatedAt  time.Time       `json:"createdAt"`
-	StartedAt  *time.Time      `json:"startedAt,omitempty"`
-	FinishedAt *time.Time      `json:"finishedAt,omitempty"`
+	StartedAt  *time.Time      `json:"startedAt"`
+	FinishedAt *time.Time      `json:"finishedAt"`
 	Failure    bool            `json:"failure"`
 	Success    bool            `json:"success"`
 	Canceled   bool            `json:"canceled"`
-	StatusCode *int            `json:"statusCode,omitempty"`
+	StatusCode *int            `json:"statusCode"`
 	Err        string          `json:"err"`
 	Output     string          `json:"output"`
 	// status properties.
@@ -79,6 +80,31 @@ func (j *Job) Status() string {
 	} else {
 		return "unknown"
 	}
+}
+
+func (j *Job) MarshalJSON() ([]byte, error) {
+	jobMap := map[string]interface{}{
+		"id":         fmt.Sprintf("%d", j.ID),
+		"name":       j.Name,
+		"comment":    j.Comment,
+		"url":        j.URL,
+		"payload":    j.Payload,
+		"timeout":    j.Timeout,
+		"createdAt":  j.CreatedAt,
+		"startedAt":  j.StartedAt,
+		"finishedAt": j.StartedAt,
+		"failure":    j.Failure,
+		"success":    j.Success,
+		"canceled":   j.Canceled,
+		"statusCode": j.StatusCode,
+		"err":        j.Err,
+		"output":     j.Output,
+		"waiting":    j.Waiting,
+		"running":    j.Running,
+		"status":     j.Status(),
+	}
+
+	return json.Marshal(jobMap)
 }
 
 type DeletedJob struct {
