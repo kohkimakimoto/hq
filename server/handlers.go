@@ -109,12 +109,18 @@ func RestartJobHandler(c echo.Context) error {
 		return NewErrorValidationFailed(fmt.Sprintf("The job %d is waiting now", job.ID))
 	}
 
-	job.FinishedAt = nil
 	job.StartedAt = nil
+	job.FinishedAt = nil
+	job.Failure = false
+	job.Success = false
+	job.StatusCode = 0
+	job.Err = ""
+	job.Output = ""
+
 	if err := app.Store.UpdateJob(job); err != nil {
 		return err
 	}
-	
+
 	app.QueueManager.EnqueueAsync(job)
 
 	return c.JSON(http.StatusOK, job)
