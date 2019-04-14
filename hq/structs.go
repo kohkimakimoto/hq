@@ -67,9 +67,7 @@ type Job struct {
 }
 
 func (j *Job) Status() string {
-	if j.Failure {
-		return "failure"
-	} else if j.Running {
+	if j.Running {
 		if j.Canceled {
 			return "canceling"
 		} else {
@@ -81,6 +79,8 @@ func (j *Job) Status() string {
 		} else {
 			return "waiting"
 		}
+	} else if j.Failure {
+		return "failure"
 	} else if j.Canceled {
 		return "canceled"
 	} else if j.Success {

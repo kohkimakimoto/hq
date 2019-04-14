@@ -2,7 +2,7 @@ Name:           %{_product_name}
 Version:        %{_product_version}
 
 Release:        1.el%{_rhel_version}
-Summary:        HTTP Job Queue Engine
+Summary:        Simplistic job queue engine
 Group:          Development/Tools
 License:        MIT
 Source0:        %{name}_linux_amd64.zip

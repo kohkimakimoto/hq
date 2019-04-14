@@ -24,7 +24,7 @@ func realMain() (status int) {
 	app.Name = hq.Name
 	app.HelpName = hq.DisplayName
 	app.Version = hq.Version + " (" + hq.CommitHash + ")"
-	app.Usage = "Simplistic Job Queue Engine"
+	app.Usage = "Simplistic job queue engine"
 	app.Commands = command.Commands
 
 	if err := app.Run(os.Args); err != nil {
