@@ -215,6 +215,7 @@ func ListJobsHandler(c echo.Context) error {
 		Begin:   req.Begin,
 		Reverse: req.Reverse,
 		Limit:   req.Limit,
+		Status:  req.Status,
 	}
 
 	list := &hq.JobList{

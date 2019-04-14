@@ -102,7 +102,7 @@ var JobListCommand = cli.Command{
 		},
 		cli.StringFlag{
 			Name:  "name, n",
-			Usage: "Regular expression `STRING` to filter the jobs with job's name",
+			Usage: "Specifies a regular expression `STRING` to filter the jobs with job's name",
 		},
 		cli.BoolFlag{
 			Name:  "reverse, r",
@@ -119,6 +119,10 @@ var JobListCommand = cli.Command{
 		cli.BoolFlag{
 			Name:  "detail, d",
 			Usage: "Display detail info.",
+		},
+		cli.StringFlag{
+			Name:  "status, s",
+			Usage: "Specifies `STATUS` to filter the jobs with job's status ('running|waiting|canceling|failure|success|canceled|unfinished|unknown')",
 		},
 	},
 }
@@ -141,6 +145,7 @@ func jobListAction(ctx *cli.Context) error {
 			Name:    ctx.String("name"),
 			Reverse: ctx.Bool("reverse"),
 			Limit:   ctx.Int("limit"),
+			Status:  ctx.String("status"),
 		}
 
 		if ctx.Uint64("begin") != 0 {

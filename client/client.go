@@ -259,6 +259,10 @@ func (c *Client) ListJobs(payload *hq.ListJobsRequest) (*hq.JobList, error) {
 		values.Add("limit", fmt.Sprintf("%d", payload.Limit))
 	}
 
+	if payload.Status != "" {
+		values.Add("status", payload.Status)
+	}
+
 	resp, err := c.get("/job", values)
 	if err != nil {
 		return nil, err

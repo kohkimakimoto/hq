@@ -195,6 +195,7 @@ type ListJobsQuery struct {
 	Begin   *uint64
 	Reverse bool
 	Limit   int
+	Status  string
 }
 
 func (s *Store) ListJobs(query *ListJobsQuery, ret *hq.JobList) error {
@@ -329,21 +330,26 @@ func (s *Store) appendJob(v []byte, query *ListJobsQuery, ret *hq.JobList) error
 
 	job = qm.UpdateJobStatus(job)
 
-	if query.Name == "" {
-		ret.Jobs = append(ret.Jobs, job)
-		return nil
-	}
-
 	// filter job name
-	r, err := regexp.Compile(query.Name)
-	if err != nil {
-		return err
+	if query.Name != "" {
+		r, err := regexp.Compile(query.Name)
+		if err != nil {
+			return err
+		}
+
+		if !r.MatchString(job.Name) {
+			return nil
+		}
+
 	}
 
-	if r.MatchString(job.Name) {
-		ret.Jobs = append(ret.Jobs, job)
-		return nil
+	if query.Status != "" {
+		if job.Status() != query.Status {
+			return nil
+		}
 	}
+
+	ret.Jobs = append(ret.Jobs, job)
 
 	return nil
 }

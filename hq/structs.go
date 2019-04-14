@@ -43,6 +43,7 @@ type ListJobsRequest struct {
 	Begin   *uint64 `query:"begin"`
 	Reverse bool    `query:"reverse"`
 	Limit   int     `query:"limit"`
+	Status  string  `query:"status"`
 }
 
 type Job struct {
@@ -81,10 +82,10 @@ func (j *Job) Status() string {
 		}
 	} else if j.Failure {
 		return "failure"
-	} else if j.Canceled {
-		return "canceled"
 	} else if j.Success {
 		return "success"
+	} else if j.Canceled {
+		return "canceled"
 	} else if j.FinishedAt == nil {
 		return "unfinished"
 	} else {
@@ -102,7 +103,7 @@ func (j *Job) MarshalJSON() ([]byte, error) {
 		"timeout":    j.Timeout,
 		"createdAt":  j.CreatedAt,
 		"startedAt":  j.StartedAt,
-		"finishedAt": j.StartedAt,
+		"finishedAt": j.FinishedAt,
 		"failure":    j.Failure,
 		"success":    j.Success,
 		"canceled":   j.Canceled,
