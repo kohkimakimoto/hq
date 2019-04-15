@@ -12,6 +12,9 @@ type Info struct {
 }
 
 type Stats struct {
+	// hq info
+	Version    string `json:"version"`
+	CommitHash string `json:"commitHash"`
 	// config
 	ServerId            uint   `json:"serverId"`
 	Queues              int64  `json:"queues"`

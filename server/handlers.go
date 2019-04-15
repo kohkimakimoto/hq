@@ -250,6 +250,8 @@ func StatsHandler(c echo.Context) error {
 	}
 
 	stats := &hq.Stats{
+		Version:             hq.Version,
+		CommitHash:          hq.CommitHash,
 		ServerId:            config.ServerId,
 		Queues:              config.Queues,
 		Dispatchers:         config.Dispatchers,

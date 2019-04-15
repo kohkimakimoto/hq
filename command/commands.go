@@ -11,9 +11,8 @@ import (
 
 // Command set
 var Commands = []cli.Command{
-	InfoCommand,
-	ServeCommand,
 	JobCommand,
+	ServeCommand,
 	StatsCommand,
 }
 
