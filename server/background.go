@@ -24,9 +24,15 @@ func (bg *Background) Start() {
 	logger := bg.app.Logger
 	logger.Debug("Starting background.")
 
+	config := bg.app.Config
+
 	app := bg.app
-	// bg.cron.AddFunc("* * * * * *", cleanupJobs(app))
-	bg.cron.AddFunc("@hourly", cleanupJobs(app))
+
+	if config.JobLifetime > 0 {
+		bg.cron.AddFunc("* * * * * *", cleanupJobs(app))
+		bg.cron.AddFunc("@hourly", cleanupJobs(app))
+	}
+
 	bg.cron.Start()
 }
 
@@ -37,19 +43,26 @@ func (bg *Background) Close() {
 }
 
 func cleanupJobs(app *App) func() {
-	mutex := new(sync.Mutex)
 	logger := app.Logger
 	config := app.Config
 
+	running := false
+	mutex := new(sync.Mutex)
+
 	return func() {
-		if config.JobLifetime <= 0 {
+		logger.Debug("Run the background task 'cleanupJobs'")
+		if running {
+			logger.Warn("'cleanupJobs' has been already running. skip it.")
 			return
 		}
 
 		mutex.Lock()
-		defer mutex.Unlock()
+		running = true
+		mutex.Unlock()
 
-		logger.Debug("Run the background task to clean up jobs")
+		defer func() {
+			running = false
+		}()
 
 		tt := time.Now().Add(time.Duration(-1*config.JobLifetime) * time.Second)
 		begin := katsubushi.ToID(tt)
@@ -73,12 +86,26 @@ func cleanupJobs(app *App) func() {
 
 		for _, job := range list.Jobs {
 			// delete
-			if job.FinishedAt != nil {
-				if err := app.Store.DeleteJob(job.ID); err != nil {
-					logger.Error(err)
-				}
-				logger.Debugf("deleted job: %d", job.ID)
+			if job.Running {
+				logger.Debugf("job %d is running. skip it", job.ID)
+				continue
 			}
+
+			if job.Waiting {
+				logger.Debugf("job %d is waiting. skip it", job.ID)
+				continue
+			}
+
+			if job.FinishedAt == nil {
+				logger.Debugf("job %d is not finished. skip it", job.ID)
+				continue
+			}
+
+			if err := app.Store.DeleteJob(job.ID); err != nil {
+				logger.Error(err)
+			}
+			logger.Debugf("deleted job: %d", job.ID)
+
 		}
 	}
 }
