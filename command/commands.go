@@ -11,9 +11,14 @@ import (
 
 // Command set
 var Commands = []cli.Command{
-	JobCommand,
+	DeleteCommand,
+	InfoCommand,
+	ListCommand,
+	RestartCommand,
+	RunCommand,
 	ServeCommand,
 	StatsCommand,
+	StopCommand,
 }
 
 // Flags
