@@ -75,7 +75,7 @@ func newTabby() *tabby.Tabby {
 }
 
 func init() {
-	cli.AppHelpTemplate = `Usage: {{.Name}}{{if .VisibleFlags}} [<options...>]{{end}} <command>
+	cli.AppHelpTemplate = `Usage: {{.HelpName}}{{if .VisibleFlags}} [<options...>]{{end}} <command>
 
 {{if .Usage}}{{.Usage}}{{end}}{{if .Version}}
 version {{.Version}}{{end}}{{if .Flags}}

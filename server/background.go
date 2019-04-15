@@ -29,7 +29,7 @@ func (bg *Background) Start() {
 	app := bg.app
 
 	if config.JobLifetime > 0 {
-		bg.cron.AddFunc("* * * * * *", cleanupJobs(app))
+		// bg.cron.AddFunc("* * * * * *", cleanupJobs(app))
 		bg.cron.AddFunc("@hourly", cleanupJobs(app))
 	}
 

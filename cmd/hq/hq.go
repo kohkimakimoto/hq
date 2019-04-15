@@ -22,7 +22,7 @@ func realMain() (status int) {
 
 	app := cli.NewApp()
 	app.Name = hq.Name
-	app.HelpName = hq.DisplayName
+	app.HelpName = hq.Name
 	app.Version = hq.Version + " (" + hq.CommitHash + ")"
 	app.Usage = "Simplistic job queue engine"
 	app.Commands = command.Commands
