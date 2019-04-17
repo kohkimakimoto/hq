@@ -54,6 +54,7 @@ func CreateJobHandler(c echo.Context) error {
 	job.Comment = req.Comment
 	job.URL = req.URL
 	job.Payload = req.Payload
+	job.Headers = req.Headers
 	job.Timeout = req.Timeout
 	job.CreatedAt = katsubushi.ToTime(id)
 
