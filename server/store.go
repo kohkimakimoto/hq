@@ -46,8 +46,6 @@ func (s *Store) Init() error {
 		}
 		return nil
 	})
-
-	return nil
 }
 
 func (s *Store) CreateJob(job *hq.Job) error {
@@ -62,6 +60,7 @@ func (s *Store) CreateJob(job *hq.Job) error {
 			Comment:    job.Comment,
 			URL:        job.URL,
 			Payload:    job.Payload,
+			Headers:    job.Headers,
 			Timeout:    job.Timeout,
 			StartedAt:  job.StartedAt,
 			CreatedAt:  job.CreatedAt,
@@ -98,6 +97,7 @@ func (s *Store) UpdateJob(job *hq.Job) error {
 			Comment:    job.Comment,
 			URL:        job.URL,
 			Payload:    job.Payload,
+			Headers:    job.Headers,
 			Timeout:    job.Timeout,
 			CreatedAt:  job.CreatedAt,
 			StartedAt:  job.StartedAt,
@@ -153,6 +153,7 @@ func (s *Store) FetchJob(id uint64, job *hq.Job) error {
 		job.Comment = out.Comment
 		job.URL = out.URL
 		job.Payload = out.Payload
+		job.Headers = out.Headers
 		job.Timeout = out.Timeout
 		job.CreatedAt = out.CreatedAt
 		job.StartedAt = out.StartedAt
@@ -316,6 +317,7 @@ func (s *Store) appendJob(v []byte, query *ListJobsQuery, ret *hq.JobList) error
 		Comment:    in.Comment,
 		URL:        in.URL,
 		Payload:    in.Payload,
+		Headers:    in.Headers,
 		Timeout:    in.Timeout,
 		CreatedAt:  in.CreatedAt,
 		StartedAt:  in.StartedAt,

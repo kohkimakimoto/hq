@@ -151,10 +151,15 @@ func (d *Dispatcher) runHttpWorker(job *hq.Job, ctx context.Context) error {
 	// set context
 	req = req.WithContext(ctx)
 
-	// headers
+	// common headers
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("User-Agent", WorkerDefaultUserAgent)
 	req.Header.Add("X-Hq-Job-Id", fmt.Sprintf("%d", job.ID))
+
+	// job specific headers
+	for k, v := range job.Headers {
+		req.Header.Add(k, v)
+	}
 
 	// http client
 	client := &http.Client{

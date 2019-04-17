@@ -34,6 +34,14 @@
   version = "v1.1.0"
 
 [[projects]]
+  digest = "1:9716907acd489a06fe450961716ab9f8a440c20d0a9189a3af73754ab6d211a9"
+  name = "github.com/client9/reopen"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "1530c81a31162bebce8a37bca43d56fb2ff6d8b1"
+  version = "v1.0.0"
+
+[[projects]]
   digest = "1:76dc72490af7174349349838f2fe118996381b31ea83243812a97e5a0fd5ed55"
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
@@ -197,11 +205,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:3e01c69b34e7c3fa4b7a118ca95a6beaecea00f7f4fb701545d83eacd3badb3c"
+  digest = "1:28d862f4f9bf2d1976d1d320481bff661b7565eb876d4df2a981f79e7f40e4cd"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "97732733099d6a942a73b889770774366de963ed"
+  revision = "12500544f89f9420afe9529ba8940bf72d294972"
 
 [solve-meta]
   analyzer-name = "dep"
@@ -210,6 +218,7 @@
     "github.com/BurntSushi/toml",
     "github.com/boltdb/bolt",
     "github.com/cheynewallace/tabby",
+    "github.com/client9/reopen",
     "github.com/dustin/go-humanize",
     "github.com/hako/durafmt",
     "github.com/kayac/go-katsubushi",

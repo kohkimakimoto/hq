@@ -2,7 +2,9 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"github.com/boltdb/bolt"
+	"github.com/client9/reopen"
 	"github.com/kayac/go-katsubushi"
 	"github.com/kohkimakimoto/hq/hq"
 	"github.com/kohkimakimoto/hq/util/logutil"
@@ -22,14 +24,16 @@ type App struct {
 	Config *Config
 	// Logger
 	Logger echo.Logger
-	// LogFile is log file is used by Logger.
-	Logfile *os.File
+	// LogfileWriter
+	LogfileWriter reopen.Writer
 	// LogLevel
 	LogLevel log.Lvl
 	// Echo web framework
 	Echo *echo.Echo
 	// AccessLog
 	AccessLogFile *os.File
+	// AccessLogFile
+	AccessLogFileWriter reopen.Writer
 	// DataDir
 	DataDir string
 	// UseTempDataDir
@@ -56,10 +60,9 @@ func NewApp(config ...*Config) *App {
 
 	// create app instance
 	app := &App{
-		Config:        c,
-		Echo:          echo.New(),
-		AccessLogFile: os.Stdout,
-		DataDir:       c.DataDir,
+		Config:  c,
+		Echo:    echo.New(),
+		DataDir: c.DataDir,
 	}
 
 	app.Echo.HideBanner = true
@@ -158,13 +161,25 @@ func (app *App) Open() error {
 
 func (app *App) openLogfile() error {
 	if app.Config.Logfile != "" {
-		f, err := os.OpenFile(app.Config.Logfile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		f, err := reopen.NewFileWriterMode(app.Config.Logfile, 0644)
 		if err != nil {
 			return err
 		}
 
 		app.Logger.SetOutput(f)
-		app.Logfile = f
+		app.LogfileWriter = f
+	} else {
+		app.LogfileWriter = reopen.Stdout
+	}
+
+	if app.Config.AccessLogfile != "" {
+		f, err := reopen.NewFileWriterMode(app.Config.AccessLogfile, 0644)
+		if err != nil {
+			return err
+		}
+		app.AccessLogFileWriter = f
+	} else {
+		app.AccessLogFileWriter = reopen.Stdout
 	}
 
 	return nil
@@ -177,6 +192,10 @@ func (app *App) BoltDBPath() string {
 func (app *App) ListenAndServe() error {
 	e := app.Echo
 
+	// handler for reloading
+	go app.sighupHandler()
+
+	// start server.
 	go func() {
 		if err := e.Start(app.Config.Addr); err != nil {
 			e.Logger.Info(err)
@@ -189,7 +208,8 @@ func (app *App) ListenAndServe() error {
 	// Wait for interrupt signal to gracefully shutdown the server with a timeout of 5 seconds.
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	<-quit
+	sig := <-quit
+	app.Logger.Infof("Received signal: %v", sig)
 	timeout := time.Duration(app.Config.ShutdownTimeout) * time.Second
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
@@ -206,6 +226,28 @@ func (app *App) ListenAndServe() error {
 	app.Logger.Infof("Successfully shutdown")
 
 	return nil
+}
+
+func (app *App) sighupHandler() {
+	reload := make(chan os.Signal, 1)
+	signal.Notify(reload, syscall.SIGHUP)
+
+	logger := app.Logger
+
+	for {
+		select {
+		case sig := <-reload:
+			logger.Infof("Received signal to reopen log: %v", sig)
+
+			if err := app.LogfileWriter.Reopen(); err != nil {
+				logger.Error(fmt.Sprintf("failed to reopen log: %v", err))
+			}
+
+			if err := app.AccessLogFileWriter.Reopen(); err != nil {
+				logger.Error(fmt.Sprintf("failed to reopen access log: %v", err))
+			}
+		}
+	}
 }
 
 func (app *App) Close() error {

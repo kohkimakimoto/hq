@@ -34,11 +34,12 @@ type Stats struct {
 }
 
 type CreateJobRequest struct {
-	Name    string          `json:"name" form:"name" query:"name"`
-	Comment string          `json:"comment" form:"comment" query:"comment"`
-	URL     string          `json:"url" form:"url" query:"url"`
-	Payload json.RawMessage `json:"payload" form:"payload" query:"payload"`
-	Timeout int64           `json:"timeout" form:"timeout" query:"timeout"`
+	Name    string            `json:"name" form:"name" query:"name"`
+	Comment string            `json:"comment" form:"comment" query:"comment"`
+	URL     string            `json:"url" form:"url" query:"url"`
+	Payload json.RawMessage   `json:"payload" form:"payload" query:"payload"`
+	Headers map[string]string `json:"headers" form:"headers" query:"headers"`
+	Timeout int64             `json:"timeout" form:"timeout" query:"timeout"`
 }
 
 type ListJobsRequest struct {
@@ -50,21 +51,22 @@ type ListJobsRequest struct {
 }
 
 type Job struct {
-	ID         uint64          `json:"id,string"`
-	Name       string          `json:"name"`
-	Comment    string          `json:"comment"`
-	URL        string          `json:"url"`
-	Payload    json.RawMessage `json:"payload"`
-	Timeout    int64           `json:"timeout"`
-	CreatedAt  time.Time       `json:"createdAt"`
-	StartedAt  *time.Time      `json:"startedAt"`
-	FinishedAt *time.Time      `json:"finishedAt"`
-	Failure    bool            `json:"failure"`
-	Success    bool            `json:"success"`
-	Canceled   bool            `json:"canceled"`
-	StatusCode *int            `json:"statusCode"`
-	Err        string          `json:"err"`
-	Output     string          `json:"output"`
+	ID         uint64            `json:"id,string"`
+	Name       string            `json:"name"`
+	Comment    string            `json:"comment"`
+	URL        string            `json:"url"`
+	Payload    json.RawMessage   `json:"payload"`
+	Headers    map[string]string `json:"headers"`
+	Timeout    int64             `json:"timeout"`
+	CreatedAt  time.Time         `json:"createdAt"`
+	StartedAt  *time.Time        `json:"startedAt"`
+	FinishedAt *time.Time        `json:"finishedAt"`
+	Failure    bool              `json:"failure"`
+	Success    bool              `json:"success"`
+	Canceled   bool              `json:"canceled"`
+	StatusCode *int              `json:"statusCode"`
+	Err        string            `json:"err"`
+	Output     string            `json:"output"`
 	// status properties.
 	Waiting bool `json:"waiting"`
 	Running bool `json:"running"`
@@ -103,6 +105,7 @@ func (j *Job) MarshalJSON() ([]byte, error) {
 		"comment":    j.Comment,
 		"url":        j.URL,
 		"payload":    j.Payload,
+		"headers":    j.Headers,
 		"timeout":    j.Timeout,
 		"createdAt":  j.CreatedAt,
 		"startedAt":  j.StartedAt,
@@ -136,6 +139,7 @@ type J struct {
 	Comment    string
 	URL        string
 	Payload    json.RawMessage
+	Headers    map[string]string
 	Timeout    int64
 	CreatedAt  time.Time
 	StartedAt  *time.Time

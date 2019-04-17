@@ -60,23 +60,12 @@ func loadServerConfigFiles(ctx *cli.Context, config *server.Config) error {
 }
 
 func configureServer(app *server.App) error {
-	// open resources such as database, temporary directory, etc.
+	// open resources such as log files, database, temporary directory, etc.
 	if err := app.Open(); err != nil {
 		return err
 	}
 
 	e := app.Echo
-	c := app.Config
-
-	// open access log file
-	accessLogfile := os.Stdout
-	if c.AccessLogfile != "" {
-		f, err := os.OpenFile(c.AccessLogfile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-		if err != nil {
-			return errors.Wrapf(err, "failed to open access logfile")
-		}
-		accessLogfile = f
-	}
 
 	// error handler
 	e.HTTPErrorHandler = errorHandler(app)
@@ -87,7 +76,7 @@ func configureServer(app *server.App) error {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Skipper: middleware.DefaultSkipper,
 		Format:  `${time_rfc3339} ${remote_ip} ${host} ${method} ${uri} ${status} ${latency} ${latency_human} ${bytes_in} ${bytes_out}` + "\n",
-		Output:  accessLogfile,
+		Output:  app.AccessLogFileWriter,
 	}))
 
 	// handlers
