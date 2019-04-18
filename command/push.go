@@ -9,19 +9,19 @@ import (
 	"os"
 )
 
-var RunCommand = cli.Command{
-	Name:  "run",
-	Usage: "Enqueues and runs a job.",
-	Description: `Enqueues and runs a job.
+var PushCommand = cli.Command{
+	Name:  "push",
+	Usage: "Pushes a new job.",
+	Description: `Pushes a new job.
 If you specify '-', it will use stdin as a job JSON .`,
 	ArgsUsage: `<-|json_file...>`,
-	Action:    runAction,
+	Action:    pushAction,
 	Flags: []cli.Flag{
 		addressFlag,
 	},
 }
 
-func runAction(ctx *cli.Context) error {
+func pushAction(ctx *cli.Context) error {
 	if ctx.NArg() < 1 {
 		return fmt.Errorf("require one JSON file at least")
 	}
@@ -35,12 +35,12 @@ func runAction(ctx *cli.Context) error {
 			return err
 		}
 
-		payload := &hq.CreateJobRequest{}
+		payload := &hq.PushJobRequest{}
 		if err := json.Unmarshal(b, payload); err != nil {
 			return err
 		}
 
-		job, err := c.CreateJob(payload)
+		job, err := c.PushJob(payload)
 		if err != nil {
 			return err
 		}
@@ -56,12 +56,12 @@ func runAction(ctx *cli.Context) error {
 			return err
 		}
 
-		payload := &hq.CreateJobRequest{}
+		payload := &hq.PushJobRequest{}
 		if err := json.Unmarshal(b, payload); err != nil {
 			return err
 		}
 
-		job, err := c.CreateJob(payload)
+		job, err := c.PushJob(payload)
 		if err != nil {
 			return err
 		}

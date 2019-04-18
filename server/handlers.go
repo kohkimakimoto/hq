@@ -29,7 +29,7 @@ var (
 func CreateJobHandler(c echo.Context) error {
 	app := c.(*AppContext).App()
 
-	req := &hq.CreateJobRequest{}
+	req := &hq.PushJobRequest{}
 	if err := bindRequest(req, c); err != nil {
 		c.Logger().Warn(errors.Wrap(err, "failed to bind request"))
 		return NewHttpErrorBadRequest()

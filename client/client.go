@@ -46,9 +46,6 @@ func (c *Client) post(url string, payload interface{}) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err != nil {
-		return nil, err
-	}
 
 	c.setHeaders(req)
 
@@ -66,9 +63,6 @@ func (c *Client) post(url string, payload interface{}) (*http.Response, error) {
 
 func (c *Client) get(url string, values url.Values) (*http.Response, error) {
 	req, err := http.NewRequest("GET", c.address+url, nil)
-	if err != nil {
-		return nil, err
-	}
 	if err != nil {
 		return nil, err
 	}
@@ -99,9 +93,6 @@ func (c *Client) get(url string, values url.Values) (*http.Response, error) {
 
 func (c *Client) delete(url string, values url.Values) (*http.Response, error) {
 	req, err := http.NewRequest("DELETE", c.address+url, nil)
-	if err != nil {
-		return nil, err
-	}
 	if err != nil {
 		return nil, err
 	}
@@ -165,7 +156,7 @@ func (c *Client) Info() (*hq.Info, error) {
 	return ret, nil
 }
 
-func (c *Client) CreateJob(payload *hq.CreateJobRequest) (*hq.Job, error) {
+func (c *Client) PushJob(payload *hq.PushJobRequest) (*hq.Job, error) {
 	resp, err := c.post("/job", payload)
 	if err != nil {
 		return nil, err
