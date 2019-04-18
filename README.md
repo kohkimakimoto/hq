@@ -4,7 +4,6 @@ HQ is a simplistic job queue engine.
 
 ----
 
-
 Table of Contents
 
   - [Installation](#installation)
@@ -25,6 +24,17 @@ As `hq` is a single binary command, to install it you can download the binrary f
 If you use CentOS7, you can also use RPM package that is stored in the same release page. It is useful because it configures systemd service automatically.
 
 ## Usage
+
+It is very easy to get started on HQ. After installing HQ, run `hq serve` in your terminal.
+
+```
+$ hq serve
+2019-04-18T18:56:25+09:00 WARN Your 'data_dir' configuration is not set. HQ server uses a temporary directory that is deleted after the process terminates.
+2019-04-18T18:56:25+09:00 WARN Created temporary data directory: /var/folders/7q/7yfsnkpj09n6s1pvlktkpp6h0000gn/T/hq_data_718224193
+2019-04-18T18:56:25+09:00 INFO Opened data directory: /var/folders/7q/7yfsnkpj09n6s1pvlktkpp6h0000gn/T/hq_data_718224193
+2019-04-18T18:56:25+09:00 INFO Opened boltdb: /var/folders/7q/7yfsnkpj09n6s1pvlktkpp6h0000gn/T/hq_data_718224193/server.bolt
+2019-04-18T18:56:25+09:00 INFO The server Listening on 0.0.0.0:19900 (pid: 74090)
+```
 
 ## Configuration
 
