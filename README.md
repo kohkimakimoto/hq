@@ -16,3 +16,10 @@ HQ provides functions as a RESTful HTTP API.
 * `POST /job/{id}/restart`:
 * `POST /job/{id}/stop`:
 
+## Author
+
+Kohki Makimoto <kohki.makimoto@gmail.com>
+
+## License
+
+The MIT License (MIT)
