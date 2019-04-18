@@ -45,6 +45,30 @@ Overview of endpoints:
 
 ## Commands
 
+HQ provides command-line interface to manipulate HQ jobs. To view a list of the available commands, just run `hq` without any arguments:
+
+```
+Usage: hq [<options...>] <command>
+
+Simplistic job queue engine
+version 0.3.0 (237ea6640ff100150fc9202a1a78322b321cddff)
+
+Options:
+  --help, -h     show help
+  --version, -v  print the version
+  
+Commands:
+  delete   Deletes a job
+  info     Displays a job detail
+  list     Lists jobs
+  push     Pushes a new job.
+  restart  Restarts a job
+  serve    Starts the HQ server process
+  stats    Displays the HQ server statistics.
+  stop     Stops a job
+  help, h  Shows a list of commands or help for one command
+```
+
 ## Author
 
 Kohki Makimoto <kohki.makimoto@gmail.com>
