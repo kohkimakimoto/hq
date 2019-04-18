@@ -18,7 +18,6 @@ var RestartCommand = cli.Command{
 			Name:  "copy, c",
 			Usage: "Restarts the copied job instead of updating the existed job",
 		},
-
 	},
 }
 
