@@ -110,7 +110,7 @@ func (app *App) Open() error {
 
 	// setup data directory as a temporary directory if it is not set.
 	if app.DataDir == "" {
-		logger.Warn("Your 'data_dir' configuration is not set. It uses a temporary directory that is deleted after the process terminates.")
+		logger.Warn("Your 'data_dir' configuration is not set. HQ server uses a temporary directory that is deleted after the process terminates.")
 
 		tmpdir, err := ioutil.TempDir("", hq.Name+"_data_")
 		if err != nil {
@@ -292,7 +292,7 @@ func (app *App) Close() error {
 		if err := os.RemoveAll(app.DataDir); err != nil {
 			return err
 		}
-		app.Logger.Warnf("Removed temporary directory: %s", app.DataDir)
+		app.Logger.Infof("Removed temporary directory: %s", app.DataDir)
 	}
 
 	return nil
