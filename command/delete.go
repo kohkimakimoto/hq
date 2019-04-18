@@ -8,7 +8,7 @@ import (
 
 var DeleteCommand = cli.Command{
 	Name:      "delete",
-	Usage:     `Delete a job`,
+	Usage:     `Deletes a job`,
 	ArgsUsage: `<job_id...>`,
 	Action:    deleteAction,
 	Flags: []cli.Flag{

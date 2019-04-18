@@ -8,7 +8,7 @@ import (
 
 var RestartCommand = cli.Command{
 	Name:      "restart",
-	Usage:     `Restart a job`,
+	Usage:     `Restarts a job`,
 	ArgsUsage: `<job_id...>`,
 	Action:    restartAction,
 	Flags: []cli.Flag{

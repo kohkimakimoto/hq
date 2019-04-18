@@ -8,7 +8,7 @@ import (
 
 var StopCommand = cli.Command{
 	Name:      "stop",
-	Usage:     `Stop a job`,
+	Usage:     `Stops a job`,
 	ArgsUsage: `<job_id...>`,
 	Action:    stopAction,
 	Flags: []cli.Flag{

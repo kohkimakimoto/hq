@@ -8,7 +8,7 @@ import (
 
 var StatsCommand = cli.Command{
 	Name:   "stats",
-	Usage:  "Display HQ server statistics",
+	Usage:  "Displays HQ server statistics",
 	Action: statsAction,
 	Flags: []cli.Flag{
 		addressFlag,

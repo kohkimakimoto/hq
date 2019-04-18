@@ -12,7 +12,7 @@ import (
 
 var ListCommand = cli.Command{
 	Name:      "list",
-	Usage:     `List jobs`,
+	Usage:     `Lists jobs`,
 	ArgsUsage: `[<job_id...>]`,
 	Action:    listAction,
 	Flags: []cli.Flag{

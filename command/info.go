@@ -9,7 +9,7 @@ import (
 
 var InfoCommand = cli.Command{
 	Name:      "info",
-	Usage:     `Display job detail`,
+	Usage:     `Displays a job detail`,
 	ArgsUsage: `<job_id>`,
 	Action:    infoAction,
 	Flags: []cli.Flag{
