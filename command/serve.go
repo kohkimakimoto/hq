@@ -10,7 +10,7 @@ import (
 
 var ServeCommand = cli.Command{
 	Name:   "serve",
-	Usage:  "Starts the hq server process",
+	Usage:  "Starts the HQ server process",
 	Action: serverAction,
 	Flags: []cli.Flag{
 		configFileFlag,

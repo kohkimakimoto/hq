@@ -22,14 +22,14 @@ HQ provides functions as a RESTful HTTP API.
 
 Overview of endpoints:
 
-* `GET /`:  
-* `GET /stats`:
-* `POST /job`:
-* `GET /job`:
-* `GET /job/{id}`:
-* `DELETE /job/{id}`:
-* `POST /job/{id}/restart`:
-* `POST /job/{id}/stop`:
+* `GET /`: Gets HQ info.
+* `GET /stats`: Gets the HQ server statistics.
+* `POST /job`: Pushes a new job.
+* `GET /job`: Lists jobs.
+* `GET /job/{id}`: Gets a job.
+* `DELETE /job/{id}`: Deletes a job.
+* `POST /job/{id}/restart`: Restarts a job.
+* `POST /job/{id}/stop`: Stops a job.
 
 ## Commands
 
