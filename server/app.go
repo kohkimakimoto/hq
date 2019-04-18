@@ -211,13 +211,13 @@ func (app *App) ListenAndServe() error {
 	}))
 	// handlers
 	e.Any("/", InfoHandler)
+	e.GET("/stats", StatsHandler)
 	e.POST("/job", CreateJobHandler)
 	e.GET("/job", ListJobsHandler)
 	e.GET("/job/:id", GetJobHandler)
-	e.POST("/job/:id/restart", RestartJobHandler)
-	e.POST("/job/:id/stop", StopJobHandler)
-	e.GET("/stats", StatsHandler)
 	e.DELETE("/job/:id", DeleteJobHandler)
+	e.POST("/job/:id/stop", StopJobHandler)
+	e.POST("/job/:id/restart", RestartJobHandler)
 
 	// handler for reopen logs
 	go app.sigusr1Handler()
