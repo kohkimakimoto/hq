@@ -50,13 +50,13 @@ func CreateJobHandler(c echo.Context) error {
 
 	job := &hq.Job{}
 	job.ID = id
+	job.CreatedAt = katsubushi.ToTime(id)
 	job.Name = req.Name
 	job.Comment = req.Comment
 	job.URL = req.URL
 	job.Payload = req.Payload
 	job.Headers = req.Headers
 	job.Timeout = req.Timeout
-	job.CreatedAt = katsubushi.ToTime(id)
 
 	if err := app.Store.CreateJob(job); err != nil {
 		return err
@@ -95,6 +95,12 @@ func RestartJobHandler(c echo.Context) error {
 		return NewErrorValidationFailed("The job id  must be a number but '" + c.Param("id") + "'.")
 	}
 
+	req := &hq.RestartJobRequest{}
+	if err := bindRequest(req, c); err != nil {
+		c.Logger().Warn(errors.Wrap(err, "failed to bind request"))
+		return NewHttpErrorBadRequest()
+	}
+
 	job := &hq.Job{}
 	if err := app.Store.FetchJob(id, job); err != nil {
 		if _, ok := err.(*ErrJobNotFound); ok {
@@ -112,17 +118,39 @@ func RestartJobHandler(c echo.Context) error {
 		return NewErrorValidationFailed(fmt.Sprintf("The job %d is waiting now", job.ID))
 	}
 
-	job.StartedAt = nil
-	job.FinishedAt = nil
-	job.Failure = false
-	job.Success = false
-	job.Canceled = false
-	job.StatusCode = nil
-	job.Err = ""
-	job.Output = ""
+	if req.Copy {
+		id, err := app.Gen.NextID()
+		if err != nil {
+			return errors.Wrap(err, "failed to generate uniq id")
+		}
 
-	if err := app.Store.UpdateJob(job); err != nil {
-		return err
+		job.ID = id
+		job.CreatedAt = katsubushi.ToTime(id)
+		job.StartedAt = nil
+		job.FinishedAt = nil
+		job.Failure = false
+		job.Success = false
+		job.Canceled = false
+		job.StatusCode = nil
+		job.Err = ""
+		job.Output = ""
+
+		if err := app.Store.CreateJob(job); err != nil {
+			return err
+		}
+	} else {
+		job.StartedAt = nil
+		job.FinishedAt = nil
+		job.Failure = false
+		job.Success = false
+		job.Canceled = false
+		job.StatusCode = nil
+		job.Err = ""
+		job.Output = ""
+
+		if err := app.Store.UpdateJob(job); err != nil {
+			return err
+		}
 	}
 
 	app.QueueManager.EnqueueAsync(job)

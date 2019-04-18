@@ -2,6 +2,7 @@ package command
 
 import (
 	"fmt"
+	"github.com/kohkimakimoto/hq/hq"
 	"github.com/urfave/cli"
 	"strconv"
 )
@@ -13,6 +14,11 @@ var RestartCommand = cli.Command{
 	Action:    restartAction,
 	Flags: []cli.Flag{
 		addressFlag,
+		cli.BoolFlag{
+			Name:  "copy, c",
+			Usage: "Restarts the copied job instead of updating the existed job",
+		},
+
 	},
 }
 
@@ -23,6 +29,8 @@ func restartAction(ctx *cli.Context) error {
 		return fmt.Errorf("require one id at least")
 	}
 
+	copy := ctx.Bool("copy")
+
 	t := newTabby()
 
 	args := ctx.Args()
@@ -32,7 +40,10 @@ func restartAction(ctx *cli.Context) error {
 			return err
 		}
 
-		job, err := c.RestartJob(id)
+		req := &hq.RestartJobRequest{
+			Copy: copy,
+		}
+		job, err := c.RestartJob(id, req)
 		if err != nil {
 			return err
 		}

@@ -201,8 +201,8 @@ func (c *Client) DeleteJob(id uint64) (*hq.DeletedJob, error) {
 	return ret, nil
 }
 
-func (c *Client) RestartJob(id uint64) (*hq.Job, error) {
-	resp, err := c.post(fmt.Sprintf("/job/%d/restart", id), nil)
+func (c *Client) RestartJob(id uint64, req *hq.RestartJobRequest) (*hq.Job, error) {
+	resp, err := c.post(fmt.Sprintf("/job/%d/restart", id), req)
 	if err != nil {
 		return nil, err
 	}

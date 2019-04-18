@@ -18,3 +18,7 @@ type ListJobsRequest struct {
 	Limit   int     `query:"limit"`
 	Status  string  `query:"status"`
 }
+
+type RestartJobRequest struct {
+	Copy bool `json:"copy" form:"copy" query:"copy"`
+}
