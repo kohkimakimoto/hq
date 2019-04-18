@@ -4,6 +4,18 @@ HQ is a simplistic job queue engine.
 
 ----
 
+
+Table of Contents
+
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Configuration](#configuration)
+  - [HTTP API](#http-api)
+  - [Commands](#commands)
+  - [Author](#author)
+  - [License](#license)
+
+
 ## Installation
 
 As `hq` is a single binary command, to install it you can download the binrary from github release page and drop it in you $PATH
