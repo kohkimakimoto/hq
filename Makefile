@@ -56,7 +56,7 @@ installtools: ## Install dev tools
 
 .PHONY:deps
 deps: ## Install dependences.
-	dep ensure
+	PATH=$(CURDIR)/.go-packages/bin:${PATH} && dep ensure
 
 .PHONY:updatedeps
 updatedeps: ## update all dependences.

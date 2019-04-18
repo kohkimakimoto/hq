@@ -76,3 +76,16 @@ func ErrorHandler(err error, c echo.Context) {
 		e.Logger.Error(fmt.Sprintf("%+v", err2))
 	}
 }
+
+func errorHandler(app *App) echo.HTTPErrorHandler {
+	return func(err error, c echo.Context) {
+		e := c.Echo()
+		if c.Response().Committed {
+			goto ERROR
+		}
+
+		ErrorHandler(err, c)
+	ERROR:
+		e.Logger.Error(err)
+	}
+}

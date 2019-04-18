@@ -9,6 +9,7 @@ Source0:        %{name}_linux_amd64.zip
 Source1:        hq.toml
 Source2:        hq.sysconfig
 Source3:        hq.service
+Source4:        hq.logrotate
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 %description
@@ -27,7 +28,11 @@ cp %{SOURCE1} %{buildroot}/%{_sysconfdir}/hq/hq.toml
 mkdir -p %{buildroot}/%{_sysconfdir}/sysconfig
 cp %{SOURCE2} %{buildroot}/%{_sysconfdir}/sysconfig/hq
 
+mkdir -p %{buildroot}/%{_sysconfdir}/logrotate.d/
+cp %{SOURCE4} %{buildroot}/%{_sysconfdir}/logrotate.d/hq
+
 mkdir -p %{buildroot}/var/lib/hq
+mkdir -p %{buildroot}/var/log/hq
 
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
 mkdir -p %{buildroot}/%{_unitdir}
@@ -61,6 +66,8 @@ rm -rf %{buildroot}
 %dir %attr(755, hq, hq) /var/lib/hq
 %config(noreplace) %{_sysconfdir}/hq/hq.toml
 %config(noreplace) %{_sysconfdir}/sysconfig/hq
+%attr(644, root, root) %{_sysconfdir}/logrotate.d/hq
+%dir %attr(755, hq, hq) /var/log/hq
 
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
 %{_unitdir}/hq.service

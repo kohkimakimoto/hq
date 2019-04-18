@@ -2,12 +2,14 @@ package server
 
 import (
 	"encoding/binary"
+	"encoding/json"
 	"fmt"
 	"github.com/boltdb/bolt"
 	"github.com/kohkimakimoto/boltutil"
 	"github.com/kohkimakimoto/hq/hq"
 	"github.com/labstack/echo"
 	"regexp"
+	"time"
 )
 
 type Store struct {
@@ -19,6 +21,26 @@ type Store struct {
 const (
 	BucketNameForJobs = "j"
 )
+
+// J is internal representation of a job in the boltdb.
+type J struct {
+	ID         uint64
+	Name       string
+	Comment    string
+	URL        string
+	Payload    json.RawMessage
+	Headers    map[string]string
+	Timeout    int64
+	CreatedAt  time.Time
+	StartedAt  *time.Time
+	FinishedAt *time.Time
+	Failure    bool
+	Success    bool
+	Canceled   bool
+	StatusCode *int
+	Err        string
+	Output     string
+}
 
 // Job Error
 
@@ -50,11 +72,11 @@ func (s *Store) Init() error {
 
 func (s *Store) CreateJob(job *hq.Job) error {
 	return s.db.Update(func(tx *bolt.Tx) error {
-		if err := boltutil.Get(tx, []interface{}{BucketNameForJobs}, job.ID, &hq.J{}); err == nil {
+		if err := boltutil.Get(tx, []interface{}{BucketNameForJobs}, job.ID, &J{}); err == nil {
 			return &ErrJobAlreadyExisted{ID: job.ID, Name: job.Name}
 		}
 
-		in := &hq.J{
+		in := &J{
 			ID:         job.ID,
 			Name:       job.Name,
 			Comment:    job.Comment,
@@ -83,7 +105,7 @@ func (s *Store) CreateJob(job *hq.Job) error {
 
 func (s *Store) UpdateJob(job *hq.Job) error {
 	return s.db.Update(func(tx *bolt.Tx) error {
-		if err := boltutil.Get(tx, []interface{}{BucketNameForJobs}, job.ID, &hq.J{}); err != nil {
+		if err := boltutil.Get(tx, []interface{}{BucketNameForJobs}, job.ID, &J{}); err != nil {
 			if err == boltutil.ErrNotFound {
 				return &ErrJobNotFound{ID: job.ID}
 			} else {
@@ -91,7 +113,7 @@ func (s *Store) UpdateJob(job *hq.Job) error {
 			}
 		}
 
-		in := &hq.J{
+		in := &J{
 			ID:         job.ID,
 			Name:       job.Name,
 			Comment:    job.Comment,
@@ -120,7 +142,7 @@ func (s *Store) UpdateJob(job *hq.Job) error {
 
 func (s *Store) DeleteJob(id uint64) error {
 	return s.db.Update(func(tx *bolt.Tx) error {
-		if err := boltutil.Get(tx, []interface{}{BucketNameForJobs}, id, &hq.J{}); err != nil {
+		if err := boltutil.Get(tx, []interface{}{BucketNameForJobs}, id, &J{}); err != nil {
 			if err == boltutil.ErrNotFound {
 				return &ErrJobNotFound{ID: id}
 			} else {
@@ -139,7 +161,7 @@ func (s *Store) DeleteJob(id uint64) error {
 func (s *Store) FetchJob(id uint64, job *hq.Job) error {
 	qm := s.app.QueueManager
 	return s.db.View(func(tx *bolt.Tx) error {
-		out := &hq.J{}
+		out := &J{}
 		if err := boltutil.Get(tx, []interface{}{BucketNameForJobs}, id, out); err != nil {
 			if err == boltutil.ErrNotFound {
 				return &ErrJobNotFound{ID: id}
@@ -306,7 +328,7 @@ func (s *Store) ListJobs(query *ListJobsQuery, ret *hq.JobList) error {
 func (s *Store) appendJob(v []byte, query *ListJobsQuery, ret *hq.JobList) error {
 	qm := s.app.QueueManager
 
-	in := &hq.J{}
+	in := &J{}
 	if err := boltutil.Deserialize(v, in); err != nil {
 		return err
 	}

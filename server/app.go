@@ -9,6 +9,7 @@ import (
 	"github.com/kohkimakimoto/hq/hq"
 	"github.com/kohkimakimoto/hq/util/logutil"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	"github.com/labstack/gommon/log"
 	"github.com/pkg/errors"
 	"io/ioutil"
@@ -190,10 +191,36 @@ func (app *App) BoltDBPath() string {
 }
 
 func (app *App) ListenAndServe() error {
+	// open resources such as log files, database, temporary directory, etc.
+	if err := app.Open(); err != nil {
+		return err
+	}
+
+	// Configure http servers (handlers and middleware)
 	e := app.Echo
 
-	// handler for reloading
-	go app.sighupHandler()
+	// error handler
+	e.HTTPErrorHandler = errorHandler(app)
+	// middleware
+	e.Use(AppContextMiddleware(app))
+	e.Use(middleware.Recover())
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Skipper: middleware.DefaultSkipper,
+		Format:  `${time_rfc3339} ${remote_ip} ${host} ${method} ${uri} ${status} ${latency} ${latency_human} ${bytes_in} ${bytes_out}` + "\n",
+		Output:  app.AccessLogFileWriter,
+	}))
+	// handlers
+	e.Any("/", InfoHandler)
+	e.POST("/job", CreateJobHandler)
+	e.GET("/job", ListJobsHandler)
+	e.GET("/job/:id", GetJobHandler)
+	e.POST("/job/:id/restart", RestartJobHandler)
+	e.POST("/job/:id/stop", StopJobHandler)
+	e.GET("/stats", StatsHandler)
+	e.DELETE("/job/:id", DeleteJobHandler)
+
+	// handler for reopen logs
+	go app.sigusr1Handler()
 
 	// start server.
 	go func() {
@@ -228,16 +255,16 @@ func (app *App) ListenAndServe() error {
 	return nil
 }
 
-func (app *App) sighupHandler() {
-	reload := make(chan os.Signal, 1)
-	signal.Notify(reload, syscall.SIGHUP)
+func (app *App) sigusr1Handler() {
+	reopen := make(chan os.Signal, 1)
+	signal.Notify(reopen, syscall.SIGUSR1)
 
 	logger := app.Logger
 
 	for {
 		select {
-		case sig := <-reload:
-			logger.Infof("Received signal to reopen log: %v", sig)
+		case sig := <-reopen:
+			logger.Infof("Received signal to reopen the logs: %v", sig)
 
 			if err := app.LogfileWriter.Reopen(); err != nil {
 				logger.Error(fmt.Sprintf("failed to reopen log: %v", err))

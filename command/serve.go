@@ -2,8 +2,6 @@ package command
 
 import (
 	"github.com/kohkimakimoto/hq/server"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
 	"github.com/pkg/errors"
 	"github.com/urfave/cli"
 
@@ -32,10 +30,6 @@ func serverAction(ctx *cli.Context) error {
 	app := server.NewApp(config)
 	defer app.Close()
 
-	if err := configureServer(app); err != nil {
-		return errors.Wrapf(err, "failed to initialize hq server")
-	}
-
 	return app.ListenAndServe()
 }
 
@@ -57,50 +51,4 @@ func loadServerConfigFiles(ctx *cli.Context, config *server.Config) error {
 	}
 
 	return nil
-}
-
-func configureServer(app *server.App) error {
-	// open resources such as log files, database, temporary directory, etc.
-	if err := app.Open(); err != nil {
-		return err
-	}
-
-	e := app.Echo
-
-	// error handler
-	e.HTTPErrorHandler = errorHandler(app)
-
-	// middleware
-	e.Use(server.AppContextMiddleware(app))
-	e.Use(middleware.Recover())
-	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Skipper: middleware.DefaultSkipper,
-		Format:  `${time_rfc3339} ${remote_ip} ${host} ${method} ${uri} ${status} ${latency} ${latency_human} ${bytes_in} ${bytes_out}` + "\n",
-		Output:  app.AccessLogFileWriter,
-	}))
-
-	// handlers
-	e.Any("/", server.InfoHandler)
-	e.POST("/job", server.CreateJobHandler)
-	e.GET("/job", server.ListJobsHandler)
-	e.GET("/job/:id", server.GetJobHandler)
-	e.POST("/job/:id/restart", server.RestartJobHandler)
-	e.POST("/job/:id/stop", server.StopJobHandler)
-	e.GET("/stats", server.StatsHandler)
-	e.DELETE("/job/:id", server.DeleteJobHandler)
-
-	return nil
-}
-
-func errorHandler(app *server.App) echo.HTTPErrorHandler {
-	return func(err error, c echo.Context) {
-		e := c.Echo()
-		if c.Response().Committed {
-			goto ERROR
-		}
-
-		server.ErrorHandler(err, c)
-	ERROR:
-		e.Logger.Error(err)
-	}
 }

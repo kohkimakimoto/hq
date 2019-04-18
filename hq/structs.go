@@ -132,26 +132,6 @@ type StoppedJob struct {
 	ID uint64 `json:"id,string"`
 }
 
-// J is internal representation of a job in the boltdb.
-type J struct {
-	ID         uint64
-	Name       string
-	Comment    string
-	URL        string
-	Payload    json.RawMessage
-	Headers    map[string]string
-	Timeout    int64
-	CreatedAt  time.Time
-	StartedAt  *time.Time
-	FinishedAt *time.Time
-	Failure    bool
-	Success    bool
-	Canceled   bool
-	StatusCode *int
-	Err        string
-	Output     string
-}
-
 type JobList struct {
 	Jobs    []*Job  `json:"jobs"`
 	HasNext bool    `json:"hasNext"`

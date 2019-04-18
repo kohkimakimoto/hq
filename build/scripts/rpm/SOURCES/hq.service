@@ -10,6 +10,7 @@ User=hq
 Group=hq
 EnvironmentFile=-/etc/sysconfig/hq
 ExecStart=/usr/bin/hq serve $HQ_OPTS
+ExecReload=/bin/kill -s HUP $MAINPID
 StandardOutput=journal
 StandardError=inherit
 
