@@ -100,7 +100,7 @@ func listAction(ctx *cli.Context) error {
 		if detail {
 			t.AddLine("ID", "NAME", "COMMENT", "URL", "CREATED", "STARTED", "FINISHED", "DURATION", "STATUS")
 		} else {
-			t.AddLine("ID", "NAME", "COMMENT", "CREATED", "DURATION", "STATUS")
+			t.AddLine("ID", "NAME", "CREATED", "DURATION", "STATUS")
 		}
 	}
 
@@ -148,7 +148,7 @@ func listAction(ctx *cli.Context) error {
 		if detail {
 			t.AddLine(job.ID, job.Name, comment, job.URL, createdAt, startedAt, finishedAt, duration, status)
 		} else {
-			t.AddLine(job.ID, job.Name, comment, createdAt, duration, status)
+			t.AddLine(job.ID, job.Name, createdAt, duration, status)
 		}
 	}
 
