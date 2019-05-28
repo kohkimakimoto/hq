@@ -1,6 +1,6 @@
 # HQ
 
-HQ is a simplistic job queue engine.
+HQ is a simplistic job queue engine communicated by HTTP messages.
 
 ## Table of Contents
 
@@ -34,7 +34,7 @@ $ hq serve
 
 ## HTTP API
 
-HQ provides functions as a RESTful HTTP API.
+HQ core functions are provided as a RESTful HTTP API.
 
 Overview of endpoints:
 
@@ -49,7 +49,7 @@ Overview of endpoints:
 
 ## Commands
 
-HQ provides command-line interface to manipulate HQ jobs. To view a list of the available commands, just run `hq` without any arguments:
+HQ also provides command-line interface to manipulate HQ jobs. To view a list of the available commands, just run `hq` without any arguments:
 
 ```
 Usage: hq [<options...>] <command>
