@@ -18,6 +18,7 @@ test: ## Run all tests
 testv: ## Run all tests with verbose outputing.
 	go test -v -cover $$(go list ./... | grep -v vendor)
 
+.PHONY:testcov
 testcov:
 	gocov test $$(go list ./... | grep -v vendor) | gocov-html > coverage-report.html
 
@@ -28,6 +29,10 @@ dev: ## Build dev binary
 .PHONY:dist
 dist: ## Build dist binaries
 	@bash -c $(CURDIR)/build/scripts/dist.sh
+
+.PHONY:clean
+clean: ## Clean build outputs
+	@bash -c $(CURDIR)/build/scripts/clean.sh
 
 .PHONY:bindata
 bindata: ## bindata
@@ -41,9 +46,6 @@ devbindata: ## devbindata
 packaging: ## Create packages (now support RPM only)
 	@bash -c $(CURDIR)/build/scripts/packaging.sh
 
-.PHONY:clean
-clean: ## Clean build outputs
-	rm -rf build/outputs/*
 
 .PHONY: installtools
 installtools: ## Install dev tools
