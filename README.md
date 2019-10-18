@@ -12,7 +12,6 @@ HQ is a simplistic job queue engine communicated by HTTP messages.
   - [Author](#author)
   - [License](#license)
 
-
 ## Installation
 
 [Download latest version](https://github.com/kohkimakimoto/hq/releases/latest)
@@ -31,6 +30,8 @@ $ hq serve
 ```
 
 ## Configuration
+
+TODO: Write document
 
 ## HTTP API
 
