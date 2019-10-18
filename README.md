@@ -49,7 +49,7 @@ Overview of endpoints:
 
 ## Commands
 
-HQ also provides command-line interface to manipulate HQ jobs. To view a list of the available commands, just run `hq` without any arguments:
+HQ also provides command-line interface to communicate HQ server. To view a list of the available commands, just run `hq` without any arguments:
 
 ```
 Usage: hq [<options...>] <command>
