@@ -39,7 +39,7 @@ HQ core functions are provided as a RESTful HTTP API.
 
 Overview of endpoints:
 
-* `GET /`: Gets HQ info.
+* [`GET /`](#a): Gets HQ info.
 * `GET /stats`: Gets the HQ server statistics.
 * `POST /job`: Pushes a new job.
 * `GET /job`: Lists jobs.
@@ -47,6 +47,8 @@ Overview of endpoints:
 * `DELETE /job/{id}`: Deletes a job.
 * `POST /job/{id}/restart`: Restarts a job.
 * `POST /job/{id}/stop`: Stops a job.
+
+### `GET /`
 
 ## Commands
 
