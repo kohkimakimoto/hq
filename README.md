@@ -77,18 +77,46 @@ HQ core functions are provided as a RESTful HTTP API.
 
 Overview of endpoints:
 
-* [`GET /`](#http-api-get-info): Gets HQ info.
-* [`GET /stats`](#): Gets the HQ server statistics.
-* `POST /job`: Pushes a new job.
-* `GET /job`: Lists jobs.
-* `GET /job/{id}`: Gets a job.
-* `DELETE /job/{id}`: Deletes a job.
-* `POST /job/{id}/restart`: Restarts a job.
-* `POST /job/{id}/stop`: Stops a job.
+ - [`GET /`](#get-): Gets HQ info.
+ - [`GET /stats`](#get-stats): Gets the HQ server statistics.
+ - [`POST /job`](#post-job): Pushes a new job.
+ - [`GET /job`](#get-job): Lists jobs.
+ - [`GET /job/{id}`](#get-jobid): Gets a job.
+ - [`DELETE /job/{id}`](#delete-jobid): Deletes a job.
+ - [`POST /job/{id}/restart`](#post-jobidrestart): Restarts a job.
+ - [`POST /job/{id}/stop`](#post-jobidstop): Stops a job.
 
 ### `GET /`
 
+Gets HQ info.
+
 ### `GET /stats`
+
+Gets the HQ server statistics.
+
+### `POST /job`
+
+Pushes a new job.
+
+### `GET /job`
+
+Lists jobs.
+
+### `GET /job/{id}`
+
+Gets a job.
+
+### `DELETE /job/{id}`
+
+Deletes a job.
+
+### `POST /job/{id}/restart`
+
+Restarts a job.
+
+### `POST /job/{id}/stop`
+
+Stops a job.
 
 ## Commands
 
