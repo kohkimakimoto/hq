@@ -73,7 +73,7 @@ job_list_default_limit = 0
 
 ## HTTP API
 
-HQ core functions are provided as a RESTful HTTP API.
+HQ core functions are provided via RESTful HTTP API.
 
 Overview of endpoints:
 
