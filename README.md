@@ -1,13 +1,22 @@
 # HQ
 
-HQ is a simplistic job queue engine communicated by HTTP messages.
+HQ is a simplistic job queue engine communicated by HTTP messages. It is implemented as a standalone RESTful HTTP API server.
 
 ## Table of Contents
 
+  - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Configuration](#configuration)
   - [HTTP API](#http-api)
+    - [`GET /`](#get-)
+    - [`GET /stats`](#get-stats)
+    - [`POST /job`](#post-job)
+    - [`GET /job`](#get-job)
+    - [`GET /job/{id}`](#get-jobid)
+    - [`DELETE /job/{id}`](#delete-jobid)
+    - [`POST /job/{id}/restart`](#post-jobidrestart)
+    - [`POST /job/{id}/stop`](#post-jobidstop)
   - [Commands](#commands)
   - [Author](#author)
   - [License](#license)
@@ -86,6 +95,8 @@ Overview of endpoints:
  - [`POST /job/{id}/restart`](#post-jobidrestart): Restarts a job.
  - [`POST /job/{id}/stop`](#post-jobidstop): Stops a job.
 
+By default, the output of all HTTP API requests is minimized JSON. If the client passes `pretty` on the query string, formatted JSON will be returned.
+
 ### `GET /`
 
 Gets HQ info.
@@ -106,6 +117,33 @@ GET /
 ### `GET /stats`
 
 Gets the HQ server statistics.
+
+```http
+GET /stats
+```
+
+#### Response
+
+```json
+{
+  "version": "0.3.0",
+  "commitHash": "6fe8ba18835f531e16166180feb7335c519df662",
+  "serverId": 0,
+  "queues": 8192,
+  "dispatchers": 8,
+  "maxWorkers": 0,
+  "shutdownTimeout": 10,
+  "jobLifetime": 2419200,
+  "jobLifetimeStr": "4 weeks",
+  "jobListDefaultLimit": 0,
+  "queueMax": 8192,
+  "queueUsage": 0,
+  "numWaitingJobs": 0,
+  "numRunningJobs": 0,
+  "numWorkers": 0,
+  "numJobs": 0
+}
+```
 
 ### `POST /job`
 
