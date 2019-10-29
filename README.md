@@ -90,6 +90,19 @@ Overview of endpoints:
 
 Gets HQ info.
 
+```http
+GET /
+```
+
+#### Response
+
+```json
+{
+  "version": "0.3.0",
+  "commitHash": "6fe8ba18835f531e16166180feb7335c519df662"
+}
+```
+
 ### `GET /stats`
 
 Gets the HQ server statistics.
