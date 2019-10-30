@@ -102,7 +102,7 @@ job_list_default_limit = 0
 
 * `addr` (string): The listen address to the HQ server process. The default is `0.0.0.0:19900`.
 
-* `data_dir` (string): The data directory to store all generated data by the HQ sever. You should set the parameter to keep jobs persistantly. If you not set it, HQ uses a temporary directory that is deleted after the process terminates.
+* `data_dir` (string): The data directory to store all generated data by the HQ sever. You should set the parameter to keep jobs persistantly. If you doesn't set it, HQ uses a temporary directory that is deleted after the process terminates.
 
 * `log_level` (string): The log level (`debug|info|warn|error`). The default is `info`.
 
