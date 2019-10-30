@@ -5,8 +5,9 @@ HQ is a simplistic job queue engine communicated by HTTP messages. It is impleme
 ## Table of Contents
 
   - [Installation](#installation)
-  - [Usage](#usage)
+  - [Getting Started](#getting-started)
   - [Configuration](#configuration)
+    - [Configuration Parameters](#configuration-parameters)
   - [HTTP API](#http-api)
     - [`GET /`](#get-)
     - [`GET /stats`](#get-stats)
@@ -22,9 +23,13 @@ HQ is a simplistic job queue engine communicated by HTTP messages. It is impleme
 
 ## Installation
 
+You can download a precompiled binary.
+
 [Download latest version](https://github.com/kohkimakimoto/hq/releases/latest)
 
-## Usage
+If you use CentOS7, you can also use RPM package that is stored in the same release page. It is useful because it configures systemd service automatically.
+
+## Getting Started
 
 It is very easy to get started on HQ. After installing HQ, run `hq serve` in your terminal.
 
@@ -39,10 +44,15 @@ $ hq serve
 
 ## Configuration
 
+The config file must be written in [TOML](https://github.com/toml-lang/toml). You can specify the config file by `-c` or `-config-file` option when HQ runs like the following.
+
+```
+$ hq serve -c /path/to/config.toml
+```
+
 TODO: Write document
 
-
-Example:
+The following is an example:
 
 ```toml
 # server_id
@@ -78,6 +88,32 @@ shutdown_timeout = 10
 # job_list_default_limit
 job_list_default_limit = 0
 ```
+
+### Configuration Parameters
+
+* `server_id` (number):
+
+* `log_level` (string): The log level (`debug|info|warn|error`). The default is `info`.
+
+* `addr` (string): The listen address to the HQ server process. The default is `0.0.0.0:19900`.
+
+* `log_file` (string):
+
+* `data_dir` (string):
+
+* `access_log_file` (string):
+
+* `queues` (number):
+
+* `dispatchers` (number):
+
+* `max_workers` (number):
+
+* `shutdown_timeout` (number):
+
+* `job_lifetime` (number):
+
+* `job_list_default_limit` (number):
 
 ## HTTP API
 
