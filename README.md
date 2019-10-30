@@ -1,8 +1,6 @@
 # HQ
 
-HQ is a simplistic, language agnostic job queue engine communicated by HTTP messages. 
-
-It lives in a single binary without external dependencies.
+HQ is a simplistic, language agnostic job queue engine communicated by HTTP messages.
 
 HQ is implemented as a standalone JSON over HTTP API server. In the job running workflow, it behaves like an asynchronous HTTP proxy server. When you push a job to the HQ server, it stores the job and sends asynchronously HTTP POST request to a URL that specified in the job.
 
@@ -30,7 +28,7 @@ Workers that actually run the jobs are web applications. So you can implement th
 
 ## Installation
 
-You can download a precompiled binary at the Github releases page.
+HQ lives in a single binary without external dependencies. You can download a precompiled binary at the Github releases page.
 
 [Download latest version](https://github.com/kohkimakimoto/hq/releases/latest)
 
