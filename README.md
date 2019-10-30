@@ -9,7 +9,7 @@ HQ is a simplistic job queue engine communicated by HTTP messages. It is impleme
   - [Configuration](#configuration)
   - [HTTP API](#http-api)
     - [Formatted JSON Output](#formatted-json-output)
-    - [`GET /`](#get)
+    - [`GET /`](#get-)
     - [`GET /stats`](#get-stats)
     - [`POST /job`](#post-job)
     - [`GET /job`](#get-job)
@@ -165,16 +165,24 @@ POST /job
 ```json
 {
   "name": "example",
+  "comment": "This is an example job!",
   "url": "https://your-worker-serevr/",
   "payload": {
     "foo": "bar"
-  }
+  },
+  "header": {
+    "X-Custom-Token": "xxxxxxx"
+  },
+  "timeout": 0
 }
 ```
 
 - `name`: 
+- `comment`: 
 - `url`: 
 - `payload`:
+- `header`:
+- `timeout`:
 
 #### Response
 
