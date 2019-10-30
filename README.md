@@ -7,7 +7,8 @@ HQ is a simplistic job queue engine communicated by HTTP messages. It is impleme
   - [Installation](#installation)
   - [Getting Started](#getting-started)
   - [Configuration](#configuration)
-    - [Configuration Parameters](#configuration-parameters)
+    - [Example](#example)
+    - [Parameters](#parameters)
   - [HTTP API](#http-api)
     - [`GET /`](#get-)
     - [`GET /stats`](#get-stats)
@@ -46,11 +47,11 @@ $ hq serve
 
 The config file must be written in [TOML](https://github.com/toml-lang/toml). You can specify the config file by `-c` or `-config-file` option when HQ runs like the following.
 
+### Example
+
 ```
 $ hq serve -c /path/to/config.toml
 ```
-
-TODO: Write document
 
 The following is an example:
 
@@ -89,7 +90,7 @@ shutdown_timeout = 10
 job_list_default_limit = 0
 ```
 
-### Configuration Parameters
+### Parameters
 
 * `server_id` (number):
 
