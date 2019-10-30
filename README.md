@@ -4,12 +4,12 @@ HQ is a simplistic job queue engine communicated by HTTP messages. It is impleme
 
 ## Table of Contents
 
-  - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Configuration](#configuration)
   - [HTTP API](#http-api)
-    - [`GET /`](#get-)
+    - [Formatted JSON Output](#formatted-json-output)
+    - [`GET /`](#get)
     - [`GET /stats`](#get-stats)
     - [`POST /job`](#post-job)
     - [`GET /job`](#get-job)
@@ -95,9 +95,13 @@ Overview of endpoints:
  - [`POST /job/{id}/restart`](#post-jobidrestart): Restarts a job.
  - [`POST /job/{id}/stop`](#post-jobidstop): Stops a job.
 
+### Formatted JSON Output
+
 By default, the output of all HTTP API requests is minimized JSON. If the client passes `pretty` on the query string, formatted JSON will be returned.
 
 ### `GET /`
+
+#### Request
 
 Gets HQ info.
 
@@ -117,6 +121,8 @@ GET /
 ### `GET /stats`
 
 Gets the HQ server statistics.
+
+#### Request
 
 ```http
 GET /stats
@@ -150,11 +156,11 @@ GET /stats
 
 Pushes a new job.
 
-```http
-GET /job
-```
-
 #### Request
+
+```http
+POST /job
+```
 
 ```json
 {
