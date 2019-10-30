@@ -98,11 +98,11 @@ job_list_default_limit = 0
 
 ### Parameters
 
-* `server_id` (number):
+* `server_id` (number): This is used to generate Job ID. HQ uses [go-katsubushi](https://github.com/kayac/go-katsubushi) to allocate unique ID. If you want Job ID to be unique on mulitple servers, You need to set the `server_id` unique on each servers. The default is `0`.
 
 * `addr` (string): The listen address to the HQ server process. The default is `0.0.0.0:19900`.
 
-* `data_dir` (string):
+* `data_dir` (string): The data directory to store all generated data by the HQ sever. You should set the parameter to keep jobs persistantly. If you not set it, HQ uses a temporary directory that is deleted after the process terminates.
 
 * `log_level` (string): The log level (`debug|info|warn|error`). The default is `info`.
 
