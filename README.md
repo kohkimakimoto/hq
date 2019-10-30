@@ -153,7 +153,7 @@ Job in HQ is a JSON like the following:
 }
 ```
 
-You 
+To create a new job, You can use 'POST /job' API.
 
 ## HTTP API
 
