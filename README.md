@@ -13,6 +13,7 @@ Workers that actually run the jobs are web applications. So you can implement th
   - [Configuration](#configuration)
     - [Example](#example)
     - [Parameters](#parameters)
+  - [Job](#job)
   - [HTTP API](#http-api)
     - [`GET /`](#get-)
     - [`GET /stats`](#get-stats)
@@ -117,6 +118,37 @@ job_list_default_limit = 0
 * `job_lifetime` (number):
 
 * `job_list_default_limit` (number):
+
+
+## Job
+
+Job in HO is a JSON like the following:
+
+```json
+{
+  "canceled": false,
+  "comment": "This is an example job!",
+  "createdAt": "2019-10-29T07:32:26.054Z",
+  "err": "",
+  "failure": false,
+  "finishedAt": "2019-10-29T07:32:28.548Z",
+  "headers": null,
+  "id": "109192606348480512",
+  "name": "example-job",
+  "output": "OK",
+  "payload": {
+    "message": "Hello world!"
+  },
+  "running": false,
+  "startedAt": "2019-10-29T07:32:28.252Z",
+  "status": "success",
+  "statusCode": 200,
+  "success": true,
+  "timeout": 0,
+  "url": "http://your-worker-server/worker/example",
+  "waiting": false
+}
+```
 
 ## HTTP API
 
