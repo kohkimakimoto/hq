@@ -149,6 +149,46 @@ GET /stats
 
 Pushes a new job.
 
+#### Parameters
+
+```json
+{
+  "name": "example",
+  "url": "https://your-worker-serevr/",
+  "payload": {
+    "foo": "bar"
+  }
+}
+```
+
+#### Response
+
+```json
+{
+  "canceled": false,
+  "comment": "",
+  "createdAt": "2019-10-29T23:57:08.713Z",
+  "err": "",
+  "failure": false,
+  "finishedAt": null,
+  "headers": null,
+  "id": "109440416981450752",
+  "name": "default",
+  "output": "",
+  "payload": {
+    "foo": "bar"
+  },
+  "running": false,
+  "startedAt": null,
+  "status": "unfinished",
+  "statusCode": null,
+  "success": false,
+  "timeout": 0,
+  "url": "https://your-worker-serevr/",
+  "waiting": false
+}
+```
+
 ### `GET /job`
 
 Lists jobs.
