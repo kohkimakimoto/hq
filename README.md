@@ -176,13 +176,12 @@ POST /job
   "timeout": 0
 }
 ```
-
-- `name`: 
-- `comment`: 
-- `url`: 
-- `payload`:
-- `header`:
-- `timeout`:
+- `url` (string,required):
+- `name` (string):
+- `comment` (string):
+- `payload` (json):
+- `header` (json):
+- `timeout` (number):
 
 #### Response
 
