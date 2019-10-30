@@ -7,15 +7,16 @@ HQ is implemented as a standalone JSON over HTTP API server. In the job running 
 Workers that actually run the jobs are web applications. So you can implement the workers in Any programming language that can talk HTTP.
 
 ```
-┌───┐             ┌──┐
-│app│──POST /job─>│  │
-└───┘             │  │
-┌───┐             │  │
-│app│──POST /job─>│HQ│
-└───┘             │  │
-┌───┐             │  │
-│app│──POST /job─>│  │
-└───┘             └──┘
+┌───┐              ┌─────────────────────────┐
+│app│──POST /job──>┼┐         HQ                      │
+└───┘              ││          ┌─────────────────────┐                       │
+┌───┐              ││          │queue                │
+│app│──POST /job──>┼┼─enqueue->│┌───┐ ┌───┐   ┌───┐ │                         │
+└───┘              ││          ││job│ │job│...│job│ │
+┌───┐              ││          │└───┘ └───┘   └───┘ │
+│app│──POST /job──>┼┘          └─────────────────────┘
+└───┘              │
+                   └─────────────────────────┘
 ```
 
 ## Table of Contents
