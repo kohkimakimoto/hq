@@ -98,7 +98,7 @@ job_list_default_limit = 0
 
 ### Parameters
 
-* `server_id` (number): This is used to generate Job ID. HQ uses [go-katsubushi](https://github.com/kayac/go-katsubushi) to allocate unique ID. If you want Job ID to be unique on mulitple servers, You need to set the `server_id` unique on each servers. The default is `0`.
+* `server_id` (number): This is used to generate Job ID. HQ uses [go-katsubushi](https://github.com/kayac/go-katsubushi) to allocate unique ID. If you want Job ID to be unique on mulitple servers, You need to set `server_id` unique on each servers. The default is `0`.
 
 * `addr` (string): The listen address to the HQ server process. The default is `0.0.0.0:19900`.
 
