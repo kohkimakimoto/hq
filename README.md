@@ -2,9 +2,21 @@
 
 HQ is a simplistic, language agnostic job queue engine communicated by HTTP messages.
 
-HQ is implemented as a standalone JSON over HTTP API server. In the job running workflow, it behaves like an asynchronous HTTP proxy server. When you push a job to the HQ server, it stores the job and sends asynchronously HTTP POST request to a URL that specified in the job.
+HQ is implemented as a standalone JSON over HTTP API server. In the job running workflow, it behaves like an asynchronous HTTP proxy server. When you push a job to the HQ server, it stores the job and sends asynchronous HTTP POST request to a URL that specified in the job.
 
 Workers that actually run the jobs are web applications. So you can implement the workers in Any programming language that can talk HTTP.
+
+```
+┌───┐             ┌──┐
+│app│──POST /job─>│  │
+└───┘             │  │
+┌───┐             │  │
+│app│──POST /job─>│HQ│
+└───┘             │  │
+┌───┐             │  │
+│app│──POST /job─>│  │
+└───┘             └──┘
+```
 
 ## Table of Contents
 
