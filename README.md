@@ -62,14 +62,17 @@ $ hq serve -c /path/to/config.toml
 # server_id
 server_id = 0
 
-# log_level
-log_level = "info"
-
 # addr
 addr = "0.0.0.0:19900"
 
 # data_dir
 data_dir = "/var/lib/hq"
+
+# log_level
+log_level = "info"
+
+# log_file
+log_file = "/var/log/hq/hq.log"
 
 # access_log_file
 access_log_file = "/var/log/hq/access.log"
@@ -78,7 +81,7 @@ access_log_file = "/var/log/hq/access.log"
 queues = 8192
 
 # dispatchers
-#dispatchers = 1
+dispatchers = 1
 
 # max_workers
 max_workers = 0
@@ -87,7 +90,7 @@ max_workers = 0
 shutdown_timeout = 10
 
 # job_lifetime
-# job_lifetime = 2419200
+job_lifetime = 2419200
 
 # job_list_default_limit
 job_list_default_limit = 0
@@ -97,13 +100,13 @@ job_list_default_limit = 0
 
 * `server_id` (number):
 
-* `log_level` (string): The log level (`debug|info|warn|error`). The default is `info`.
-
 * `addr` (string): The listen address to the HQ server process. The default is `0.0.0.0:19900`.
 
-* `log_file` (string):
-
 * `data_dir` (string):
+
+* `log_level` (string): The log level (`debug|info|warn|error`). The default is `info`.
+
+* `log_file` (string):
 
 * `access_log_file` (string):
 
@@ -122,7 +125,7 @@ job_list_default_limit = 0
 
 ## Job
 
-Job in HO is a JSON like the following:
+Job in HQ is a JSON like the following:
 
 ```json
 {
@@ -149,6 +152,8 @@ Job in HO is a JSON like the following:
   "waiting": false
 }
 ```
+
+You 
 
 ## HTTP API
 
