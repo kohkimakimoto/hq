@@ -124,6 +124,7 @@ GET /stats
 
 #### Response
 
+
 ```json
 {
   "version": "0.3.0",
@@ -149,7 +150,11 @@ GET /stats
 
 Pushes a new job.
 
-#### Parameters
+```http
+GET /job
+```
+
+#### Request
 
 ```json
 {
@@ -160,6 +165,10 @@ Pushes a new job.
   }
 }
 ```
+
+- `name`: 
+- `url`: 
+- `payload`:
 
 #### Response
 
