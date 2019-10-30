@@ -47,13 +47,11 @@ $ hq serve
 
 The config file must be written in [TOML](https://github.com/toml-lang/toml). You can specify the config file by `-c` or `-config-file` option when HQ runs like the following.
 
-### Example
-
 ```
 $ hq serve -c /path/to/config.toml
 ```
 
-The following is an example:
+### Example
 
 ```toml
 # server_id
