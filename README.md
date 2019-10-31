@@ -99,21 +99,21 @@ job_list_default_limit = 0
 
 * `log_level` (string): The log level (`debug|info|warn|error`). The default is `info`.
 
-* `log_file` (string): The log file of the HQ server. If you do not set, HQ writes log to STDOUT.
+* `log_file` (string): The log file path. If you do not set, HQ writes log to STDOUT.
 
-* `access_log_file` (string):
+* `access_log_file` (string):The access log file path. If you do not set, HQ writes log to STDOUT.
 
-* `queues` (number):
+* `queues` (number): Size of queue. The default is `8192`.
 
-* `dispatchers` (number):
+* `dispatchers` (number): Number of dispatchers. The default is `runtime.NumCPU()`.
 
-* `max_workers` (number):
+* `max_workers` (number): Number of max workers. The dispacher can execute multiple workers concurrently. This config is limit how many each dispatcher can run workers concurrently. For example, If you set `dispatcher = 2` and `max_workers = 3`, HQ can run max `6` workers at the same time. If you set `max_workers = 0`, each dispacher run only one worker synchronously. The default is `0`.
 
-* `shutdown_timeout` (number):
+* `shutdown_timeout` (number): This is time how many seconds HQ waits executing jobs to finish in a shutdown process. If HQ server process receives `SIGINT` or `SIGTERM`, it try to shutdown itself. If HQ has executing workers, it waits workers to finish or number of seconds of this config. The default is `10`.
 
-* `job_lifetime` (number):
+* `job_lifetime` (number): HQ removes old finished jobs automatically. This config sets time how many seconds HQ keeps jobs. If you set it `0`, HQ does not remove any jobs. The default is `2419200` (28 days).
 
-* `job_list_default_limit` (number):
+* `job_list_default_limit` (number): The default `limit` value of [`GET /job`](#get-job)'. The default is `0` (no limit).
 
 ## Job
 

@@ -2,9 +2,10 @@ package server
 
 import (
 	"fmt"
-	"github.com/BurntSushi/toml"
 	"runtime"
 	"time"
+
+	"github.com/BurntSushi/toml"
 )
 
 type Config struct {
