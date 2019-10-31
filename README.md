@@ -64,6 +64,12 @@ $ hq serve
 
 > Note: Running HQ server without any configuration like the above can cause to lost queued jobs, because HQ uses temporary directory to store jobs. Therefore this should be used only on DEV environment. When you use HQ on your production environment, You should set a proper configuration file. see [Configuration](#configuration).
 
+You can push a job by using the following `curl` command:
+
+```
+$ curl -XPOST http://localhost:19900/job -H "Content-Type: application/json" -d '{"url": "http://your-worker-app-server/example", "payload": {"message": "Hello world!"}}'
+```
+
 ## Configuration
 
 The config file must be written in [TOML](https://github.com/toml-lang/toml). You can specify the config file by `-c` or `-config-file` option when HQ runs like the following.
