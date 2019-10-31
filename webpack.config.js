@@ -4,13 +4,19 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: './ui/index.js',
+  entry: {
+    main: './ui/index.tsx',
+  },
   output: {
     path: path.join(__dirname, '/res/ui'),
-    filename: 'bundle.js'
+    filename: '[name].bundle.js'
   },
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        use: "ts-loader"
+      },
       {
         test: /\.(ttf|eot|woff|woff2|svg)$/,
         loader: 'file-loader',

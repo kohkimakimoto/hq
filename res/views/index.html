@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <title>HQ Web UI</title>
-  <link rel="stylesheet" href="/ui/bundle.css?v={{ CommitHash }}">
-  <script src="/ui/bundle.js?v={{ CommitHash }}" async></script>
 </head>
 <body>
-<div>{{ CommitHash }}</div>
+<div id="app"></div>
+<script src="/ui/vendor.bundle.js?v={{ CommitHash }}"></script>
+<script src="/ui/main.bundle.js?v={{ CommitHash }}"></script>
 </body>
 </html>

@@ -11,7 +11,8 @@
   "devDependencies": {},
   "author": "Kohki Makimoto <kohki.makimoto@gmail.com>",
   "dependencies": {
-    "bulma": "^0.8.0",
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.3",
     "copy-webpack-plugin": "^5.0.4",
     "cross-env": "^6.0.3",
     "css-loader": "^3.2.0",
@@ -19,8 +20,13 @@
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.13.0",
     "prettier": "^1.18.2",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
     "sass-loader": "^8.0.0",
+    "semantic-ui-react": "^0.88.1",
     "style-loader": "^1.0.0",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.6.4",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   }

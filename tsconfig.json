@@ -2,9 +2,8 @@
   "compilerOptions": {
     "sourceMap": true,
     "allowJs": true,
-    "outDir": "./res/public/",
     "moduleResolution": "node",
-    "baseUrl": "./ui/js/",
+    "baseUrl": "./ui/",
     "keyofStringsOnly": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -14,8 +13,5 @@
     "lib": ["es2015", "es2017", "dom"],
     "jsx": "react"
   },
-  "include": [
-    "./ui/js/"
-  ],
   "compileOnSave": true
 }
