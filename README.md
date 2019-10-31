@@ -161,11 +161,14 @@ POST /example HTTP/1.1
 Host: your-worker-app-server
 Content-Type: application/json
 User-Agent: HQ/1.0.0
+X-Hq-Job-Id: 109192606348480512
 
 {
   "message": "Hello world!"
 }
 ```
+
+You can also modify HTTP headers you like. see [`POST /job`](#post-job).
 
 ## HTTP API
 
@@ -261,12 +264,13 @@ POST /job
   "timeout": 0
 }
 ```
-- `url` (string,required):
-- `name` (string):
-- `comment` (string):
-- `payload` (json):
-- `header` (json):
-- `timeout` (number):
+
+- `url` (string,required): This URL to send HTTP request to a worker application.
+- `name` (string): The name of this job. You can set it an arbitrary string. This property is used by searching of the [`GET /job`](#get-job). If you do not set it. HQ set it `default` automatically.
+- `comment` (string): The arbitrary text to describe this job.
+- `payload` (json): The payload on the HTTP request to a worker application.
+- `header` (json): Custom HTTP headers on the HTTP request to a worker application.
+- `timeout` (number): timeout seconds of this job.
 
 #### Response
 
