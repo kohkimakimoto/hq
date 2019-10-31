@@ -360,9 +360,65 @@ GET /job?name={name}&begin={id}&reverse={true|false}&status={status}&limit={limi
 
 Gets a job.
 
+#### Request
+
+```http
+GET /job/{id}
+```
+
+##### Parameters
+
+- `id`: Job ID to get.
+
+#### Response
+
+```json
+{
+  "canceled": false,
+  "comment": "",
+  "createdAt": "2019-10-29T23:57:08.713Z",
+  "err": "failed to do http request: Post https://localhost/: dial tcp [::1]:443: connect: connection refused",
+  "failure": true,
+  "finishedAt": "2019-10-29T23:57:08.761Z",
+  "headers": null,
+  "id": "109440416981450752",
+  "name": "default",
+  "output": "",
+  "payload": {
+    "message": "Hello world!"
+  },
+  "running": false,
+  "startedAt": "2019-10-29T23:57:08.736Z",
+  "status": "failure",
+  "statusCode": null,
+  "success": false,
+  "timeout": 0,
+  "url": "https://localhost/",
+  "waiting": false
+}
+```
+
 ### `DELETE /job/{id}`
 
 Deletes a job.
+
+#### Request
+
+```http
+DELETE /job/{id}
+```
+
+##### Parameters
+
+- `id`: Job ID to delete.
+
+#### Response
+
+```json
+{
+  "id": "109440416981450752"
+}
+```
 
 ### `POST /job/{id}/restart`
 
