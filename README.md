@@ -265,6 +265,8 @@ POST /job
 }
 ```
 
+##### Parameters
+
 - `url` (string,required): The URL to send HTTP request to a worker application.
 - `name` (string): The name of this job. You can set it an arbitrary string. This property is used by searching of the [`GET /job`](#get-job). If you do not set it. HQ sets it `default` automatically.
 - `comment` (string): The arbitrary text to describe this job.
@@ -307,12 +309,16 @@ Lists jobs.
 #### Request
 
 ```http
-GET /job
+GET /job?name={name}&begin={id}&reverse={true|false}&status={status}&limit={limit}
 ```
 
 ##### Parameters
 
-- `limit`
+- `name`:
+- `begin`:
+- `reverse`:
+- `status`:
+- `limit`:
 
 #### Response
 
