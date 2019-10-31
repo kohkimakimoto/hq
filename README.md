@@ -8,14 +8,14 @@ Worker applications that actually run the jobs are web applications. So you can 
 
 ```
                    ┌────────────────────────────────────────────────────────────────┐
-┌───┐              │HQ                                                      ┌──────┐│              ┌──────────┐
+┌───┐              │HQ server                                               ┌──────┐│              ┌──────────┐
 │app│──POST /job──>┼┐          ┌───────────────────┐                      ┌>│worker│┼──POST /xxx──>│worker app│
 └───┘              ││          │queue              │                      │ └──────┘│              └──────────┘
 ┌───┐              ││          │┌───┐ ┌───┐   ┌───┐│          ┌──────────┐│ ┌──────┐│              ┌──────────┐
 │app│──POST /job──>┼┼─enqueue->││job│ │job│...│job││-dequeue->│dispatcher│┼>│worker│┼──POST /xxx──>│worker app│
 └───┘              ││          │└───┘ └───┘   └───┘│          └──────────┘│ └──────┘│              └──────────┘
-┌───┐              ││          └───────────────────┘                      │ ┌──────┐│              ┌──────────┐
-│app│──POST /job──>┼┘                                                     └>│worker│┼──POST /xxx──>│worker app│
+┌───┐              ││          │                   │                      │ ┌──────┐│              ┌──────────┐
+│app│──POST /job──>┼┘          └───────────────────┘                      └>│worker│┼──POST /xxx──>│worker app│
 └───┘              │                                                        └──────┘│              └──────────┘
                    └────────────────────────────────────────────────────────────────┘
 ```
@@ -167,8 +167,6 @@ X-Hq-Job-Id: 109192606348480512
   "message": "Hello world!"
 }
 ```
-
-You can also modify HTTP headers you like. see [`POST /job`](#post-job).
 
 ## HTTP API
 
