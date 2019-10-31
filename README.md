@@ -62,6 +62,8 @@ $ hq serve
 2019-04-18T18:56:25+09:00 INFO The server Listening on 0.0.0.0:19900 (pid: 74090)
 ```
 
+> Note: Running HQ server without any configuration like the above can cause to lost queued jobs, because HQ uses temporary directory to store jobs. Therefore this should be used only on DEV environment. When you use HQ on your production environment, You should set a proper configuration file. see [Configuration](#configuration).
+
 ## Configuration
 
 The config file must be written in [TOML](https://github.com/toml-lang/toml). You can specify the config file by `-c` or `-config-file` option when HQ runs like the following.
