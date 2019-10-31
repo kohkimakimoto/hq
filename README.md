@@ -199,8 +199,8 @@ GET /
 
 ```json
 {
-  "version": "0.3.0",
-  "commitHash": "6fe8ba18835f531e16166180feb7335c519df662"
+  "version": "1.0.0",
+  "commitHash": "e78e5977ffecffce7f5118e002069dd05165deb6"
 }
 ```
 
@@ -219,8 +219,8 @@ GET /stats
 
 ```json
 {
-  "version": "0.3.0",
-  "commitHash": "6fe8ba18835f531e16166180feb7335c519df662",
+  "version": "1.0.0",
+  "commitHash": "e78e5977ffecffce7f5118e002069dd05165deb6",
   "serverId": 0,
   "queues": 8192,
   "dispatchers": 8,
@@ -497,12 +497,12 @@ HQ also provides command-line interface to communicate HQ server. To view a list
 Usage: hq [<options...>] <command>
 
 Simplistic job queue engine
-version 0.3.0 (237ea6640ff100150fc9202a1a78322b321cddff)
+version 1.0.0 (e78e5977ffecffce7f5118e002069dd05165deb6)
 
 Options:
   --help, -h     show help
   --version, -v  print the version
-
+  
 Commands:
   delete   Deletes a job
   info     Displays a job detail
