@@ -4,19 +4,20 @@ HQ is a simplistic, language agnostic job queue engine communicated by HTTP mess
 
 HQ is implemented as a standalone JSON over HTTP API server. In the job running workflow, it behaves like an asynchronous HTTP proxy server. When you push a job to the HQ server, it stores the job and sends asynchronous HTTP POST request to a URL that specified in the job.
 
-Workers that actually run the jobs are web applications. So you can implement the workers in Any programming language that can talk HTTP.
+Worker applications that actually run the jobs are web applications. So you can implement the workers in Any programming language that can talk HTTP.
 
 ```
-┌───┐              ┌─────────────────────────┐
-│app│──POST /job──>┼┐         HQ                      │
-└───┘              ││          ┌─────────────────────┐                       │
-┌───┐              ││          │queue                │
-│app│──POST /job──>┼┼─enqueue->│┌───┐ ┌───┐   ┌───┐ │                         │
-└───┘              ││          ││job│ │job│...│job│ │
-┌───┐              ││          │└───┘ └───┘   └───┘ │
-│app│──POST /job──>┼┘          └─────────────────────┘
-└───┘              │
-                   └─────────────────────────┘
+                   ┌────────────────────────────────────────────────────────────────┐
+┌───┐              │HQ                                                      ┌──────┐│              ┌──────────┐
+│app│──POST /job──>┼┐          ┌───────────────────┐                      ┌>│worker│┼──POST /xxx──>│worker app│
+└───┘              ││          │queue              │                      │ └──────┘│              └──────────┘
+┌───┐              ││          │┌───┐ ┌───┐   ┌───┐│          ┌──────────┐│ ┌──────┐│              ┌──────────┐
+│app│──POST /job──>┼┼─enqueue->││job│ │job│...│job││-dequeue->│dispatcher│┼>│worker│┼──POST /xxx──>│worker app│
+└───┘              ││          │└───┘ └───┘   └───┘│          └──────────┘│ └──────┘│              └──────────┘
+┌───┐              ││          └───────────────────┘                      │ ┌──────┐│              ┌──────────┐
+│app│──POST /job──>┼┘                                                     └>│worker│┼──POST /xxx──>│worker app│
+└───┘              │                                                        └──────┘│              └──────────┘
+                   └────────────────────────────────────────────────────────────────┘
 ```
 
 ## Table of Contents
