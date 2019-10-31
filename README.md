@@ -517,6 +517,8 @@ Commands:
   help, h  Shows a list of commands or help for one command
 ```
 
+See more detail, Run a sub command with `-h` option.
+
 ## Author
 
 Kohki Makimoto <kohki.makimoto@gmail.com>
