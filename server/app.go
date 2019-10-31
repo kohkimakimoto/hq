@@ -13,6 +13,7 @@ import (
 	"github.com/labstack/gommon/log"
 	"github.com/pkg/errors"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -157,6 +158,10 @@ func (app *App) Open() error {
 	app.Background = NewBackground(app)
 	app.Background.Start()
 
+	// echo templates
+	e := app.Echo
+	e.Renderer = NewTemplate()
+
 	return nil
 }
 
@@ -209,6 +214,10 @@ func (app *App) ListenAndServe() error {
 		Format:  `${time_rfc3339} ${remote_ip} ${host} ${method} ${uri} ${status} ${latency} ${latency_human} ${bytes_in} ${bytes_out}` + "\n",
 		Output:  app.AccessLogFileWriter,
 	}))
+	e.Pre(middleware.RemoveTrailingSlashWithConfig(middleware.TrailingSlashConfig{
+		RedirectCode: http.StatusFound,
+	}))
+
 	// handlers
 	e.Any("/", InfoHandler)
 	e.GET("/stats", StatsHandler)
@@ -218,6 +227,11 @@ func (app *App) ListenAndServe() error {
 	e.DELETE("/job/:id", DeleteJobHandler)
 	e.POST("/job/:id/stop", StopJobHandler)
 	e.POST("/job/:id/restart", RestartJobHandler)
+
+	if app.Config.UI {
+		// enable web ui
+		e.Any("/ui", UIHandler)
+	}
 
 	// handler for reopen logs
 	go app.sigusr1Handler()
