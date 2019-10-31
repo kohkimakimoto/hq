@@ -424,9 +424,72 @@ DELETE /job/{id}
 
 Restarts a job.
 
+#### Request
+
+```http
+POST /job/{id}/restart
+```
+
+```json
+{
+  "copy": false
+}
+```
+
+##### Parameters
+
+- `id`: Job ID to restart.
+- `copy`: If it set `true`, Restarts the copied job instead of updating the existed job.
+
+#### Response
+
+```json
+{
+  "canceled": false,
+  "comment": "",
+  "createdAt": "2019-10-30T10:02:33.531Z",
+  "err": "",
+  "failure": false,
+  "finishedAt": null,
+  "headers": null,
+  "id": "109592774310887424",
+  "name": "default",
+  "output": "",
+  "payload": {
+    "message": "Hello world!"
+  },
+  "running": false,
+  "startedAt": null,
+  "status": "unfinished",
+  "statusCode": null,
+  "success": false,
+  "timeout": 0,
+  "url": "https://localhost/",
+  "waiting": false
+}
+```
+
 ### `POST /job/{id}/stop`
 
 Stops a job.
+
+#### Request
+
+```http
+POST /job/{id}/stop
+```
+
+##### Parameters
+
+- `id`: Job ID to stop.
+
+#### Response
+
+```json
+{
+  "id": "109440416981450752"
+}
+```
 
 ## Commands
 
