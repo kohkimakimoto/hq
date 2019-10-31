@@ -113,7 +113,7 @@ job_list_default_limit = 0
 
 * `job_lifetime` (number): HQ removes old finished jobs automatically. This config sets time how many seconds HQ keeps jobs. If you set it `0`, HQ does not remove any jobs. The default is `2419200` (28 days).
 
-* `job_list_default_limit` (number): The default `limit` value of [`GET /job`](#get-job)'. The default is `0` (no limit).
+* `job_list_default_limit` (number): The default `limit` value of [`GET /job`](#get-job). The default is `0` (no limit).
 
 ## Job
 
@@ -140,7 +140,7 @@ Job in HQ is a JSON as the following:
   "statusCode": 200,
   "success": true,
   "timeout": 0,
-  "url": "http://your-worker-server/worker/example",
+  "url": "http://your-worker-app-server/example",
   "waiting": false
 }
 ```
