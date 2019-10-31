@@ -154,6 +154,19 @@ Job in HQ is a JSON as the following:
 To create and push a new job, You can use [`POST /job`](#post-job) API.
 The pushed job is stored in the queue and executed by the HQ worker. The HQ worker constructs HTTP POST request from the job. You can customize this request headers and JSON payload by the job properties.
 
+If the above example job is executed, HQ will send like the following HTTP request:
+
+```
+POST /example HTTP/1.1
+Host: your-worker-app-server
+Content-Type: application/json
+User-Agent: HQ/1.0.0
+
+{
+  "message": "Hello world!"
+}
+```
+
 ## HTTP API
 
 HQ core functions are provided via RESTful HTTP API.
