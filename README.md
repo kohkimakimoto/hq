@@ -314,11 +314,11 @@ GET /job?name={name}&begin={id}&reverse={true|false}&status={status}&limit={limi
 
 ##### Parameters
 
-- `name`:
-- `begin`:
-- `reverse`:
-- `status`:
-- `limit`:
+- `name`: Specifies a regular expression string to filter the jobs with job's name
+- `begin`: Load the jobs from ID. (default: 0)
+- `reverse`: Sort by descending ID.
+- `status`: Specifies STATUS to filter the jobs with job's status (`running|waiting|canceling|failure|success|canceled|unfinished|unknown`).
+- `limit`: Max number of displaying jobs.
 
 #### Response
 
