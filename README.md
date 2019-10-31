@@ -238,9 +238,9 @@ POST /job
 {
   "name": "example",
   "comment": "This is an example job!",
-  "url": "https://your-worker-serevr/",
+  "url": "https://your-worker-app-server/example",
   "payload": {
-    "foo": "bar"
+    "message": "Hello world!"
   },
   "header": {
     "X-Custom-Token": "xxxxxxx"
@@ -260,17 +260,17 @@ POST /job
 ```json
 {
   "canceled": false,
-  "comment": "",
+  "comment": "This is an example job!",
   "createdAt": "2019-10-29T23:57:08.713Z",
   "err": "",
   "failure": false,
   "finishedAt": null,
   "headers": null,
   "id": "109440416981450752",
-  "name": "default",
+  "name": "example",
   "output": "",
   "payload": {
-    "foo": "bar"
+    "message": "Hello world!"
   },
   "running": false,
   "startedAt": null,
@@ -278,7 +278,7 @@ POST /job
   "statusCode": null,
   "success": false,
   "timeout": 0,
-  "url": "https://your-worker-serevr/",
+  "url": "https://your-worker-app-server/example",
   "waiting": false
 }
 ```
