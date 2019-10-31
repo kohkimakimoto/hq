@@ -250,9 +250,9 @@ POST /job
 
 ```json
 {
+  "url": "https://your-worker-app-server/example",
   "name": "example",
   "comment": "This is an example job!",
-  "url": "https://your-worker-app-server/example",
   "payload": {
     "message": "Hello world!"
   },
