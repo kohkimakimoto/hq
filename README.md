@@ -2,7 +2,7 @@
 
 HQ is a simplistic, language agnostic job queue engine communicated by HTTP messages.
 
-HQ is implemented as a standalone JSON over HTTP API server. In the job running workflow, it behaves like an asynchronous HTTP proxy server. When you push a job to the HQ server, it stores the job and sends asynchronous HTTP POST request to a URL that specified in the job.
+HQ is implemented as a standalone JSON over HTTP API server. In the job running workflow, it behaves like an asynchronous HTTP proxy server. When you push a job to the HQ server, it stores the job in the internal queue database and sends asynchronous HTTP POST request to a URL that specified in the job.
 
 Worker applications that actually run the jobs are web applications. So you can implement the workers in Any programming language that can talk HTTP.
 
@@ -73,40 +73,28 @@ $ hq serve -c /path/to/config.toml
 ### Example
 
 ```toml
-# server_id
 server_id = 0
 
-# addr
 addr = "0.0.0.0:19900"
 
-# data_dir
 data_dir = "/var/lib/hq"
 
-# log_level
 log_level = "info"
 
-# log_file
 log_file = "/var/log/hq/hq.log"
 
-# access_log_file
 access_log_file = "/var/log/hq/access.log"
 
-# queues
 queues = 8192
 
-# dispatchers
 dispatchers = 1
 
-# max_workers
 max_workers = 0
 
-# shutdown_timeout
 shutdown_timeout = 10
 
-# job_lifetime
 job_lifetime = 2419200
 
-# job_list_default_limit
 job_list_default_limit = 0
 ```
 
@@ -120,7 +108,7 @@ job_list_default_limit = 0
 
 * `log_level` (string): The log level (`debug|info|warn|error`). The default is `info`.
 
-* `log_file` (string):
+* `log_file` (string): The log file of the HQ server. If you do not set, HQ writes log to STDOUT.
 
 * `access_log_file` (string):
 
@@ -136,10 +124,9 @@ job_list_default_limit = 0
 
 * `job_list_default_limit` (number):
 
-
 ## Job
 
-Job in HQ is a JSON like the following:
+Job in HQ is a JSON as the following:
 
 ```json
 {
@@ -167,7 +154,8 @@ Job in HQ is a JSON like the following:
 }
 ```
 
-To create a new job, You can use [`POST /job`](#post-job) API.
+To create and push a new job, You can use [`POST /job`](#post-job) API.
+The pushed job is stored in the queue and executed by the HQ worker. The HQ worker constructs HTTP POST request from the job. You can customize this request headers and JSON payload by the job properties.
 
 ## HTTP API
 
@@ -331,7 +319,7 @@ version 0.3.0 (237ea6640ff100150fc9202a1a78322b321cddff)
 Options:
   --help, -h     show help
   --version, -v  print the version
-  
+
 Commands:
   delete   Deletes a job
   info     Displays a job detail
