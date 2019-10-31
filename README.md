@@ -67,7 +67,7 @@ $ hq serve
 You can push a job by using the following `curl` command:
 
 ```
-$ curl -XPOST http://localhost:19900/job -H "Content-Type: application/json" -d '{"url": "http://your-worker-app-server/example", "payload": {"message": "Hello world!"}}'
+$ curl -XPOST http://localhost:19900/job -H "Content-Type: application/json" -d '{"url": "http://localhost:8080/example", "payload": {"message": "Hello world!"}}'
 ```
 
 ## Configuration
