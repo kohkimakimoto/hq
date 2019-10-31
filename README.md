@@ -265,12 +265,12 @@ POST /job
 }
 ```
 
-- `url` (string,required): This URL to send HTTP request to a worker application.
-- `name` (string): The name of this job. You can set it an arbitrary string. This property is used by searching of the [`GET /job`](#get-job). If you do not set it. HQ set it `default` automatically.
+- `url` (string,required): The URL to send HTTP request to a worker application.
+- `name` (string): The name of this job. You can set it an arbitrary string. This property is used by searching of the [`GET /job`](#get-job). If you do not set it. HQ sets it `default` automatically.
 - `comment` (string): The arbitrary text to describe this job.
 - `payload` (json): The payload on the HTTP request to a worker application.
 - `header` (json): Custom HTTP headers on the HTTP request to a worker application.
-- `timeout` (number): timeout seconds of this job.
+- `timeout` (number): timeout seconds of this job. The default is `0` (no timeout).
 
 #### Response
 
@@ -303,6 +303,52 @@ POST /job
 ### `GET /job`
 
 Lists jobs.
+
+#### Request
+
+```http
+GET /job
+```
+
+##### Parameters
+
+- `limit`
+
+#### Response
+
+```json
+{
+  "jobs": [
+    {
+      "canceled": false,
+      "comment": "",
+      "createdAt": "2019-10-29T23:57:08.713Z",
+      "err": "failed to do http request: Post https://localhost/: dial tcp [::1]:443: connect: connection refused",
+      "failure": true,
+      "finishedAt": "2019-10-29T23:57:08.761Z",
+      "headers": null,
+      "id": "109440416981450752",
+      "name": "default",
+      "output": "",
+      "payload": {
+        "message": "Hello world!"
+      },
+      "running": false,
+      "startedAt": "2019-10-29T23:57:08.736Z",
+      "status": "failure",
+      "statusCode": null,
+      "success": false,
+      "timeout": 0,
+      "url": "https://localhost/",
+      "waiting": false
+    },
+    // ...
+  ],
+  "hasNext": true,
+  "next": "109592774310887424",
+  "count": 1
+}
+```
 
 ### `GET /job/{id}`
 
