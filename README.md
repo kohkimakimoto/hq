@@ -123,7 +123,7 @@ job_list_default_limit = 0
 
 ## Job
 
-Job in HQ is a JSON as the following:
+Job in HQ is a JSON object as the following:
 
 ```json
 {
