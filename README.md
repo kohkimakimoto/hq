@@ -74,27 +74,16 @@ $ hq serve -c /path/to/config.toml
 
 ```toml
 server_id = 0
-
 addr = "0.0.0.0:19900"
-
 data_dir = "/var/lib/hq"
-
 log_level = "info"
-
 log_file = "/var/log/hq/hq.log"
-
 access_log_file = "/var/log/hq/access.log"
-
 queues = 8192
-
 dispatchers = 1
-
 max_workers = 0
-
 shutdown_timeout = 10
-
 job_lifetime = 2419200
-
 job_list_default_limit = 0
 ```
 
