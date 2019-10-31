@@ -3,15 +3,18 @@ package server
 import (
 	"context"
 	"fmt"
+	"github.com/elazarl/go-bindata-assetfs"
 	"github.com/boltdb/bolt"
 	"github.com/client9/reopen"
 	"github.com/kayac/go-katsubushi"
 	"github.com/kohkimakimoto/hq/hq"
 	"github.com/kohkimakimoto/hq/util/logutil"
+	uibindata "github.com/kohkimakimoto/hq/res/ui"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/labstack/gommon/log"
 	"github.com/pkg/errors"
+	staticmw "github.com/kohkimakimoto/echo-static"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -231,6 +234,15 @@ func (app *App) ListenAndServe() error {
 	if app.Config.UI {
 		// enable web ui
 		e.Any("/ui", UIHandler)
+		e.Use(staticmw.StaticWithConfig(staticmw.StaticConfig{
+			UrlPrefix: "/ui",
+			AssetFS: &assetfs.AssetFS{
+				Asset:     uibindata.Asset,
+				AssetDir:  uibindata.AssetDir,
+				AssetInfo: uibindata.AssetInfo,
+				Prefix:    "",
+			},
+		}))
 	}
 
 	// handler for reopen logs

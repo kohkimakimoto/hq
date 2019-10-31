@@ -4,6 +4,8 @@ Thumbs.db
 ._*
 *.iml
 .vscode/
+node_modules/
+
 .go-packages/
 /_tmp
 /.vagrant
@@ -14,8 +16,7 @@ Thumbs.db
 
 /vendor
 
-/res/static/bindata.go
 /res/views/bindata.go
-/res/public
+/res/ui
 
 !.gitkeep

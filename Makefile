@@ -36,10 +36,14 @@ clean: ## Clean build outputs
 
 .PHONY:bindata
 bindata: ## bindata
+	yarn run clean && yarn run build
+	go-bindata -o ./res/ui/bindata.go -ignore bindata.go -prefix res/ui -pkg views res/ui/...
 	go-bindata -o ./res/views/bindata.go -ignore bindata.go -prefix res/views -pkg views res/views/...
 
 .PHONY:devbindata
 devbindata: ## devbindata
+	yarn run clean && yarn run dev
+	go-bindata -o ./res/ui/bindata.go -ignore bindata.go -prefix res/ui -pkg views res/ui/...
 	go-bindata -o ./res/views/bindata.go -ignore bindata.go -prefix res/views -pkg views res/views/...
 
 .PHONY:packaging

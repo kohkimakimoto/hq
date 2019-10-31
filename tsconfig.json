@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "allowJs": true,
+    "outDir": "./res/public/",
+    "moduleResolution": "node",
+    "baseUrl": "./ui/js/",
+    "keyofStringsOnly": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "module": "es2015",
+    "target": "es5",
+    "lib": ["es2015", "es2017", "dom"],
+    "jsx": "react"
+  },
+  "include": [
+    "./ui/js/"
+  ],
+  "compileOnSave": true
+}
