@@ -156,7 +156,7 @@ The pushed job is stored in the queue and executed by the HQ worker. The HQ work
 
 If the above example job is executed, HQ will send like the following HTTP request:
 
-```
+```http
 POST /example HTTP/1.1
 Host: your-worker-app-server
 Content-Type: application/json
