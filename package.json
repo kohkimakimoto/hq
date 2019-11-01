@@ -24,10 +24,12 @@
     "react-dom": "^16.11.0",
     "react-router-dom": "^5.1.2",
     "sass-loader": "^8.0.0",
+    "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.1",
     "style-loader": "^1.0.0",
     "ts-loader": "^6.2.1",
     "typescript": "^3.6.4",
+    "url-loader": "^2.2.0",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   }

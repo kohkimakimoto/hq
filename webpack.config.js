@@ -8,8 +8,8 @@ module.exports = {
     main: './ui/index.tsx'
   },
   output: {
-    path: path.join(__dirname, '/res/ui'),
-    filename: '[name].bundle.js'
+    path: path.join(__dirname, '/res/ui/assets'),
+    filename: 'bundle.js'
   },
   module: {
     rules: [
@@ -22,6 +22,14 @@ module.exports = {
         loader: 'file-loader',
         options: {
           name: '[name].[ext]'
+        }
+      },
+      {
+        test: /\.(png|jpe?g|gif)(\?.*)?$/,
+        loader: 'url-loader',
+        query: {
+          limit: 10000,
+          name: 'img/[name].[ext]'
         }
       },
       {
@@ -56,7 +64,7 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
     }),
     new MiniCssExtractPlugin({
-      filename: 'bundle.css'
+      filename: 'style.css'
     }),
     new CopyPlugin([
       {

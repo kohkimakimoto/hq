@@ -22,6 +22,7 @@ type Config struct {
 	JobLifetime         int64  `toml:"job_lifetime"`
 	JobListDefaultLimit int    `toml:"job_list_default_limit"`
 	UI                  bool   `toml:"ui"`
+	UIBasename          string `toml:"ui_basename"`
 	IDEpoch             []int  `toml:"id_epoch"`
 }
 
@@ -43,6 +44,7 @@ func NewConfig() *Config {
 		JobLifetime:         60 * 60 * 24 * 28,
 		JobListDefaultLimit: 0,
 		UI:                  true,
+		UIBasename:          "/ui",
 		IDEpoch:             []int{2019, 1, 1},
 	}
 }

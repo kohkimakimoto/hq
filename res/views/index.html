@@ -4,11 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
-  <title>HQ Web UI</title>
+  <link rel="stylesheet" media="all" href="{{ Basename }}/assets/vendor.style.css?v={{ CommitHash }}" />
+  <link rel="stylesheet" media="all" href="{{ Basename }}/assets/style.css?v={{ CommitHash }}" />
+  <title>HQ</title>
 </head>
 <body>
 <div id="app"></div>
-<script src="/ui/vendor.bundle.js?v={{ CommitHash }}"></script>
-<script src="/ui/main.bundle.js?v={{ CommitHash }}"></script>
+<script>
+var appConfig = {
+  basename: "{{ Basename }}"
+};
+</script>
+<script src="{{ Basename }}/assets/vendor.bundle.js?v={{ CommitHash }}"></script>
+<script src="{{ Basename }}/assets/bundle.js?v={{ CommitHash }}"></script>
 </body>
 </html>

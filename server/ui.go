@@ -5,6 +5,10 @@ import (
 	"net/http"
 )
 
-func UIHandler(c echo.Context) error {
+func UIIndexHandler(c echo.Context) error {
 	return c.Render(http.StatusOK, "index.html", nil)
+}
+
+func UIFallbackHandler(c echo.Context) error {
+	return UIIndexHandler(c)
 }

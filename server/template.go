@@ -19,21 +19,24 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
-func NewTemplate() *Template {
+func NewTemplate(app *App) *Template {
 	return &Template{
-		templates: getCompiledViewTemplate(),
+		templates: getCompiledViewTemplate(app),
 	}
 }
 
-var funcMap = template.FuncMap{
-	"CommitHash": func() string {
-		return hq.CommitHash
-	},
-	"ToUpper": strings.ToUpper,
-	"ToLower": strings.ToLower,
-}
+func getCompiledViewTemplate(app *App) *template.Template {
+	funcMap := template.FuncMap{
+		"CommitHash": func() string {
+			return hq.CommitHash
+		},
+		"Basename": func() string {
+			return app.Config.UIBasename
+		},
+		"ToUpper": strings.ToUpper,
+		"ToLower": strings.ToLower,
+	}
 
-func getCompiledViewTemplate() *template.Template {
 	t := template.New("views").Funcs(funcMap)
 	for _, name := range views.AssetNames() {
 		t = template.Must(t.New(name).Parse(string(views.MustAsset(name))))
