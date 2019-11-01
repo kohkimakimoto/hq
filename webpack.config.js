@@ -5,7 +5,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
-    main: './ui/index.tsx',
+    main: './ui/index.tsx'
   },
   output: {
     path: path.join(__dirname, '/res/ui'),
@@ -15,7 +15,7 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: "ts-loader"
+        use: 'ts-loader'
       },
       {
         test: /\.(ttf|eot|woff|woff2|svg)$/,
@@ -56,13 +56,15 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
     }),
     new MiniCssExtractPlugin({
-      filename: 'bundle.css',
+      filename: 'bundle.css'
     }),
-    new CopyPlugin([{
-      from: path.join(__dirname, '/ui/static/*'),
-      to: path.join(__dirname, '/res/ui/'),
-      context: path.join(__dirname, '/ui/static'),
-    }])
+    new CopyPlugin([
+      {
+        from: path.join(__dirname, '/ui/static/*'),
+        to: path.join(__dirname, '/res/ui/'),
+        context: path.join(__dirname, '/ui/static')
+      }
+    ])
   ],
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.scss', '.css']

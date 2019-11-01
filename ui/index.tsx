@@ -1,9 +1,10 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { App } from './src/App';
 
 declare var process: any;
 if (process.env.NODE_ENV === 'development') {
-  console.log('This is development mode!');
+  console.log('This is the development mode!');
 }
 
-ReactDOM.render(<div>aaaaaaaaaaaa</div>, document.getElementById('app'));
+ReactDOM.render(<App />, document.getElementById('app'));

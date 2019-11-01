@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "fmt": "prettier --write \"ui/**/*.js\" \"ui/**/*.ts\" \"*.js\"",
+    "fmt": "prettier --write \"ui/**/*.js\" \"ui/**/*.ts\" \"ui/**/*.tsx\" \"*.js\"",
     "build": "cross-env NODE_ENV=production webpack",
     "dev": "cross-env NODE_ENV=development webpack",
     "clean": "rm -rf res/ui"
@@ -22,6 +22,7 @@
     "prettier": "^1.18.2",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
+    "react-router-dom": "^5.1.2",
     "sass-loader": "^8.0.0",
     "semantic-ui-react": "^0.88.1",
     "style-loader": "^1.0.0",

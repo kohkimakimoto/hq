@@ -2,7 +2,7 @@
 
 HQ is a simplistic, language agnostic job queue engine communicated by HTTP messages.
 
-HQ is implemented as a standalone JSON over HTTP API server. In the job running workflow, it behaves like an asynchronous HTTP proxy server. When you push a job to the HQ server, it stores the job in the internal queue database and sends asynchronous HTTP POST request to a URL that specified in the job.
+HQ is implemented as a standalone JSON over HTTP API server. When you push a job to the HQ server, it stores the job in the internal queue database and sends asynchronous HTTP POST request to a URL that specified in the job.
 
 Worker applications that actually run the jobs are web applications. So you can implement applications for the jobs in Any programming language that can talk HTTP (such as Go, PHP, Python, etc).
 
@@ -22,6 +22,7 @@ Worker applications that actually run the jobs are web applications. So you can 
 
 ## Table of Contents
 
+  - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Getting Started](#getting-started)
   - [Configuration](#configuration)
@@ -38,6 +39,7 @@ Worker applications that actually run the jobs are web applications. So you can 
     - [`POST /job/{id}/restart`](#post-jobidrestart)
     - [`POST /job/{id}/stop`](#post-jobidstop)
   - [Commands](#commands)
+  - [Web UI](#web-ui)
   - [Author](#author)
   - [License](#license)
 
@@ -516,6 +518,10 @@ Commands:
 ```
 
 See more detail, Run a sub command with `-h` option.
+
+
+## Web UI
+
 
 ## Author
 
