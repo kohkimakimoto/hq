@@ -153,7 +153,7 @@ Job in HQ is a JSON object as the following:
 }
 ```
 
-To create and push a new job, You can use [`POST /job`](#post-job) API.
+Jobs are managed internal database in HQ. To create and push a new job, You can use [`POST /job`](#post-job) API.
 The pushed job is stored in the queue and executed by the HQ worker. The HQ worker constructs HTTP POST request from the job. You can customize this request headers and JSON payload by the job properties.
 
 If the above example job is executed, HQ will send like the following HTTP request:
