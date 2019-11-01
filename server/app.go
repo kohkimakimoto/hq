@@ -238,7 +238,7 @@ func (app *App) ListenAndServe() error {
 
 		e.Any(app.Config.UIBasename, UIIndexHandler)
 		e.Any(app.Config.UIBasename+"/*", UIFallbackHandler)
-		setupAPIHandlers(e, app.Config.UIBasename+"/internal")
+		setupAPIHandlers(e, app.Config.UIBasename+"/internal/")
 	}
 
 	// handler for reopen logs

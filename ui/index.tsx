@@ -12,6 +12,15 @@ if (process.env.NODE_ENV === 'development') {
 
 declare var appConfig: {
   basename: string;
+  version: string;
+  commitHash: string;
 };
 
-ReactDOM.render(<App basename={appConfig.basename} />, document.getElementById('app'));
+ReactDOM.render(
+  <App
+    basename={appConfig.basename}
+    version={appConfig.version}
+    commitHash={appConfig.commitHash}
+  />,
+  document.getElementById('app')
+);

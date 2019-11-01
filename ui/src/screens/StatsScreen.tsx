@@ -1,7 +1,11 @@
 import React from 'react';
-import {Container} from "semantic-ui-react";
+import {Container, Header} from "semantic-ui-react";
 
 export const StatsScreen: React.FC = () => {
-  return <Container>Stats</Container>;
+  return (
+    <Container>
+      <Header as='h1'>Stats</Header>
+    </Container>
+  );
 };
 

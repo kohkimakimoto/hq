@@ -27,6 +27,9 @@ func NewTemplate(app *App) *Template {
 
 func getCompiledViewTemplate(app *App) *template.Template {
 	funcMap := template.FuncMap{
+		"Version": func() string {
+			return hq.Version
+		},
 		"CommitHash": func() string {
 			return hq.CommitHash
 		},

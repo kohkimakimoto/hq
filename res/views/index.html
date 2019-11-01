@@ -11,9 +11,7 @@
 <body>
 <div id="app"></div>
 <script>
-var appConfig = {
-  basename: "{{ Basename }}"
-};
+var appConfig = {basename: "{{ Basename }}", version: "{{ Version }}", commitHash: "{{ CommitHash }}"};
 </script>
 <script src="{{ Basename }}/assets/vendor.bundle.js?v={{ CommitHash }}"></script>
 <script src="{{ Basename }}/assets/bundle.js?v={{ CommitHash }}"></script>
