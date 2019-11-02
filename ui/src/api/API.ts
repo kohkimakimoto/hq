@@ -1,7 +1,6 @@
 import { Client, HttpClientProvider } from './Client';
 
 export class API {
-
   private client: Client;
 
   public constructor() {

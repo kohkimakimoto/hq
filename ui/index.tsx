@@ -10,17 +10,7 @@ if (process.env.NODE_ENV === 'development') {
   console.log('This is the development mode!');
 }
 
-declare var appConfig: {
-  basename: string;
-  version: string;
-  commitHash: string;
-};
+// defined in html
+declare var appConfig: any;
 
-ReactDOM.render(
-  <App
-    basename={appConfig.basename}
-    version={appConfig.version}
-    commitHash={appConfig.commitHash}
-  />,
-  document.getElementById('app')
-);
+ReactDOM.render(<App initAppConfig={appConfig} />, document.getElementById('app'));

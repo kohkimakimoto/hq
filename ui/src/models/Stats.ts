@@ -1,8 +1,8 @@
-export interface StatsProperties {
+export type StatsProperties = {
   readonly queueSize?: number;
   readonly queueUsage?: number;
   readonly runningWorkers?: number;
-}
+};
 
 export class Stats implements StatsProperties {
   readonly queueSize: number = 0;
