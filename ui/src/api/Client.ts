@@ -1,10 +1,30 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { errorParser } from './Error';
+import { StoreState } from '../store/State';
+import { addLogger } from './addLogger';
 
 /**
  * HttpClientProvider
  */
 export type HttpClientProvider = () => AxiosInstance;
+
+export function createHTTPClientProvider(basename: string): HttpClientProvider {
+  return () => {
+    const headers = {};
+
+    const client = axios.create({
+      baseURL: basename + '/internal',
+      timeout: 10000,
+      headers: headers
+    });
+
+    if (__DEV__) {
+      addLogger(client);
+    }
+
+    return client;
+  };
+}
 
 /**
  * Client is an API client to make requests to the myRule API.

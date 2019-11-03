@@ -4,6 +4,8 @@ import { StoreState } from './store/State';
 import { ErrorHandler } from './ErrorHandler';
 import { Dispatcher } from './store/Dispatcher';
 import { configureStore } from './store/configureStore';
+import { createHTTPClientProvider, HttpClientProvider } from './api/Client';
+import { API } from './api/API';
 
 const store = configureStore();
 
@@ -25,8 +27,12 @@ export class ServiceResolver {
     return new Dispatcher(this.store);
   }
 
-  get error() {
+  get errorHandler() {
     return new ErrorHandler(this.dispatcher);
+  }
+
+  get api(): API {
+    return new API(createHTTPClientProvider(this.store.getState().basename));
   }
 }
 
