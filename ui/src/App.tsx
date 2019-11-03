@@ -4,9 +4,10 @@ import { Container, Divider, Dropdown, Grid, Header, Image, List, Menu, Segment,
 import { JobsScreen } from './screens/JobsScreen';
 import { NotFoundScreen } from './screens/NotFoundScreen';
 import { StatsScreen } from './screens/StatsScreen';
-import {Store } from "redux";
-import {Provider as StoreProvider, useSelector } from 'react-redux';
-import {StoreState} from "./store/State";
+import { Store } from 'redux';
+import { Provider as StoreProvider, useSelector } from 'react-redux';
+import { StoreState } from './store/State';
+import { ServiceProvider, ServiceResolver } from './services';
 
 const Navbar: React.FC<{}> = () => {
   const location = useLocation();
@@ -77,10 +78,12 @@ const Main: React.FC = () => {
   );
 };
 
-export const App: React.FC<{ store: Store<StoreState> }> = props => {
+export const App: React.FC<{ resolver: ServiceResolver }> = ({ resolver }) => {
   return (
-    <StoreProvider store={props.store}>
-      <Main />
-    </StoreProvider>
+    <ServiceProvider value={resolver}>
+      <StoreProvider store={resolver.store}>
+        <Main />
+      </StoreProvider>
+    </ServiceProvider>
   );
 };
