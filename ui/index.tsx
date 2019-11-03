@@ -1,16 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from './src/App';
+import { configureStore } from "./src/store/configureStore";
+import {Dispatcher} from "./src/store/Dispatcher";
 
 // import style
 import './style.scss';
 
-declare var process: any;
-if (process.env.NODE_ENV === 'development') {
+declare global {
+  const __DEV__: boolean;
+}
+
+if (__DEV__) {
   console.log('This is the development mode!');
 }
 
-// defined in html
-declare var appConfig: any;
+const store = configureStore();
+const dispatcher = new Dispatcher(store);
 
-ReactDOM.render(<App initAppConfig={appConfig} />, document.getElementById('app'));
+// initialize store state.
+declare var appConfig: any;
+dispatcher.commit(appConfig);
+
+ReactDOM.render(<App store={store} />, document.getElementById('app'));

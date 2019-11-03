@@ -4,7 +4,9 @@ import { Container, Divider, Dropdown, Grid, Header, Image, List, Menu, Segment,
 import { JobsScreen } from './screens/JobsScreen';
 import { NotFoundScreen } from './screens/NotFoundScreen';
 import { StatsScreen } from './screens/StatsScreen';
-import { AppConfig, AppConfigProperties, AppConfigProvider, useAppConfig } from './store/AppConfig';
+import {Store } from "redux";
+import {Provider as StoreProvider, useSelector } from 'react-redux';
+import {StoreState} from "./store/State";
 
 const Navbar: React.FC<{}> = () => {
   const location = useLocation();
@@ -38,23 +40,23 @@ const Navbar: React.FC<{}> = () => {
 };
 
 const Footer: React.FC = () => {
-  const appConfig = useAppConfig();
+  const version = useSelector<StoreState, string>(state => state.version);
 
   return (
     <Container textAlign="center" style={{ marginTop: 40 }}>
       <Divider />
       <List horizontal divided size="small">
-        <List.Item>version {appConfig.version}</List.Item>
+        <List.Item>version {version}</List.Item>
       </List>
     </Container>
   );
 };
 
 const Main: React.FC = () => {
-  const appConfig = useAppConfig();
+  const basename = useSelector<StoreState, string>(state => state.basename);
 
   return (
-    <Router basename={appConfig.basename}>
+    <Router basename={basename}>
       <Navbar />
       <Switch>
         <Route exact path="/">
@@ -75,12 +77,10 @@ const Main: React.FC = () => {
   );
 };
 
-export const App: React.FC<{ initAppConfig: AppConfigProperties }> = props => {
-  const appConfig = new AppConfig(props.initAppConfig);
-
+export const App: React.FC<{ store: Store<StoreState> }> = props => {
   return (
-    <AppConfigProvider value={appConfig}>
+    <StoreProvider store={props.store}>
       <Main />
-    </AppConfigProvider>
+    </StoreProvider>
   );
 };
