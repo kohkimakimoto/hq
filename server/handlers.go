@@ -280,7 +280,6 @@ func StatsHandler(c echo.Context) error {
 		Queues:              config.Queues,
 		Dispatchers:         config.Dispatchers,
 		MaxWorkers:          config.MaxWorkers,
-		QueueMax:            cap(queueManger.Queue),
 		QueueUsage:          len(queueManger.Queue),
 		NumWaitingJobs:      len(queueManger.WaitingJobs),
 		NumRunningJobs:      len(queueManger.RunningJobs),

@@ -15,7 +15,6 @@ type Stats struct {
 	Queues              int64  `json:"queues"`
 	Dispatchers         int64  `json:"dispatchers"`
 	MaxWorkers          int64  `json:"maxWorkers"`
-	QueueMax       int   `json:"queueMax"`
 	QueueUsage     int   `json:"queueUsage"`
 	NumWaitingJobs int   `json:"numWaitingJobs"`
 	NumRunningJobs int   `json:"numRunningJobs"`

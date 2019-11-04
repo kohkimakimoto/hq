@@ -224,7 +224,6 @@ GET /stats
   "queues": 8192,
   "dispatchers": 8,
   "maxWorkers": 0,
-  "queueMax": 8192,
   "queueUsage": 0,
   "numWaitingJobs": 0,
   "numRunningJobs": 0,

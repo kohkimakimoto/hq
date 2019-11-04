@@ -2,7 +2,6 @@ export type StatsProperties = {
   readonly queues?: number;
   readonly dispatchers?: number;
   readonly maxWorkers?: number;
-  readonly queueMax?: number;
   readonly queueUsage?: number;
   readonly numWaitingJobs?: number;
   readonly numRunningJobs?: number;
@@ -14,7 +13,6 @@ export class Stats implements StatsProperties {
   readonly queues: number = 0;
   readonly dispatchers: number = 0;
   readonly maxWorkers: number = 0;
-  readonly queueMax: number = 0;
   readonly queueUsage: number = 0;
   readonly numWaitingJobs: number = 0;
   readonly numRunningJobs: number = 0;

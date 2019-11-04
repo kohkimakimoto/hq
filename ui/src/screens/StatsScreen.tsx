@@ -26,8 +26,6 @@ export const StatsScreen: React.FC = () => {
         <p>{stats.dispatchers}</p>
         <Header as="h2">MaxWorkers</Header>
         <p>{stats.maxWorkers}</p>
-        <Header as="h2">QueueMax</Header>
-        <p>{stats.queueMax}</p>
         <Header as="h2">QueueUsage</Header>
         <p>{stats.queueUsage}</p>
         <Header as="h2">NumWaitingJobs</Header>
