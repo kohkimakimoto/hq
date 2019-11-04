@@ -1,13 +1,12 @@
 import React, { useContext } from 'react';
 import { Store } from 'redux';
 import { StoreState } from './store/State';
-import { ErrorHandler } from './ErrorHandler';
 import { Dispatcher } from './store/Dispatcher';
 import { configureStore } from './store/configureStore';
-import { createHTTPClientProvider, HttpClientProvider } from './api/Client';
 import { API } from './api/API';
-
-const store = configureStore();
+import { createHTTPClientProvider } from './api/createHTTPClientProvider';
+import { createHandleError, HandleError } from './services/HandleError';
+import { createUpdateStats, UpdateStats } from './services/UpdateStats';
 
 /**
  * ServiceResolver
@@ -27,22 +26,15 @@ export class ServiceResolver {
     return new Dispatcher(this.store);
   }
 
-  get errorHandler() {
-    return new ErrorHandler(this.dispatcher);
+  get handleError(): HandleError {
+    return createHandleError(this.dispatcher);
+  }
+
+  get updateStats(): UpdateStats {
+    return createUpdateStats(this.api, this.dispatcher);
   }
 
   get api(): API {
     return new API(createHTTPClientProvider(this.store.getState().basename));
   }
 }
-
-// Init default resolver.
-ServiceResolver.defaultResolver = new ServiceResolver(configureStore());
-
-const context = React.createContext<ServiceResolver>(ServiceResolver.defaultResolver);
-
-export const ServiceProvider = context.Provider;
-
-export const useServices = () => {
-  return useContext<ServiceResolver>(context);
-};

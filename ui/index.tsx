@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { App } from './src/App';
 import { configureStore } from './src/store/configureStore';
 import { Dispatcher } from './src/store/Dispatcher';
-import { ServiceResolver } from './src/services';
+import { ServiceResolver } from './src/ServiceResolver';
 
 // import style
 import './style.scss';

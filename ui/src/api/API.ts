@@ -1,22 +1,38 @@
-import { Client, HttpClientProvider } from './Client';
+import { Client } from './Client';
 import { Stats } from '../models/Stats';
+import { AxiosInstance } from 'axios';
+import {JobList} from "../models/JobList";
+import {Job} from "../models/Job";
 
 export class API {
   private client: Client;
 
-  public constructor(provider?: HttpClientProvider) {
+  public constructor(provider?: () => AxiosInstance) {
     this.client = new Client();
     if (provider) {
       this.registerHttpClientProvider(provider);
     }
   }
 
-  public registerHttpClientProvider(provider: HttpClientProvider) {
-    this.client.provider = provider;
+  public registerHttpClientProvider(provider: () => AxiosInstance) {
+    this.client.httpClientProvider = provider;
   }
 
-  public async getStats(): Promise<Stats> {
+  public async stats(): Promise<Stats> {
     const resp = await this.client.get('/stats');
     return new Stats(resp);
+  }
+
+  public async listJobs(): Promise<JobList> {
+    const resp = await this.client.get('/job');
+
+    return new JobList({
+      jobs: resp.jobs.map((value) => {
+        return new Job(value);
+      }),
+      hasNext: resp.hasNext,
+      next: resp.next,
+      count: resp.count,
+    });
   }
 }

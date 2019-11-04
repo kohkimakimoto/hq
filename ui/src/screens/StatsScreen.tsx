@@ -1,27 +1,44 @@
-import React, { useEffect } from 'react';
-import { Container, Header } from 'semantic-ui-react';
-import { useServices } from '../services';
+import React, { useEffect, useState } from 'react';
+import { Container, Header, Segment, Progress } from 'semantic-ui-react';
+import { Stats } from '../models/Stats';
+import { useEffectDocumentTitle } from '../hooks/useEffectDocumentTitle';
+import { useSelector } from 'react-redux';
+import { StoreState } from '../store/State';
+import { useEffectStats } from '../hooks/useEffectStats';
 
 export const StatsScreen: React.FC = () => {
-  useEffect(() => {
-    document.title = 'HQ | Stats';
-  });
+  useEffectStats();
+  useEffectDocumentTitle('Stats');
 
-  const { api, errorHandler } = useServices();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const stat = await api.getStats();
-      } catch (err) {
-        errorHandler.handle(err);
-      }
-    })();
-  });
+  const stats = useSelector<StoreState, Stats>(state => state.stats);
 
   return (
     <Container>
-      <Header as="h1">Stats</Header>
+      <div className="page-title">
+        <Header as="h1" dividing>
+          Stats
+        </Header>
+      </div>
+      <div>
+        <Header as="h2">Queues</Header>
+        <p>{stats.queues}</p>
+        <Header as="h2">Dispatchers</Header>
+        <p>{stats.dispatchers}</p>
+        <Header as="h2">MaxWorkers</Header>
+        <p>{stats.maxWorkers}</p>
+        <Header as="h2">QueueMax</Header>
+        <p>{stats.queueMax}</p>
+        <Header as="h2">QueueUsage</Header>
+        <p>{stats.queueUsage}</p>
+        <Header as="h2">NumWaitingJobs</Header>
+        <p>{stats.numWaitingJobs}</p>
+        <Header as="h2">NumRunningJobs</Header>
+        <p>{stats.numRunningJobs}</p>
+        <Header as="h2">NumWorkers</Header>
+        <p>{stats.numWorkers}</p>
+        <Header as="h2">NumJobs</Header>
+        <p>{stats.numJobs}</p>
+      </div>
     </Container>
   );
 };

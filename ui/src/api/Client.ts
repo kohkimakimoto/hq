@@ -1,50 +1,25 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { errorParser } from './Error';
-import { StoreState } from '../store/State';
-import { addLogger } from './addLogger';
-
-/**
- * HttpClientProvider
- */
-export type HttpClientProvider = () => AxiosInstance;
-
-export function createHTTPClientProvider(basename: string): HttpClientProvider {
-  return () => {
-    const headers = {};
-
-    const client = axios.create({
-      baseURL: basename + '/internal',
-      timeout: 10000,
-      headers: headers
-    });
-
-    if (__DEV__) {
-      addLogger(client);
-    }
-
-    return client;
-  };
-}
 
 /**
  * Client is an API client to make requests to the myRule API.
  * The myRule APIs only use POST request.
  */
 export class Client {
-  public provider: HttpClientProvider;
+  public httpClientProvider: () => AxiosInstance;
 
   public constructor() {
-    this.provider = function() {
+    this.httpClientProvider = function() {
       return axios.create();
     };
   }
 
-  public registerHttpClientProvider(provider: HttpClientProvider) {
-    this.provider = provider;
+  public registerHttpClientProvider(provider: () => AxiosInstance) {
+    this.httpClientProvider = provider;
   }
 
   public put(url: string, data?: any, config?: AxiosRequestConfig): Promise<any> {
-    return this.provider()
+    return this.httpClientProvider()
       .put(url, data, config)
       .then(resp => {
         return resp.data;
@@ -55,7 +30,7 @@ export class Client {
   }
 
   public post(url: string, data?: any, config?: AxiosRequestConfig): Promise<any> {
-    return this.provider()
+    return this.httpClientProvider()
       .post(url, data, config)
       .then(resp => {
         return resp.data;
@@ -70,7 +45,7 @@ export class Client {
       config.params = params;
     }
 
-    return this.provider()
+    return this.httpClientProvider()
       .delete(url, config)
       .then(resp => {
         return resp.data;
@@ -85,7 +60,7 @@ export class Client {
       config.params = params;
     }
 
-    return this.provider()
+    return this.httpClientProvider()
       .get(url, config)
       .then(resp => {
         return resp.data;

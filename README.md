@@ -221,16 +221,9 @@ GET /stats
 
 ```json
 {
-  "version": "1.0.0",
-  "commitHash": "e78e5977ffecffce7f5118e002069dd05165deb6",
-  "serverId": 0,
   "queues": 8192,
   "dispatchers": 8,
   "maxWorkers": 0,
-  "shutdownTimeout": 10,
-  "jobLifetime": 2419200,
-  "jobLifetimeStr": "4 weeks",
-  "jobListDefaultLimit": 0,
   "queueMax": 8192,
   "queueUsage": 0,
   "numWaitingJobs": 0,

@@ -12,19 +12,9 @@ type Info struct {
 }
 
 type Stats struct {
-	// hq info
-	Version    string `json:"version"`
-	CommitHash string `json:"commitHash"`
-	// config
-	ServerId            uint   `json:"serverId"`
 	Queues              int64  `json:"queues"`
 	Dispatchers         int64  `json:"dispatchers"`
 	MaxWorkers          int64  `json:"maxWorkers"`
-	ShutdownTimeout     int64  `json:"shutdownTimeout"`
-	JobLifetime         int64  `json:"jobLifetime"`
-	JobLifetimeStr      string `json:"jobLifetimeStr"`
-	JobListDefaultLimit int    `json:"jobListDefaultLimit"`
-	// queue stats
 	QueueMax       int   `json:"queueMax"`
 	QueueUsage     int   `json:"queueUsage"`
 	NumWaitingJobs int   `json:"numWaitingJobs"`

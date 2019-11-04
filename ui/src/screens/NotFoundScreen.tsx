@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react';
 import { Container, Header } from 'semantic-ui-react';
-import { useServices } from '../services';
+import { useEffectDocumentTitle } from '../hooks/useEffectDocumentTitle';
 
 export const NotFoundScreen: React.FC = () => {
-  useEffect(() => {
-    document.title = 'HQ | Not Found';
-  });
+  useEffectDocumentTitle('Not Found');
 
   return (
     <Container>
-      <Header as="h1">404 Page not found</Header>
+      <div className="page-title">
+        <Header as="h1" dividing>
+          404 Page not found
+        </Header>
+      </div>
       <p>HQ returned an error.</p>
     </Container>
   );

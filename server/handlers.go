@@ -3,7 +3,6 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/hako/durafmt"
 	"github.com/kayac/go-katsubushi"
 	"github.com/kohkimakimoto/boltutil"
 	"github.com/kohkimakimoto/hq/hq"
@@ -12,7 +11,6 @@ import (
 	"net/http"
 	"strconv"
 	"sync/atomic"
-	"time"
 )
 
 func InfoHandler(c echo.Context) error {
@@ -279,16 +277,9 @@ func StatsHandler(c echo.Context) error {
 	}
 
 	stats := &hq.Stats{
-		Version:             hq.Version,
-		CommitHash:          hq.CommitHash,
-		ServerId:            config.ServerId,
 		Queues:              config.Queues,
 		Dispatchers:         config.Dispatchers,
 		MaxWorkers:          config.MaxWorkers,
-		ShutdownTimeout:     config.ShutdownTimeout,
-		JobLifetime:         config.JobLifetime,
-		JobLifetimeStr:      durafmt.Parse(time.Duration(time.Duration(config.JobLifetime) * time.Second)).String(),
-		JobListDefaultLimit: config.JobListDefaultLimit,
 		QueueMax:            cap(queueManger.Queue),
 		QueueUsage:          len(queueManger.Queue),
 		NumWaitingJobs:      len(queueManger.WaitingJobs),

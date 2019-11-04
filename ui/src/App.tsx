@@ -1,13 +1,27 @@
 import React, { useContext, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect, useLocation } from 'react-router-dom';
-import { Container, Divider, Dropdown, Grid, Header, Image, List, Menu, Segment, Icon } from 'semantic-ui-react';
+import {
+  Container,
+  Divider,
+  Dropdown,
+  Grid,
+  Header,
+  Image,
+  List,
+  Menu,
+  Segment,
+  Message,
+  SemanticCOLORS,
+  Icon
+} from 'semantic-ui-react';
 import { JobsScreen } from './screens/JobsScreen';
 import { NotFoundScreen } from './screens/NotFoundScreen';
 import { StatsScreen } from './screens/StatsScreen';
 import { Store } from 'redux';
 import { Provider as StoreProvider, useSelector } from 'react-redux';
 import { StoreState } from './store/State';
-import { ServiceProvider, ServiceResolver } from './services';
+import { ServiceResolver } from './ServiceResolver';
+import { ServiceContext } from './ServiceContext';
 
 const Navbar: React.FC<{}> = () => {
   const location = useLocation();
@@ -40,14 +54,26 @@ const Navbar: React.FC<{}> = () => {
   );
 };
 
+const MessageArea: React.FC<{ color: SemanticCOLORS; message: string }> = props => {
+  if (props.message === '') {
+    return null;
+  }
+
+  return (
+    <Container textAlign="center" style={{ marginBottom: 40 }}>
+      <Message color={props.color}>{props.message}</Message>
+    </Container>
+  );
+};
+
 const Footer: React.FC = () => {
   const version = useSelector<StoreState, string>(state => state.version);
 
   return (
-    <Container textAlign="center" style={{ marginTop: 40 }}>
+    <Container textAlign="center" style={{ marginTop: 40, marginBottom: 40 }}>
       <Divider />
       <List horizontal divided size="small">
-        <List.Item>version {version}</List.Item>
+        <List.Item>HQ Web UI version {version}</List.Item>
       </List>
     </Container>
   );
@@ -55,10 +81,16 @@ const Footer: React.FC = () => {
 
 const Main: React.FC = () => {
   const basename = useSelector<StoreState, string>(state => state.basename);
+  const error = useSelector<StoreState, string>(state => state.error);
 
   return (
     <Router basename={basename}>
       <Navbar />
+      {(() => {
+        if (error != '') {
+          return <MessageArea color="red" message={error} />;
+        }
+      })()}
       <Switch>
         <Route exact path="/">
           <Redirect to="/jobs" />
@@ -80,10 +112,10 @@ const Main: React.FC = () => {
 
 export const App: React.FC<{ resolver: ServiceResolver }> = ({ resolver }) => {
   return (
-    <ServiceProvider value={resolver}>
+    <ServiceContext.Provider value={resolver}>
       <StoreProvider store={resolver.store}>
         <Main />
       </StoreProvider>
-    </ServiceProvider>
+    </ServiceContext.Provider>
   );
 };
