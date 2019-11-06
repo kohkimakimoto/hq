@@ -13,11 +13,11 @@ export const JobsScreen: React.FC = () => {
 
   const history = useHistory();
   const query = useQuery();
-  const term = query.get('term') ? query.get('term') as string : '';
+  const term = query.get('term') ? (query.get('term') as string) : '';
 
   const { api, handleError } = useServices();
-  const [ jobList, setJobList ] = useState(new JobList());
-  const [ searchText, setSearchText ] = useState(term);
+  const [jobList, setJobList] = useState(new JobList());
+  const [searchText, setSearchText] = useState(term);
 
   const handleChangeSearchText = (e, { value }) => {
     setSearchText(value);
@@ -30,29 +30,26 @@ export const JobsScreen: React.FC = () => {
           term: term,
           reverse: true,
           limit: limit,
-          begin: jobList.next,
+          begin: jobList.next
         });
 
         const newJobs = jobList.jobs.concat(newList.jobs);
 
-        setJobList(jobList.modify({
-          jobs: newJobs,
-          hasNext: newList.hasNext,
-          next: newList.next,
-          count: jobList.count + newList.count,
-        }));
+        setJobList(
+          jobList.modify({
+            jobs: newJobs,
+            hasNext: newList.hasNext,
+            next: newList.next,
+            count: jobList.count + newList.count
+          })
+        );
       }
     })().catch(err => handleError(err));
   };
 
   const handleKeyDown = e => {
     if (e.keyCode === 13) {
-      history.push(
-        '/jobs?' +
-          qs.stringify({
-            term: searchText
-          })
-      );
+      history.push('/jobs?' + qs.stringify({ term: searchText }));
     }
   };
 
@@ -61,7 +58,7 @@ export const JobsScreen: React.FC = () => {
       const list = await api.listJobs({
         term: term,
         reverse: true,
-        limit: limit,
+        limit: limit
       });
       setJobList(list);
     })().catch(err => handleError(err));
@@ -83,19 +80,7 @@ export const JobsScreen: React.FC = () => {
         <Input
           placeholder="search-term"
           icon={
-            <Icon
-              name="search"
-              link
-              color="blue"
-              onClick={() => {
-                history.push(
-                  '/jobs?' +
-                    qs.stringify({
-                      term: searchText
-                    })
-                );
-              }}
-            />
+            <Icon name="search" link color="blue" onClick={() => history.push('/jobs?' + qs.stringify({ term: searchText }))} />
           }
           fluid
           value={searchText}
@@ -158,11 +143,11 @@ export const JobsScreen: React.FC = () => {
                     })()}
                   </Table.Cell>
                   <Table.Cell collapsing verticalAlign="top">
-                    <div>
-                      <Button content='restart' />
+                    <div style={{ marginBottom: 10, width: 70 }}>
+                      <Button basic size="mini" fluid compact content="Restart" color="teal" />
                     </div>
                     <div>
-                      <Button content='delete' />
+                      <Button basic size="mini" fluid compact content="Delete" color="red" />
                     </div>
                   </Table.Cell>
                 </Table.Row>
@@ -175,7 +160,9 @@ export const JobsScreen: React.FC = () => {
         if (jobList.hasNext) {
           return (
             <div>
-              <Button fluid onClick={handleClickMore}>More</Button>
+              <Button fluid onClick={handleClickMore}>
+                More
+              </Button>
             </div>
           );
         }

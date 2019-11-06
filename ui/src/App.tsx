@@ -23,8 +23,9 @@ import { StoreState } from './store/State';
 import { ServiceResolver } from './ServiceResolver';
 import { ServiceContext } from './ServiceContext';
 import { JobDetail } from './screens/JobDetailScreen';
-import {useServices} from "./hooks/useService";
-import {JobsNewScreen} from "./screens/JobsNewScreen";
+import { useServices } from './hooks/useService';
+import { JobsNewScreen } from './screens/JobsNewScreen';
+import {usePrevious} from "./hooks/usePrevious";
 
 const Navbar: React.FC<{}> = () => {
   const location = useLocation();
@@ -59,14 +60,30 @@ const Navbar: React.FC<{}> = () => {
   );
 };
 
-const MessageArea: React.FC<{ color: SemanticCOLORS; message: string }> = props => {
-  if (props.message === '') {
+const MessageArea: React.FC = () => {
+  const location = useLocation();
+  const prevLocation: any = usePrevious(location);
+  const { dispatcher } = useServices();
+  const error = useSelector<StoreState, string>(state => state.error);
+
+  useEffect(() => {
+    // if the url is changed, it clear error message.
+    if (prevLocation && location.key !== prevLocation.key && error !== "") {
+      dispatcher.commit({error: ""});
+    }
+  });
+
+  if (error == "") {
     return null;
   }
 
+  const handleDismiss = () => {
+    dispatcher.commit({error: ""});
+  };
+
   return (
-    <Container textAlign="center" style={{ marginBottom: 40 }}>
-      <Message color={props.color}>{props.message}</Message>
+    <Container textAlign="center" style={{ marginBottom: 20 }}>
+      <Message color='red' onDismiss={handleDismiss}>{error}</Message>
     </Container>
   );
 };
@@ -86,27 +103,11 @@ const Footer: React.FC = () => {
 
 const Main: React.FC = () => {
   const basename = useSelector<StoreState, string>(state => state.basename);
-  const error = useSelector<StoreState, string>(state => state.error);
-  const { dispatcher } = useServices();
-
-  useEffect(() => {
-    if (error != '') {
-      setTimeout(() => {
-        dispatcher.commit({
-          error: '',
-        });
-      }, 3000);
-    }
-  }, [error]);
 
   return (
     <Router basename={basename}>
       <Navbar />
-      {(() => {
-        if (error != '') {
-          return <MessageArea color="red" message={error} />;
-        }
-      })()}
+      <MessageArea />
       <Switch>
         <Route exact path="/">
           <Redirect to="/jobs" />

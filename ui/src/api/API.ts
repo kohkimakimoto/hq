@@ -26,7 +26,7 @@ export class API {
   public async listJobs(data: {
     readonly name?: string;
     readonly term?: string;
-    readonly begin?: string
+    readonly begin?: string;
     readonly reverse?: boolean;
     readonly limit?: number;
     readonly status?: string;

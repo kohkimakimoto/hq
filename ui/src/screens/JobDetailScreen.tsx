@@ -11,13 +11,15 @@ export const JobDetail: React.FC = () => {
   useEffectDocumentTitle('Jobs');
 
   const { api, handleError } = useServices();
-  const [ job, setJob ] = useState(new Job());
+  const [job, setJob] = useState(new Job());
 
   useEffect(() => {
     (async () => {
       const job = await api.getJob(id!);
       setJob(job);
-    })().catch(err => {handleError(err)});
+    })().catch(err => {
+      handleError(err);
+    });
   }, []);
 
   return (
@@ -59,11 +61,15 @@ export const JobDetail: React.FC = () => {
                 </Segment>
                 <Header as="h2">Payload</Header>
                 <Segment>
-                  <pre><code>{JSON.stringify(job.payload, null, "\t")}</code></pre>
+                  <pre>
+                    <code>{JSON.stringify(job.payload, null, '\t')}</code>
+                  </pre>
                 </Segment>
                 <Header as="h2">Headers</Header>
                 <Segment>
-                  <pre><code>{JSON.stringify(job.headers, null, "\t")}</code></pre>
+                  <pre>
+                    <code>{JSON.stringify(job.headers, null, '\t')}</code>
+                  </pre>
                 </Segment>
                 <Header as="h2">Timeout</Header>
                 <Segment>
@@ -87,15 +93,19 @@ export const JobDetail: React.FC = () => {
                 </Segment>
                 <Header as="h2">Output</Header>
                 <Segment>
-                  <pre><code>{job.output}</code></pre>
+                  <pre>
+                    <code>{job.output}</code>
+                  </pre>
                 </Segment>
                 <Header as="h2">Error</Header>
                 <Segment>
-                  <pre><code>{job.err}</code></pre>
+                  <pre>
+                    <code>{job.err}</code>
+                  </pre>
                 </Segment>
                 <Header as="h2">Status</Header>
                 <Segment>
-                  <p className={"text " + job.statusColor}>{job.status}</p>
+                  <p className={'text ' + job.statusColor}>{job.status}</p>
                 </Segment>
               </div>
             </React.Fragment>
