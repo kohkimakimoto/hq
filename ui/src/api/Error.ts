@@ -24,9 +24,9 @@ export function errorParser(err): Promise<any> {
 
     if (data instanceof Object) {
       // received a JSON body.
-      if (status === 422 && data.errors !== 'undefined') {
+      if (status === 422 && data.error !== 'undefined') {
         // validation failed
-        return Promise.reject(new ErrorValidationFailed(data.message));
+        return Promise.reject(new ErrorValidationFailed(data.error));
       } else if (typeof data.message !== 'undefined') {
         // has custom error message.
         return Promise.reject(new Error(data.message));

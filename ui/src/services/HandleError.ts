@@ -6,6 +6,9 @@ export type HandleError = (err: any) => void;
 export const createHandleError = (dispatcher: Dispatcher): HandleError => {
   return (err: any) => {
     if (err instanceof ErrorValidationFailed) {
+      dispatcher.commit({
+        error: err.message
+      });
     } else if (typeof err === 'string') {
       dispatcher.commit({
         error: err

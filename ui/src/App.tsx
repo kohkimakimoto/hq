@@ -23,6 +23,8 @@ import { StoreState } from './store/State';
 import { ServiceResolver } from './ServiceResolver';
 import { ServiceContext } from './ServiceContext';
 import { JobDetail } from './screens/JobDetailScreen';
+import {useServices} from "./hooks/useService";
+import {JobsNewScreen} from "./screens/JobsNewScreen";
 
 const Navbar: React.FC<{}> = () => {
   const location = useLocation();
@@ -44,6 +46,7 @@ const Navbar: React.FC<{}> = () => {
         <Menu.Item name="Jobs" as={Link} to="/jobs" active={/\/jobs/.test(pathname)} />
         <Menu.Item name="Stats" as={Link} to="/stats" active={/\/stats/.test(pathname)} />
         <Menu.Menu position="right">
+          <Menu.Item as={Link} to="/jobs/new" icon={<Icon name="plus" size="large" />} />
           <Menu.Item
             as="a"
             target="_blank"
@@ -84,6 +87,17 @@ const Footer: React.FC = () => {
 const Main: React.FC = () => {
   const basename = useSelector<StoreState, string>(state => state.basename);
   const error = useSelector<StoreState, string>(state => state.error);
+  const { dispatcher } = useServices();
+
+  useEffect(() => {
+    if (error != '') {
+      setTimeout(() => {
+        dispatcher.commit({
+          error: '',
+        });
+      }, 3000);
+    }
+  }, [error]);
 
   return (
     <Router basename={basename}>
@@ -99,6 +113,9 @@ const Main: React.FC = () => {
         </Route>
         <Route exact path="/jobs">
           <JobsScreen />
+        </Route>
+        <Route exact path="/jobs/new">
+          <JobsNewScreen />
         </Route>
         <Route exact path="/jobs/:id">
           <JobDetail />

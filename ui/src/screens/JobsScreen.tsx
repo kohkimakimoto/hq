@@ -107,9 +107,10 @@ export const JobsScreen: React.FC = () => {
       <Table basic="very">
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell colSpan="3"></Table.HeaderCell>
+            <Table.HeaderCell colSpan="4"></Table.HeaderCell>
           </Table.Row>
         </Table.Header>
+
         <Table.Body>
           {(() => {
             return jobList.jobs.map((job, index, array) => {
@@ -155,6 +156,14 @@ export const JobsScreen: React.FC = () => {
                         );
                       }
                     })()}
+                  </Table.Cell>
+                  <Table.Cell collapsing verticalAlign="top">
+                    <div>
+                      <Button content='restart' />
+                    </div>
+                    <div>
+                      <Button content='delete' />
+                    </div>
                   </Table.Cell>
                 </Table.Row>
               );
