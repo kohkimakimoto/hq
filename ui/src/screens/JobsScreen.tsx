@@ -7,20 +7,42 @@ import { useServices } from '../hooks/useService';
 import { JobList } from '../models/JobList';
 import { useQuery } from '../hooks/useQuery';
 
+const limit = 3;
 export const JobsScreen: React.FC = () => {
   useEffectDocumentTitle('Jobs');
 
   const history = useHistory();
   const query = useQuery();
-
-  let term = query.get('term');
+  const term = query.get('term') ? query.get('term') as string : '';
 
   const { api, handleError } = useServices();
-  const [jobList, setJobList] = useState(new JobList());
-  const [searchText, setSearchText] = useState(term ? term : '');
+  const [ jobList, setJobList ] = useState(new JobList());
+  const [ searchText, setSearchText ] = useState(term);
 
   const handleChangeSearchText = (e, { value }) => {
     setSearchText(value);
+  };
+
+  const handleClickMore = () => {
+    (async () => {
+      if (jobList.next) {
+        const newList = await api.listJobs({
+          term: term,
+          reverse: true,
+          limit: limit,
+          begin: jobList.next,
+        });
+
+        const newJobs = jobList.jobs.concat(newList.jobs);
+
+        setJobList(jobList.modify({
+          jobs: newJobs,
+          hasNext: newList.hasNext,
+          next: newList.next,
+          count: jobList.count + newList.count,
+        }));
+      }
+    })().catch(err => handleError(err));
   };
 
   const handleKeyDown = e => {
@@ -34,19 +56,15 @@ export const JobsScreen: React.FC = () => {
     }
   };
 
-  const loadJobs = () => {
-    (async () => {
-      const listJobs = await api.listJobs({
-        term: term === null ? undefined : term,
-        reverse: true,
-        limit: 100
-      });
-      setJobList(listJobs);
-    })().catch(err => handleError(err));
-  };
-
   useEffect(() => {
-    loadJobs();
+    (async () => {
+      const list = await api.listJobs({
+        term: term,
+        reverse: true,
+        limit: limit,
+      });
+      setJobList(list);
+    })().catch(err => handleError(err));
   }, [term]);
 
   return (
@@ -63,7 +81,7 @@ export const JobsScreen: React.FC = () => {
 
       <div>
         <Input
-          placeholder="name:default status:failure search-term"
+          placeholder="search-term"
           icon={
             <Icon
               name="search"
@@ -144,6 +162,15 @@ export const JobsScreen: React.FC = () => {
           })()}
         </Table.Body>
       </Table>
+      {(() => {
+        if (jobList.hasNext) {
+          return (
+            <div>
+              <Button fluid onClick={handleClickMore}>More</Button>
+            </div>
+          );
+        }
+      })()}
     </Container>
   );
 };

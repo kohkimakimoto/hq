@@ -24,10 +24,11 @@ export class API {
   }
 
   public async listJobs(data: {
-    readonly reverse?: boolean;
-    readonly limit?: number;
     readonly name?: string;
     readonly term?: string;
+    readonly begin?: string
+    readonly reverse?: boolean;
+    readonly limit?: number;
     readonly status?: string;
   }): Promise<JobList> {
     const resp = await this.client.get('/job', data);
