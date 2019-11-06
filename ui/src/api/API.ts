@@ -1,8 +1,8 @@
 import { Client } from './Client';
 import { Stats } from '../models/Stats';
 import { AxiosInstance } from 'axios';
-import {JobList} from "../models/JobList";
-import {Job} from "../models/Job";
+import { JobList } from '../models/JobList';
+import { Job } from '../models/Job';
 
 export class API {
   private client: Client;
@@ -23,16 +23,27 @@ export class API {
     return new Stats(resp);
   }
 
-  public async listJobs(): Promise<JobList> {
-    const resp = await this.client.get('/job');
+  public async listJobs(data: {
+    readonly reverse?: boolean;
+    readonly limit?: number;
+    readonly name?: string;
+    readonly term?: string;
+    readonly status?: string;
+  }): Promise<JobList> {
+    const resp = await this.client.get('/job', data);
 
     return new JobList({
-      jobs: resp.jobs.map((value) => {
+      jobs: resp.jobs.map(value => {
         return new Job(value);
       }),
       hasNext: resp.hasNext,
       next: resp.next,
-      count: resp.count,
+      count: resp.count
     });
+  }
+
+  public async getJob(id: string): Promise<Job> {
+    const resp = await this.client.get('/job/' + id);
+    return new Job(resp);
   }
 }

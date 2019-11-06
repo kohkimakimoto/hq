@@ -22,9 +22,11 @@ import { Provider as StoreProvider, useSelector } from 'react-redux';
 import { StoreState } from './store/State';
 import { ServiceResolver } from './ServiceResolver';
 import { ServiceContext } from './ServiceContext';
+import { JobDetail } from './screens/JobDetailScreen';
 
 const Navbar: React.FC<{}> = () => {
   const location = useLocation();
+  const pathname = location.pathname;
 
   return (
     <Menu
@@ -34,13 +36,13 @@ const Navbar: React.FC<{}> = () => {
       style={{
         borderRadius: 0,
         boxShadow: 'none',
-        marginBottom: 40
+        marginBottom: 20
       }}
     >
       <Container>
         <Menu.Item name="HQ" as={Link} to="/" header />
-        <Menu.Item name="Jobs" as={Link} to="/jobs" active={location.pathname == '/jobs'} />
-        <Menu.Item name="Stats" as={Link} to="/stats" active={location.pathname == '/stats'} />
+        <Menu.Item name="Jobs" as={Link} to="/jobs" active={/\/jobs/.test(pathname)} />
+        <Menu.Item name="Stats" as={Link} to="/stats" active={/\/stats/.test(pathname)} />
         <Menu.Menu position="right">
           <Menu.Item
             as="a"
@@ -95,10 +97,13 @@ const Main: React.FC = () => {
         <Route exact path="/">
           <Redirect to="/jobs" />
         </Route>
-        <Route path="/jobs">
+        <Route exact path="/jobs">
           <JobsScreen />
         </Route>
-        <Route path="/stats">
+        <Route exact path="/jobs/:id">
+          <JobDetail />
+        </Route>
+        <Route exact path="/stats">
           <StatsScreen />
         </Route>
         <Route path="*">

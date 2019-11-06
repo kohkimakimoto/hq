@@ -215,6 +215,7 @@ func (s *Store) JobsStats() (*bolt.BucketStats, error) {
 
 type ListJobsQuery struct {
 	Name    string
+	Term   string
 	Begin   *uint64
 	Reverse bool
 	Limit   int
@@ -354,6 +355,24 @@ func (s *Store) appendJob(v []byte, query *ListJobsQuery, ret *hq.JobList) error
 
 	job = qm.UpdateJobStatus(job)
 
+	// filter by term
+	if query.Term != "" {
+		r, err := regexp.Compile(query.Term)
+		if err != nil {
+			return err
+		}
+
+		if !r.MatchString(job.Name) {
+			if !r.MatchString(job.Comment) {
+				if !r.MatchString(job.URL) {
+					if !r.MatchString(job.Status()) {
+						return nil
+					}
+				}
+			}
+		}
+	}
+
 	// filter job name
 	if query.Name != "" {
 		r, err := regexp.Compile(query.Name)
@@ -364,7 +383,6 @@ func (s *Store) appendJob(v []byte, query *ListJobsQuery, ret *hq.JobList) error
 		if !r.MatchString(job.Name) {
 			return nil
 		}
-
 	}
 
 	if query.Status != "" {

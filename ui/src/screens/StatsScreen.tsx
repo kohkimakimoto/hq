@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Header, Segment, Progress } from 'semantic-ui-react';
+import { Container, Header, Segment, Progress, Breadcrumb } from 'semantic-ui-react';
 import { Stats } from '../models/Stats';
 import { useEffectDocumentTitle } from '../hooks/useEffectDocumentTitle';
 import { useSelector } from 'react-redux';
@@ -14,6 +14,10 @@ export const StatsScreen: React.FC = () => {
 
   return (
     <Container>
+      <Breadcrumb>
+        <Breadcrumb.Section active>Stats</Breadcrumb.Section>
+      </Breadcrumb>
+
       <div className="page-title">
         <Header as="h1" dividing>
           Stats

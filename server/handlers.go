@@ -239,6 +239,7 @@ func ListJobsHandler(c echo.Context) error {
 
 	query := &ListJobsQuery{
 		Name:    req.Name,
+		Term:    req.Term,
 		Begin:   req.Begin,
 		Reverse: req.Reverse,
 		Limit:   req.Limit,

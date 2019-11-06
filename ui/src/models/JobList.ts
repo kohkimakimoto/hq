@@ -1,4 +1,4 @@
-import {Job} from "./Job";
+import { Job } from './Job';
 
 export type JobListProperties = {
   readonly jobs?: Job[];

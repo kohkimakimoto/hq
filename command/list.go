@@ -25,6 +25,10 @@ var ListCommand = cli.Command{
 			Name:  "name, n",
 			Usage: "Specifies a regular expression `STRING` to filter the jobs with job's name",
 		},
+		cli.StringFlag{
+			Name:  "term, t",
+			Usage: "Specifies a regular expression `STRING` to filter the jobs with job's name, comment, url or status",
+		},
 		cli.BoolFlag{
 			Name:  "reverse, r",
 			Usage: "Sort by descending ID.",
@@ -64,6 +68,7 @@ func listAction(ctx *cli.Context) error {
 	if len(ids) == 0 {
 		payload := &hq.ListJobsRequest{
 			Name:    ctx.String("name"),
+			Term:    ctx.String("term"),
 			Reverse: ctx.Bool("reverse"),
 			Limit:   ctx.Int("limit"),
 			Status:  ctx.String("status"),

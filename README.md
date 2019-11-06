@@ -307,6 +307,7 @@ GET /job?name={name}&begin={id}&reverse={true|false}&status={status}&limit={limi
 ##### Parameters
 
 - `name`: Specifies a regular expression string to filter the jobs with job's name
+- `term`: Specifies a regular expression string to filter the jobs with job's name, comment, url or status
 - `begin`: Load the jobs from ID. (default: 0)
 - `reverse`: Sort by descending ID.
 - `status`: Specifies STATUS to filter the jobs with job's status (`running|waiting|canceling|failure|success|canceled|unfinished|unknown`).

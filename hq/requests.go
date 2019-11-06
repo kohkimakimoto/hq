@@ -13,6 +13,7 @@ type PushJobRequest struct {
 
 type ListJobsRequest struct {
 	Name    string  `query:"name"`
+	Term    string  `query:"term"`
 	Begin   *uint64 `query:"begin"`
 	Reverse bool    `query:"reverse"`
 	Limit   int     `query:"limit"`
