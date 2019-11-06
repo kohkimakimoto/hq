@@ -7,7 +7,7 @@ import { useServices } from '../hooks/useService';
 import { JobList } from '../models/JobList';
 import { useQuery } from '../hooks/useQuery';
 
-const limit = 3;
+const limit = 100;
 export const JobsScreen: React.FC = () => {
   useEffectDocumentTitle('Jobs');
 
