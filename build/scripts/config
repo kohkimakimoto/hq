@@ -1,0 +1,3 @@
+export PRODUCT_NAME="hq"
+export PRODUCT_VERSION="1.0.0"
+export COMMIT_HASH=`git log --pretty=format:%H -n 1`

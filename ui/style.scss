@@ -1,0 +1,69 @@
+@import '~semantic-ui-css/semantic.min.css';
+@import '~codemirror/lib/codemirror.css';
+@import '~codemirror/theme/material.css';
+
+// see https://github.com/Semantic-Org/Semantic-UI/issues/1885#issuecomment-226047499
+.text.white {
+  color: #FFFFFF;
+}
+.text.grey {
+  color: #CCCCCC;
+}
+.text.black {
+  color: #1B1C1D;
+}
+.text.yellow {
+  color: #F2C61F;
+}
+.text.teal {
+  color: #00B5AD;
+}
+.text.red {
+  color: #D95C5C;
+}
+.text.purple {
+  color: #564F8A;
+}
+.text.pink {
+  color: #D9499A;
+}
+.text.orange {
+  color: #E07B53;
+}
+.text.green {
+  color: #5BBD72;
+}
+.text.blue {
+  color: #3B83C0;
+}
+
+// for CodeMirror
+.CodeMirror {
+  height: 100%;
+  min-height: 100px;
+  border-radius: .28571429rem;
+  font-family: Monaco, 'Andale Mono', 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
+  font-size: 9pt;
+}
+
+.CodeMirror pre {
+
+}
+
+.CodeMirror-scroll {
+  height: 100%;
+}
+
+// custom styles
+.page-title {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+pre {
+  white-space: pre;
+  word-wrap: break-word;
+  overflow: auto;
+  margin: 0;
+  padding: 0;
+}
