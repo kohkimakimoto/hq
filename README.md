@@ -95,6 +95,8 @@ max_workers = 0
 shutdown_timeout = 10
 job_lifetime = 2419200
 job_list_default_limit = 0
+ui = true
+ui_basename = "/ui"
 ```
 
 ### Parameters
@@ -122,6 +124,10 @@ job_list_default_limit = 0
 * `job_lifetime` (number): HQ removes old finished jobs automatically. This config sets time how many seconds HQ keeps jobs. If you set it `0`, HQ does not remove any jobs. The default is `2419200` (28 days).
 
 * `job_list_default_limit` (number): The default `limit` value of [`GET /job`](#get-job). The default is `0` (no limit).
+
+* `ui` (boolean): Enables built-in Web UI. The default is `true`.
+
+* `ui_basename` (string): The built-in Web UI URL. For example, if you set it `/foo`, The Web UI will be provided on the url like `http://localhost:19900/foo`. The default is `/ui`.
 
 ## Job
 
@@ -515,6 +521,9 @@ See more detail, Run a sub command with `-h` option.
 
 ## Web UI
 
+HQ includes built-in Web UI. The web ui is enabled at default. Access `http://localhost:19900/ui`.
+
+![webui.png](https://raw.githubusercontent.com/kohkimakimoto/hq/master/webui.png)
 
 ## Author
 
