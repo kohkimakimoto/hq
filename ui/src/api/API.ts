@@ -63,4 +63,11 @@ export class API {
     });
     return new Job(resp);
   }
+
+  public async stopJob(id: string): Promise<{
+    readonly id: string;
+  }> {
+    const resp = await this.client.post('/job/' + id + '/stop', );
+    return resp;
+  }
 }

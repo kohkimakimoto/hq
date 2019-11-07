@@ -69,6 +69,10 @@ export const JobsScreen: React.FC = () => {
     }
   };
 
+  const handleClickStop = (job: Job) => {
+
+  };
+
   const handleClickRestart = (job: Job) => {
     setRestartingJob(job);
   };
@@ -185,7 +189,7 @@ export const JobsScreen: React.FC = () => {
                       <div className="text grey">{job.comment}</div>
                     </Table.Cell>
                     <Table.Cell collapsing verticalAlign="top">
-                      <Header size="tiny" as="div" to={'/jobs/' + job.id} color={job.statusColor} textAlign='right'>
+                      <Header size="tiny" as="div" to={'/jobs/' + job.id} color={job.statusColor} textAlign='right' style={{minWidth: 70}}>
                         {(() => {
                           if (job.status == 'running') {
                             return (<Icon name="spinner" loading/>);
@@ -221,28 +225,50 @@ export const JobsScreen: React.FC = () => {
                       })()}
                     </Table.Cell>
                     <Table.Cell collapsing verticalAlign="top">
-                      <div style={{ marginBottom: 10, width: 70 }}>
-                        <Button
-                          basic
-                          size="mini"
-                          fluid
-                          compact
-                          content="Restart"
-                          color="teal"
-                          onClick={() => handleClickRestart(job)}
-                        />
-                      </div>
-                      <div>
-                        <Button
-                          basic
-                          size="mini"
-                          fluid
-                          compact
-                          content="Delete"
-                          color="red"
-                          onClick={() => handleClickDelete(job)}
-                        />
-                      </div>
+                      {(() => {
+                        if (job.status == 'running' || job.status == "waiting") {
+                          return (
+                            <div style={{ marginBottom: 10, width: 70 }}>
+                              <Button
+                                basic
+                                size="mini"
+                                fluid
+                                compact
+                                content="Stop"
+                                color="orange"
+                                onClick={() => handleClickStop(job)}
+                              />
+                            </div>
+                          );
+                        } else {
+                          return (
+                            <React.Fragment>
+                              <div style={{ marginBottom: 10, width: 70 }}>
+                                <Button
+                                  basic
+                                  size="mini"
+                                  fluid
+                                  compact
+                                  content="Restart"
+                                  color="teal"
+                                  onClick={() => handleClickRestart(job)}
+                                />
+                              </div>
+                              <div>
+                                <Button
+                                  basic
+                                  size="mini"
+                                  fluid
+                                  compact
+                                  content="Delete"
+                                  color="red"
+                                  onClick={() => handleClickDelete(job)}
+                                />
+                              </div>
+                            </React.Fragment>
+                          );
+                        }
+                      })()}
                     </Table.Cell>
                   </Table.Row>
                 );
