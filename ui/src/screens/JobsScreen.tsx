@@ -29,6 +29,10 @@ export const JobsScreen: React.FC = () => {
   // deleting
   const [deletingJob, setDeletingJob] = useState<Job | null>(null);
   const [deleting, setDeleting] = useState<boolean>(false);
+  // stopping
+  const [stoppingJob, setStoppingJob] = useState<Job | null>(null);
+  const [stopping, setStopping] = useState<boolean>(false);
+
 
   // effect
   useEffect(() => {
@@ -69,10 +73,6 @@ export const JobsScreen: React.FC = () => {
     }
   };
 
-  const handleClickStop = (job: Job) => {
-
-  };
-
   const handleClickRestart = (job: Job) => {
     setRestartingJob(job);
   };
@@ -81,6 +81,10 @@ export const JobsScreen: React.FC = () => {
     setDeletingJob(job);
   };
 
+  const handleClickStop = (job: Job) => {
+    setStoppingJob(job);
+  };
+  
   const handleRestartAsANewJob = (job: Job) => {
     setRestarting(true);
 
@@ -126,6 +130,22 @@ export const JobsScreen: React.FC = () => {
       .finally(() => {
         setDeleting(false);
         setDeletingJob(null);
+      });
+  };
+
+  const handleStop = (job: Job) => {
+    setStopping(true);
+
+    (async () => {
+      const resp = await api.stopJob(job.id);
+      refreshList(term);
+    })()
+      .catch(err => {
+        handleError(err);
+      })
+      .finally(() => {
+        setStopping(false);
+        setStoppingJob(null);
       });
   };
 
@@ -303,7 +323,6 @@ export const JobsScreen: React.FC = () => {
           );
         }
       })()}
-
       {(() => {
         if (deletingJob) {
           return (
@@ -324,6 +343,27 @@ export const JobsScreen: React.FC = () => {
           );
         }
       })()}
+      {(() => {
+        if (stoppingJob) {
+          return (
+            <Modal size="tiny" open={!!stoppingJob} onClose={() => setStoppingJob(null)}>
+              <Modal.Header>Deleting Job</Modal.Header>
+              <Modal.Content>
+                <p>Are you sure you want to stop the following job?</p>
+                <div>
+                  <Header size="tiny" color={stoppingJob.statusColor}>
+                    {'#' + stoppingJob.id}
+                  </Header>
+                </div>
+              </Modal.Content>
+              <Modal.Actions>
+                <Button color="orange" content="Stop" onClick={() => handleStop(stoppingJob)} loading={stopping} />
+              </Modal.Actions>
+            </Modal>
+          );
+        }
+      })()}
+
     </React.Fragment>
   );
 };
