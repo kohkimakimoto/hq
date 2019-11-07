@@ -256,7 +256,7 @@ POST /job
   "payload": {
     "message": "Hello world!"
   },
-  "header": {
+  "headers": {
     "X-Custom-Token": "xxxxxxx"
   },
   "timeout": 0
@@ -269,7 +269,7 @@ POST /job
 - `name` (string): The name of this job. You can set it an arbitrary string. This property is used by searching of the [`GET /job`](#get-job). If you do not set it. HQ sets it `default` automatically.
 - `comment` (string): The arbitrary text to describe this job.
 - `payload` (json): The payload on the HTTP request to a worker application.
-- `header` (json): Custom HTTP headers on the HTTP request to a worker application.
+- `headers` (json): Custom HTTP headers on the HTTP request to a worker application.
 - `timeout` (number): timeout seconds of this job. The default is `0` (no timeout).
 
 #### Response
