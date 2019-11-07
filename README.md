@@ -521,7 +521,7 @@ See more detail, Run a sub command with `-h` option.
 
 ## Web UI
 
-HQ includes built-in Web UI. The web ui is enabled at default. Access `http://localhost:19900/ui`.
+HQ includes built-in Web UI. The web ui is enabled at default. See `http://localhost:19900/ui` with your browser.
 
 ![webui.png](https://raw.githubusercontent.com/kohkimakimoto/hq/master/webui.png)
 
