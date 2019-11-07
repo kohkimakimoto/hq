@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Header, Segment, Progress, Breadcrumb } from 'semantic-ui-react';
 import { Stats } from '../models/Stats';
-import { useEffectDocumentTitle } from '../hooks/useEffectDocumentTitle';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useSelector } from 'react-redux';
 import { StoreState } from '../store/State';
-import { useEffectStats } from '../hooks/useEffectStats';
+import { useUpdateStats } from '../hooks/useUpdateStats';
 
 export const StatsScreen: React.FC = () => {
-  useEffectStats();
-  useEffectDocumentTitle('Stats');
+  useUpdateStats();
+  useDocumentTitle('Stats');
 
   const stats = useSelector<StoreState, Stats>(state => state.stats);
 
@@ -24,36 +24,52 @@ export const StatsScreen: React.FC = () => {
         </Header>
       </div>
       <div>
-        <Header as="h2">Queues</Header>
-        <Segment>
+        <Segment vertical>
+          <Header as="h2" size="medium">
+            Queues
+          </Header>
           <p>{stats.queues}</p>
         </Segment>
-        <Header as="h2">Dispatchers</Header>
-        <Segment>
+        <Segment vertical>
+          <Header as="h2" size="medium">
+            Dispatchers
+          </Header>
           <p>{stats.dispatchers}</p>
         </Segment>
-        <Header as="h2">MaxWorkers</Header>
-        <Segment>
+        <Segment vertical>
+          <Header as="h2" size="medium">
+            MaxWorkers
+          </Header>
           <p>{stats.maxWorkers}</p>
         </Segment>
-        <Header as="h2">QueueUsage</Header>
-        <Segment>
+        <Segment vertical>
+          <Header as="h2" size="medium">
+            QueueUsage
+          </Header>
           <p>{stats.queueUsage}</p>
         </Segment>
-        <Header as="h2">NumWaitingJobs</Header>
-        <Segment>
+        <Segment vertical>
+          <Header as="h2" size="medium">
+            NumWaitingJobs
+          </Header>
           <p>{stats.numWaitingJobs}</p>
         </Segment>
-        <Header as="h2">NumRunningJobs</Header>
-        <Segment>
+        <Segment vertical>
+          <Header as="h2" size="medium">
+            NumRunningJobs
+          </Header>
           <p>{stats.numRunningJobs}</p>
         </Segment>
-        <Header as="h2">NumWorkers</Header>
-        <Segment>
+        <Segment vertical>
+          <Header as="h2" size="medium">
+            NumWorkers
+          </Header>
           <p>{stats.numWorkers}</p>
         </Segment>
-        <Header as="h2">NumJobs</Header>
-        <Segment>
+        <Segment vertical>
+          <Header as="h2" size="medium">
+            NumJobs
+          </Header>
           <p>{stats.numJobs}</p>
         </Segment>
       </div>

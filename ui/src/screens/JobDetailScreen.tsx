@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Breadcrumb, Container, Header, Icon, Table, Label, Segment } from 'semantic-ui-react';
-import { useEffectDocumentTitle } from '../hooks/useEffectDocumentTitle';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useServices } from '../hooks/useService';
 import { Job } from '../models/Job';
 
 export const JobDetail: React.FC = () => {
   const { id } = useParams();
 
-  useEffectDocumentTitle('Jobs');
+  useDocumentTitle('Jobs');
 
   const { api, handleError } = useServices();
   const [job, setJob] = useState(new Job());
@@ -43,69 +43,87 @@ export const JobDetail: React.FC = () => {
               </div>
 
               <div>
-                <Header as="h2">ID</Header>
-                <Segment>
-                  <p>{'#' + job.id}</p>
-                </Segment>
-                <Header as="h2">Name</Header>
-                <Segment>
+                <Segment vertical>
+                  <Header as="h2" size="medium">
+                    Name
+                  </Header>
                   <p>{job.name}</p>
                 </Segment>
-                <Header as="h2">URL</Header>
-                <Segment>
-                  <p>{job.url}</p>
+                <Segment vertical>
+                  <Header as="h2" size="medium">
+                    URL
+                  </Header>
+                  <pre>
+                    <code>{job.url}</code>
+                  </pre>
                 </Segment>
-                <Header as="h2">Comment</Header>
-                <Segment>
+                <Segment vertical>
+                  <Header as="h2" size="medium">
+                    Comment
+                  </Header>
                   <p>{job.comment}</p>
                 </Segment>
-                <Header as="h2">Payload</Header>
-                <Segment>
+                <Segment vertical>
+                  <Header as="h2" size="medium">
+                    Payload
+                  </Header>
                   <pre>
                     <code>{JSON.stringify(job.payload, null, '\t')}</code>
                   </pre>
                 </Segment>
-                <Header as="h2">Headers</Header>
-                <Segment>
+                <Segment vertical>
+                  <Header as="h2" size="medium">
+                    Headers
+                  </Header>
                   <pre>
                     <code>{JSON.stringify(job.headers, null, '\t')}</code>
                   </pre>
                 </Segment>
-                <Header as="h2">Timeout</Header>
-                <Segment>
+                <Segment vertical>
+                  <Header as="h2" size="medium">
+                    Timeout
+                  </Header>
                   <p>{job.timeout}</p>
                 </Segment>
-                <Header as="h2">CreatedAt</Header>
-                <Segment>
+                <Segment vertical>
+                  <Header as="h2" size="medium">
+                    CreatedAt
+                  </Header>
                   <p>{job.createdAt}</p>
                 </Segment>
-                <Header as="h2">StartedAt</Header>
-                <Segment>
+                <Segment vertical>
+                  <Header as="h2" size="medium">
+                    StartedAt
+                  </Header>
                   <p>{job.startedAt}</p>
                 </Segment>
-                <Header as="h2">FinishedAt</Header>
-                <Segment>
+                <Segment vertical>
+                  <Header as="h2" size="medium">
+                    FinishedAt
+                  </Header>
                   <p>{job.finishedAt}</p>
                 </Segment>
-                <Header as="h2">StatusCode</Header>
-                <Segment>
+                <Segment vertical>
+                  <Header as="h2" size="medium">
+                    StatusCode
+                  </Header>
                   <p>{job.statusCode}</p>
                 </Segment>
-                <Header as="h2">Output</Header>
-                <Segment>
+                <Segment vertical>
+                  <Header as="h2" size="medium">
+                    Output
+                  </Header>
                   <pre>
                     <code>{job.output}</code>
                   </pre>
                 </Segment>
-                <Header as="h2">Error</Header>
-                <Segment>
+                <Segment vertical>
+                  <Header as="h2" size="medium">
+                    Error
+                  </Header>
                   <pre>
                     <code>{job.err}</code>
                   </pre>
-                </Segment>
-                <Header as="h2">Status</Header>
-                <Segment>
-                  <p className={'text ' + job.statusColor}>{job.status}</p>
                 </Segment>
               </div>
             </React.Fragment>

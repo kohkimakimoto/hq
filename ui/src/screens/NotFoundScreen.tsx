@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Breadcrumb, Container, Header } from 'semantic-ui-react';
-import { useEffectDocumentTitle } from '../hooks/useEffectDocumentTitle';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { Link } from 'react-router-dom';
 
 export const NotFoundScreen: React.FC = () => {
-  useEffectDocumentTitle('Not Found');
+  useDocumentTitle('Not Found');
 
   return (
     <Container>

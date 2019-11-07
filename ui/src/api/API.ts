@@ -47,4 +47,20 @@ export class API {
     const resp = await this.client.get('/job/' + id);
     return new Job(resp);
   }
+
+  public async deleteJob(
+    id: string
+  ): Promise<{
+    readonly id: string;
+  }> {
+    const resp = await this.client.delete('/job/' + id);
+    return resp;
+  }
+
+  public async restartJob(id: string, copy: boolean): Promise<Job> {
+    const resp = await this.client.post('/job/' + id + '/restart', {
+      copy: copy,
+    });
+    return new Job(resp);
+  }
 }

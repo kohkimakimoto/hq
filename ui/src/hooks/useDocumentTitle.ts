@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export function useEffectDocumentTitle(title) {
+export function useDocumentTitle(title) {
   useEffect(() => {
     document.title = 'HQ | ' + title;
   });

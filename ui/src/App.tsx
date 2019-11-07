@@ -25,7 +25,7 @@ import { ServiceContext } from './ServiceContext';
 import { JobDetail } from './screens/JobDetailScreen';
 import { useServices } from './hooks/useService';
 import { JobsNewScreen } from './screens/JobsNewScreen';
-import {usePrevious} from "./hooks/usePrevious";
+import { usePrevious } from './hooks/usePrevious';
 
 const Navbar: React.FC<{}> = () => {
   const location = useLocation();
@@ -68,22 +68,24 @@ const MessageArea: React.FC = () => {
 
   useEffect(() => {
     // if the url is changed, it clear error message.
-    if (prevLocation && location.key !== prevLocation.key && error !== "") {
-      dispatcher.commit({error: ""});
+    if (prevLocation && location.key !== prevLocation.key && error !== '') {
+      dispatcher.commit({ error: '' });
     }
   });
 
-  if (error == "") {
+  if (error == '') {
     return null;
   }
 
   const handleDismiss = () => {
-    dispatcher.commit({error: ""});
+    dispatcher.commit({ error: '' });
   };
 
   return (
     <Container textAlign="center" style={{ marginBottom: 20 }}>
-      <Message color='red' onDismiss={handleDismiss}>{error}</Message>
+      <Message color="red" onDismiss={handleDismiss}>
+        {error}
+      </Message>
     </Container>
   );
 };

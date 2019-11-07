@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import qs from 'query-string';
-import {Container, Header, Icon, Table, Breadcrumb, Input, Button, Label} from 'semantic-ui-react';
-import { useEffectDocumentTitle } from '../hooks/useEffectDocumentTitle';
+import { Container, Header, Icon, Table, Breadcrumb, Input, Button, Label } from 'semantic-ui-react';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useServices } from '../hooks/useService';
 import { JobList } from '../models/JobList';
 import { useQuery } from '../hooks/useQuery';
@@ -23,9 +23,7 @@ export const JobsNewScreen: React.FC = () => {
           New Job
         </Header>
       </div>
-      <div>
-
-      </div>
+      <div></div>
     </Container>
   );
 };
