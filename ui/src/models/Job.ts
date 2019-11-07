@@ -43,7 +43,8 @@ export class Job implements JobProperties {
   readonly output: string = '';
   readonly waiting: boolean = false;
   readonly running: boolean = false;
-  readonly status: 'failure' | 'success' | 'running' | 'waiting' | 'canceled' | 'canceling' | 'unfinished' | 'unknown' = 'unknown';
+  readonly status: 'failure' | 'success' | 'running' | 'waiting' | 'canceled' | 'canceling' | 'unfinished' | 'unknown' =
+    'unknown';
 
   public constructor(props?: JobProperties) {
     props && Object.assign(this, props);

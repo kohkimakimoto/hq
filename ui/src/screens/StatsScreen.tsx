@@ -25,49 +25,49 @@ export const StatsScreen: React.FC = () => {
       </div>
       <div>
         <Segment vertical>
-          <Header as="h2" size="medium">
+          <Header as="h2" size="small">
             Queues
           </Header>
           <p>{stats.queues}</p>
         </Segment>
         <Segment vertical>
-          <Header as="h2" size="medium">
+          <Header as="h2" size="small">
             Dispatchers
           </Header>
           <p>{stats.dispatchers}</p>
         </Segment>
         <Segment vertical>
-          <Header as="h2" size="medium">
+          <Header as="h2" size="small">
             MaxWorkers
           </Header>
           <p>{stats.maxWorkers}</p>
         </Segment>
         <Segment vertical>
-          <Header as="h2" size="medium">
+          <Header as="h2" size="small">
             QueueUsage
           </Header>
           <p>{stats.queueUsage}</p>
         </Segment>
         <Segment vertical>
-          <Header as="h2" size="medium">
+          <Header as="h2" size="small">
             NumWaitingJobs
           </Header>
           <p>{stats.numWaitingJobs}</p>
         </Segment>
         <Segment vertical>
-          <Header as="h2" size="medium">
+          <Header as="h2" size="small">
             NumRunningJobs
           </Header>
           <p>{stats.numRunningJobs}</p>
         </Segment>
         <Segment vertical>
-          <Header as="h2" size="medium">
+          <Header as="h2" size="small">
             NumWorkers
           </Header>
           <p>{stats.numWorkers}</p>
         </Segment>
         <Segment vertical>
-          <Header as="h2" size="medium">
+          <Header as="h2" size="small">
             NumJobs
           </Header>
           <p>{stats.numJobs}</p>

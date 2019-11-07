@@ -23,6 +23,18 @@ export class API {
     return new Stats(resp);
   }
 
+  public async createJob(data: {
+    readonly name?: string;
+    readonly comment?: string;
+    readonly url?: string;
+    readonly payload?: any;
+    readonly headers?: any;
+    readonly timeout?: number;
+  }): Promise<Job> {
+    const resp = await this.client.post('/job', data);
+    return new Job(resp);
+  }
+
   public async listJobs(data: {
     readonly name?: string;
     readonly term?: string;
@@ -59,15 +71,17 @@ export class API {
 
   public async restartJob(id: string, copy: boolean): Promise<Job> {
     const resp = await this.client.post('/job/' + id + '/restart', {
-      copy: copy,
+      copy: copy
     });
     return new Job(resp);
   }
 
-  public async stopJob(id: string): Promise<{
+  public async stopJob(
+    id: string
+  ): Promise<{
     readonly id: string;
   }> {
-    const resp = await this.client.post('/job/' + id + '/stop', );
+    const resp = await this.client.post('/job/' + id + '/stop');
     return resp;
   }
 }

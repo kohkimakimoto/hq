@@ -7,7 +7,7 @@ import { useServices } from '../hooks/useService';
 import { JobList } from '../models/JobList';
 import { useQuery } from '../hooks/useQuery';
 import { Job } from '../models/Job';
-import {useInterval} from "../hooks/useInterval";
+import { useInterval } from '../hooks/useInterval';
 
 const limit = 300;
 const pollingInterval = 5000;
@@ -32,7 +32,6 @@ export const JobsScreen: React.FC = () => {
   // stopping
   const [stoppingJob, setStoppingJob] = useState<Job | null>(null);
   const [stopping, setStopping] = useState<boolean>(false);
-
 
   // effect
   useEffect(() => {
@@ -84,7 +83,7 @@ export const JobsScreen: React.FC = () => {
   const handleClickStop = (job: Job) => {
     setStoppingJob(job);
   };
-  
+
   const handleRestartAsANewJob = (job: Job) => {
     setRestarting(true);
 
@@ -165,9 +164,7 @@ export const JobsScreen: React.FC = () => {
         <div>
           <Input
             placeholder="search-term"
-            icon={
-              <Icon name="search" link color="blue" onClick={() => search(searchText)} />
-            }
+            icon={<Icon name="search" link color="blue" onClick={() => search(searchText)} />}
             fluid
             value={searchText}
             onChange={handleChangeSearchText}
@@ -209,10 +206,17 @@ export const JobsScreen: React.FC = () => {
                       <div className="text grey">{job.comment}</div>
                     </Table.Cell>
                     <Table.Cell collapsing verticalAlign="top">
-                      <Header size="tiny" as="div" to={'/jobs/' + job.id} color={job.statusColor} textAlign='right' style={{minWidth: 70}}>
+                      <Header
+                        size="tiny"
+                        as="div"
+                        to={'/jobs/' + job.id}
+                        color={job.statusColor}
+                        textAlign="right"
+                        style={{ minWidth: 70 }}
+                      >
                         {(() => {
                           if (job.status == 'running') {
-                            return (<Icon name="spinner" loading/>);
+                            return <Icon name="spinner" loading />;
                           }
                         })()}
                         {job.status}
@@ -246,7 +250,7 @@ export const JobsScreen: React.FC = () => {
                     </Table.Cell>
                     <Table.Cell collapsing verticalAlign="top">
                       {(() => {
-                        if (job.status == 'running' || job.status == "waiting") {
+                        if (job.status == 'running' || job.status == 'waiting') {
                           return (
                             <div style={{ marginBottom: 10, width: 70 }}>
                               <Button
@@ -363,7 +367,6 @@ export const JobsScreen: React.FC = () => {
           );
         }
       })()}
-
     </React.Fragment>
   );
 };

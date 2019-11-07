@@ -1,4 +1,6 @@
 @import '~semantic-ui-css/semantic.min.css';
+@import '~codemirror/lib/codemirror.css';
+@import '~codemirror/theme/material.css';
 
 // see https://github.com/Semantic-Org/Semantic-UI/issues/1885#issuecomment-226047499
 .text.white {
@@ -33,6 +35,23 @@
 }
 .text.blue {
   color: #3B83C0;
+}
+
+// for CodeMirror
+.CodeMirror {
+  height: 100%;
+  min-height: 100px;
+  border-radius: .28571429rem;
+  font-family: Monaco, 'Andale Mono', 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
+  font-size: 9pt;
+}
+
+.CodeMirror pre {
+
+}
+
+.CodeMirror-scroll {
+  height: 100%;
 }
 
 // custom styles

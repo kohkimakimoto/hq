@@ -44,13 +44,13 @@ export const JobDetail: React.FC = () => {
 
               <div>
                 <Segment vertical>
-                  <Header as="h2" size="medium">
+                  <Header as="h2" size="small">
                     Name
                   </Header>
                   <p>{job.name}</p>
                 </Segment>
                 <Segment vertical>
-                  <Header as="h2" size="medium">
+                  <Header as="h2" size="small">
                     URL
                   </Header>
                   <pre>
@@ -58,13 +58,13 @@ export const JobDetail: React.FC = () => {
                   </pre>
                 </Segment>
                 <Segment vertical>
-                  <Header as="h2" size="medium">
+                  <Header as="h2" size="small">
                     Comment
                   </Header>
                   <p>{job.comment}</p>
                 </Segment>
                 <Segment vertical>
-                  <Header as="h2" size="medium">
+                  <Header as="h2" size="small">
                     Payload
                   </Header>
                   <pre>
@@ -72,7 +72,7 @@ export const JobDetail: React.FC = () => {
                   </pre>
                 </Segment>
                 <Segment vertical>
-                  <Header as="h2" size="medium">
+                  <Header as="h2" size="small">
                     Headers
                   </Header>
                   <pre>
@@ -80,37 +80,37 @@ export const JobDetail: React.FC = () => {
                   </pre>
                 </Segment>
                 <Segment vertical>
-                  <Header as="h2" size="medium">
+                  <Header as="h2" size="small">
                     Timeout
                   </Header>
                   <p>{job.timeout}</p>
                 </Segment>
                 <Segment vertical>
-                  <Header as="h2" size="medium">
+                  <Header as="h2" size="small">
                     CreatedAt
                   </Header>
                   <p>{job.createdAt}</p>
                 </Segment>
                 <Segment vertical>
-                  <Header as="h2" size="medium">
+                  <Header as="h2" size="small">
                     StartedAt
                   </Header>
                   <p>{job.startedAt}</p>
                 </Segment>
                 <Segment vertical>
-                  <Header as="h2" size="medium">
+                  <Header as="h2" size="small">
                     FinishedAt
                   </Header>
                   <p>{job.finishedAt}</p>
                 </Segment>
                 <Segment vertical>
-                  <Header as="h2" size="medium">
+                  <Header as="h2" size="small">
                     StatusCode
                   </Header>
                   <p>{job.statusCode}</p>
                 </Segment>
                 <Segment vertical>
-                  <Header as="h2" size="medium">
+                  <Header as="h2" size="small">
                     Output
                   </Header>
                   <pre>
@@ -118,7 +118,7 @@ export const JobDetail: React.FC = () => {
                   </pre>
                 </Segment>
                 <Segment vertical>
-                  <Header as="h2" size="medium">
+                  <Header as="h2" size="small">
                     Error
                   </Header>
                   <pre>
