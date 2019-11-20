@@ -50,20 +50,16 @@
   version = "1.0.0"
 
 [[constraint]]
-  name = "github.com/hako/durafmt"
-  version = "1.0.0"
-
-[[constraint]]
   name = "github.com/kayac/go-katsubushi"
   version = "1.5.4"
 
 [[constraint]]
-  branch = "master"
   name = "github.com/kohkimakimoto/boltutil"
+  version = "1.0.0"
 
 [[constraint]]
-  branch = "master"
   name = "github.com/kohkimakimoto/echo-static"
+  version = "1.0.0"
 
 [[constraint]]
   name = "github.com/labstack/echo"

@@ -74,14 +74,6 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:09970bb8daf100bdf11b48b72c71ef980cd2b50efbd903989b3d182956be0b83"
-  name = "github.com/hako/durafmt"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "7b7ae1e72eade09dbc9c2cfba3e6c4bae7b8bcac"
-  version = "1.0.0"
-
-[[projects]]
   digest = "1:523e7bda2a76ca00f197a434031580eaf2f29e4270c0e24939cad32ca910a72e"
   name = "github.com/kayac/go-katsubushi"
   packages = ["."]
@@ -90,20 +82,20 @@
   version = "v1.5.4"
 
 [[projects]]
-  branch = "master"
   digest = "1:9f97b16ac33fe0c2266f922d9b6c41d6820ec29affd054503379aae6e0675477"
   name = "github.com/kohkimakimoto/boltutil"
   packages = ["."]
   pruneopts = "UT"
   revision = "1245d08380461e300d9f2c3b3f60f79419d179ed"
+  version = "v1.0.0"
 
 [[projects]]
-  branch = "master"
   digest = "1:0b585b370debdaeb312e64c853146f95bde86cebe6e225203c7c4fbeeb4cf32a"
   name = "github.com/kohkimakimoto/echo-static"
   packages = ["."]
   pruneopts = "UT"
   revision = "cad6c5bb2b481787806d8d788f14b2280073cf62"
+  version = "v1.0.0"
 
 [[projects]]
   digest = "1:efd601ad1d1189884f37ed075fadb5bbd17f1f5acf5862827247c6da56d125ba"
@@ -194,20 +186,20 @@
   version = "v1.1.0"
 
 [[projects]]
-  digest = "1:0bdcb0c740d79d400bd3f7946ac22a715c94db62b20bfd2e01cd50693aba0600"
+  digest = "1:c708d00d1097e62bf4f3a72f239efa7dafc257581421b0b7d3789e1ff5299f30"
   name = "go.uber.org/atomic"
   packages = ["."]
   pruneopts = "UT"
-  revision = "9dc4df04d0d1c39369750a9f6c32c39560672089"
-  version = "v1.5.0"
+  revision = "40ae6a40a970ef4cdbffa7b24b280e316db8accc"
+  version = "v1.5.1"
 
 [[projects]]
-  digest = "1:002ebc50f3ef475ac325e1904be931d9dcba6dc6d73b5682afce0c63436e3902"
+  digest = "1:e6d88834deb4e35eb998c74f4d042db6ccecaaf62c0f6d57905852800994af00"
   name = "go.uber.org/multierr"
   packages = ["."]
   pruneopts = "UT"
-  revision = "c3fc3d02ec864719d8e25be2d7dde1e35a36aa27"
-  version = "v1.3.0"
+  revision = "824d08f79702fe5f54aca8400aa0d754318786e7"
+  version = "v1.4.0"
 
 [[projects]]
   branch = "master"
@@ -218,7 +210,7 @@
   revision = "2cfd321de3ee5d5f8a5fda2521d1703478334d98"
 
 [[projects]]
-  digest = "1:6be13632ab4bd5842a097abb3aabac045a8601e19a10da4239e7d8bd83d4b83c"
+  digest = "1:260048b6193e304ee294452a9e3410c474e3ce187248c7e2e4a2631207386f74"
   name = "go.uber.org/zap"
   packages = [
     ".",
@@ -229,8 +221,8 @@
     "zapcore",
   ]
   pruneopts = "UT"
-  revision = "a6015e13fab9b744d96085308ce4e8f11bad1996"
-  version = "v1.12.0"
+  revision = "33e58d4d0120aa28d4df84cd244838c490846c9d"
+  version = "v1.13.0"
 
 [[projects]]
   branch = "master"
@@ -241,7 +233,7 @@
     "acme/autocert",
   ]
   pruneopts = "UT"
-  revision = "8986dd9e96cf0a6f74da406c005ba3df38527c04"
+  revision = "4f8c1d86b1ba699e7a66cd649947ed270a74e0bb"
 
 [[projects]]
   branch = "master"
@@ -256,19 +248,19 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:15a159ca3e34c429f800dd822cbb37707e98552c9523b8d07fdd244dba62f04b"
+  digest = "1:d1f7edf951b9cc444358a31de2f4e4c1c5c539ea9c6aca13f5bf92eb1124fc4b"
   name = "golang.org/x/net"
   packages = ["idna"]
   pruneopts = "UT"
-  revision = "fe3aa8a4527195a6057b3fad46619d7d090e99b5"
+  revision = "fc4aabc6c91483155dade6fbb627cc953a723260"
 
 [[projects]]
   branch = "master"
-  digest = "1:999c8e6b10ddb08bc4ea3a56d4e838194c4884eac6ecf90a9aa98ed8475fdf37"
+  digest = "1:fc96eb481f72e9a5edeb4bb3f3610d3b9384c036f7c1e39f8c0dedff23d0c34d"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "f43be2a4598cf3a47be9f94f0c28197ed9eae611"
+  revision = "f068ffe820e46336f56dfca7777430582d6e507b"
 
 [[projects]]
   digest = "1:8d8faad6b12a3a4c819a3f9618cb6ee1fa1cfc33253abeeea8b55336721e3405"
@@ -297,7 +289,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:bae8b3bf837d9d7f601776f37f44e031d46943677beff8fb2eb9c7317d44de2f"
+  digest = "1:108d65ea68bad2eb706522d1e43c41aec81133a38c672adf4ae9bccd97632cc6"
   name = "golang.org/x/tools"
   packages = [
     "go/analysis",
@@ -317,7 +309,7 @@
     "internal/span",
   ]
   pruneopts = "UT"
-  revision = "1e24073be82ceb8a7a39f652fab401729dc00ce3"
+  revision = "ad01d5993d978890e598d35ff90e41811bc2958b"
 
 [[projects]]
   digest = "1:131158a88aad1f94854d0aa21a64af2802d0a470fb0f01cb33c04fafd2047111"
@@ -363,7 +355,6 @@
     "github.com/client9/reopen",
     "github.com/dustin/go-humanize",
     "github.com/elazarl/go-bindata-assetfs",
-    "github.com/hako/durafmt",
     "github.com/kayac/go-katsubushi",
     "github.com/kohkimakimoto/boltutil",
     "github.com/kohkimakimoto/echo-static",
