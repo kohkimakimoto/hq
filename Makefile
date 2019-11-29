@@ -1,6 +1,8 @@
 .PHONY:help
 .DEFAULT_GOAL := help
 
+export GO111MODULE=off
+
 # This is a magic code to output help message at default
 # see https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help:

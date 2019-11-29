@@ -30,7 +30,7 @@ func CreateJobHandler(c echo.Context) error {
 	req := &hq.PushJobRequest{}
 	if err := bindRequest(req, c); err != nil {
 		c.Logger().Warn(errors.Wrap(err, "failed to bind request"))
-		return NewHttpErrorBadRequest()
+		return err
 	}
 
 	if req.URL == "" {
@@ -96,7 +96,7 @@ func RestartJobHandler(c echo.Context) error {
 	req := &hq.RestartJobRequest{}
 	if err := bindRequest(req, c); err != nil {
 		c.Logger().Warn(errors.Wrap(err, "failed to bind request"))
-		return NewHttpErrorBadRequest()
+		return err
 	}
 
 	job := &hq.Job{}
@@ -230,7 +230,7 @@ func ListJobsHandler(c echo.Context) error {
 	req := &hq.ListJobsRequest{}
 	if err := bindRequest(req, c); err != nil {
 		c.Logger().Warn(errors.Wrap(err, "failed to bind request"))
-		return NewHttpErrorBadRequest()
+		return err
 	}
 
 	if req.Limit == 0 {
