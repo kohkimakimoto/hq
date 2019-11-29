@@ -21,18 +21,6 @@ func NewErrorValidationFailed(msgs ...string) *echo.HTTPError {
 	}
 }
 
-func NewHttpErrorBadRequest(msgs ...string) *echo.HTTPError {
-	msg := http.StatusText(http.StatusBadRequest)
-	if len(msg) > 0 {
-		msg = strings.Join(msgs, "\n")
-	}
-
-	return &echo.HTTPError{
-		Code:    http.StatusBadRequest,
-		Message: msg,
-	}
-}
-
 func NewHttpErrorNotFound(msgs ...string) *echo.HTTPError {
 	msg := http.StatusText(http.StatusNotFound)
 	if len(msg) > 0 {
