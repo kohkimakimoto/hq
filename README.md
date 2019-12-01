@@ -66,17 +66,34 @@ $ hq serve
 
 > Note: Running HQ server without any configuration like the above can cause to lost queued jobs, because HQ uses temporary directory to store jobs. Therefore this should be used only on DEV environment. When you use HQ on your production environment, You should set a proper configuration file. See [Configuration](#configuration).
 
-Next, you must launch your worker application. It is a web application that should be implemented for your purpose. But this time, You can use an example web app I made. Download [`workerapp.py`](./examples/workerapp.py) script and add it executable permission. Run the script like the following:
+Next, you must launch your worker application. It is a web application that should be implemented for your purpose. But this time, you can use an example web app I made. Download [`workerapp.py`](./examples/workerapp.py) script and add it executable permission and then run the script like the following:
 
 ```
 $ ./workerapp.py
 Serving at port 8000
 ```
 
-You can push a job by using the following `curl` command:
+This is a web application that just outputs HTTP post request info to the console. 
+You are ready to push a job. You can push a job to HQ by using the following `curl` command:
 
 ```
-$ curl -XPOST http://localhost:19900/job -H "Content-Type: application/json" -d '{"url": "http://localhost:8080/example", "payload": {"message": "Hello world!"}}'
+$ curl -XPOST http://localhost:19900/job -H "Content-Type: application/json" -d '{"url": "http://localhost:8000/", "payload": {"message": "Hello world!"}}'
+```
+
+[`workerapp.py`](./examples/workerapp.py) outputs like the following message.
+
+```
+--POST REQUEST BEGIN--
+POST /
+Host: localhost:8000
+User-Agent: HQ/1.0.0
+Content-Length: 27
+Content-Type: application/json
+X-Hq-Job-Id: 121128807380811776
+Accept-Encoding: gzip
+
+{"message": "Hello world!"}
+--POST REQUEST END----
 ```
 
 ## Configuration
