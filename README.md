@@ -64,12 +64,36 @@ $ hq serve
 2019-04-18T18:56:25+09:00 INFO The server Listening on 0.0.0.0:19900 (pid: 74090)
 ```
 
-> Note: Running HQ server without any configuration like the above can cause to lost queued jobs, because HQ uses temporary directory to store jobs. Therefore this should be used only on DEV environment. When you use HQ on your production environment, You should set a proper configuration file. see [Configuration](#configuration).
+> Note: Running HQ server without any configuration like the above can cause to lost queued jobs, because HQ uses temporary directory to store jobs. Therefore this should be used only on DEV environment. When you use HQ on your production environment, You should set a proper configuration file. See [Configuration](#configuration).
 
-You can push a job by using the following `curl` command:
+Next, you must launch your worker application. It is a web application that should be implemented for your purpose. But this time, you can use an example web app I made. Download [`workerapp.py`](./examples/workerapp.py) script and add it executable permission and then run the script like the following:
 
 ```
-$ curl -XPOST http://localhost:19900/job -H "Content-Type: application/json" -d '{"url": "http://localhost:8080/example", "payload": {"message": "Hello world!"}}'
+$ ./workerapp.py
+Serving at port 8000
+```
+
+This is a web application that just outputs HTTP post request info to the console. 
+You are ready to push a job. You can push a job to HQ by using the following `curl` command:
+
+```
+$ curl -XPOST http://localhost:19900/job -H "Content-Type: application/json" -d '{"url": "http://localhost:8000/", "payload": {"message": "Hello world!"}}'
+```
+
+`workerapp.py` will get a job from HQ and output like the following message.
+
+```
+--POST REQUEST BEGIN--
+POST /
+Host: localhost:8000
+User-Agent: HQ/1.0.0
+Content-Length: 27
+Content-Type: application/json
+X-Hq-Job-Id: 121128807380811776
+Accept-Encoding: gzip
+
+{"message": "Hello world!"}
+--POST REQUEST END----
 ```
 
 ## Configuration
@@ -167,13 +191,13 @@ If the above example job is executed, HQ will send like the following HTTP reque
 ```http
 POST /example HTTP/1.1
 Host: your-worker-app-server
-Content-Type: application/json
 User-Agent: HQ/1.0.0
+Content-Type: application/json
+Content-Length: 26
 X-Hq-Job-Id: 109192606348480512
+Accept-Encoding: gzip
 
-{
-  "message": "Hello world!"
-}
+{"message":"Hello world!"}
 ```
 
 ## HTTP API

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/kohkimakimoto/hq/hq"
 	"github.com/pkg/errors"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"sync/atomic"
@@ -138,11 +139,16 @@ func (d *Dispatcher) work(job *hq.Job) {
 }
 
 func (d *Dispatcher) runHttpWorker(job *hq.Job, ctx context.Context) error {
+	var reqBody io.Reader
+	if job.Payload != nil && !bytes.Equal(job.Payload, []byte("null")) {
+		reqBody = bytes.NewReader(job.Payload)
+	}
+
 	// worker
 	req, err := http.NewRequest(
 		"POST",
 		job.URL,
-		bytes.NewReader(job.Payload),
+		reqBody,
 	)
 	if err != nil {
 		return errors.Wrap(err, "failed to create new request")

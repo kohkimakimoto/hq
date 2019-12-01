@@ -32,7 +32,7 @@ export const JobsNewScreen: React.FC = () => {
 
     (async () => {
       const postedJob = await api.createJob({
-        name: name,
+        name: job.name,
         comment: job.comment,
         url: job.url,
         payload: job.payload,
