@@ -167,13 +167,12 @@ If the above example job is executed, HQ will send like the following HTTP reque
 ```http
 POST /example HTTP/1.1
 Host: your-worker-app-server
-Content-Type: application/json
 User-Agent: HQ/1.0.0
+Content-Type: application/json
+Content-Length: 26
 X-Hq-Job-Id: 109192606348480512
 
-{
-  "message": "Hello world!"
-}
+{"message":"Hello world!"}
 ```
 
 ## HTTP API
