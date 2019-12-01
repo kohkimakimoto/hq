@@ -195,6 +195,7 @@ User-Agent: HQ/1.0.0
 Content-Type: application/json
 Content-Length: 26
 X-Hq-Job-Id: 109192606348480512
+Accept-Encoding: gzip
 
 {"message":"Hello world!"}
 ```
