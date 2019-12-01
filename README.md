@@ -80,7 +80,7 @@ You are ready to push a job. You can push a job to HQ by using the following `cu
 $ curl -XPOST http://localhost:19900/job -H "Content-Type: application/json" -d '{"url": "http://localhost:8000/", "payload": {"message": "Hello world!"}}'
 ```
 
-[`workerapp.py`](./examples/workerapp.py) outputs like the following message.
+`workerapp.py` will get a job from HQ and output like the following message.
 
 ```
 --POST REQUEST BEGIN--
