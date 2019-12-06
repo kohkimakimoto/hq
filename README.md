@@ -37,27 +37,21 @@ Worker applications that actually run the jobs are web applications. So you can 
       - [Response](#response-1)
     - [`POST /job`](#post-job)
       - [Request](#request-2)
-        - [Parameters](#parameters-1)
       - [Response](#response-2)
     - [`GET /job`](#get-job)
       - [Request](#request-3)
-        - [Parameters](#parameters-2)
       - [Response](#response-3)
     - [`GET /job/{id}`](#get-jobid)
       - [Request](#request-4)
-        - [Parameters](#parameters-3)
       - [Response](#response-4)
     - [`DELETE /job/{id}`](#delete-jobid)
       - [Request](#request-5)
-        - [Parameters](#parameters-4)
       - [Response](#response-5)
     - [`POST /job/{id}/restart`](#post-jobidrestart)
       - [Request](#request-6)
-        - [Parameters](#parameters-5)
       - [Response](#response-6)
     - [`POST /job/{id}/stop`](#post-jobidstop)
       - [Request](#request-7)
-        - [Parameters](#parameters-6)
       - [Response](#response-7)
   - [Commands](#commands)
   - [Web UI](#web-ui)
@@ -308,7 +302,7 @@ POST /job
 }
 ```
 
-##### Parameters
+##### Parameters <!-- omit in toc -->
 
 - `url` (string,required): The URL to send HTTP request to a worker application.
 - `name` (string): The name of this job. You can set it an arbitrary string. This property is used by searching of the [`GET /job`](#get-job). If you do not set it. HQ sets it `default` automatically.
@@ -355,7 +349,7 @@ Lists jobs.
 GET /job?name={name}&begin={id}&reverse={true|false}&status={status}&limit={limit}
 ```
 
-##### Parameters
+##### Parameters <!-- omit in toc -->
 
 - `name`: Specifies a regular expression string to filter the jobs with job's name
 - `term`: Specifies a regular expression string to filter the jobs with job's name, comment, url or status
@@ -410,7 +404,7 @@ Gets a job.
 GET /job/{id}
 ```
 
-##### Parameters
+##### Parameters <!-- omit in toc -->
 
 - `id`: Job ID to get.
 
@@ -452,7 +446,7 @@ Deletes a job.
 DELETE /job/{id}
 ```
 
-##### Parameters
+##### Parameters <!-- omit in toc -->
 
 - `id`: Job ID to delete.
 
@@ -480,7 +474,7 @@ POST /job/{id}/restart
 }
 ```
 
-##### Parameters
+##### Parameters <!-- omit in toc -->
 
 - `id`: Job ID to restart.
 - `copy`: If it set `true`, Restarts the copied job instead of updating the existed job.
@@ -523,7 +517,7 @@ Stops a job.
 POST /job/{id}/stop
 ```
 
-##### Parameters
+##### Parameters <!-- omit in toc -->
 
 - `id`: Job ID to stop.
 
