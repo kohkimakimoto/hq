@@ -1,4 +1,4 @@
-# HQ
+# HQ <!-- omit in toc -->
 
 HQ is a simplistic, language agnostic job queue engine communicated by HTTP messages.
 
@@ -20,9 +20,8 @@ Worker applications that actually run the jobs are web applications. So you can 
                    └────────────────────────────────────────────────────────────────┘
 ```
 
-## Table of Contents
+## Table of Contents <!-- omit in toc -->
 
-  - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Getting Started](#getting-started)
   - [Configuration](#configuration)
@@ -31,13 +30,35 @@ Worker applications that actually run the jobs are web applications. So you can 
   - [Job](#job)
   - [HTTP API](#http-api)
     - [`GET /`](#get-)
+      - [Request](#request)
+      - [Response](#response)
     - [`GET /stats`](#get-stats)
+      - [Request](#request-1)
+      - [Response](#response-1)
     - [`POST /job`](#post-job)
+      - [Request](#request-2)
+        - [Parameters](#parameters-1)
+      - [Response](#response-2)
     - [`GET /job`](#get-job)
+      - [Request](#request-3)
+        - [Parameters](#parameters-2)
+      - [Response](#response-3)
     - [`GET /job/{id}`](#get-jobid)
+      - [Request](#request-4)
+        - [Parameters](#parameters-3)
+      - [Response](#response-4)
     - [`DELETE /job/{id}`](#delete-jobid)
+      - [Request](#request-5)
+        - [Parameters](#parameters-4)
+      - [Response](#response-5)
     - [`POST /job/{id}/restart`](#post-jobidrestart)
+      - [Request](#request-6)
+        - [Parameters](#parameters-5)
+      - [Response](#response-6)
     - [`POST /job/{id}/stop`](#post-jobidstop)
+      - [Request](#request-7)
+        - [Parameters](#parameters-6)
+      - [Response](#response-7)
   - [Commands](#commands)
   - [Web UI](#web-ui)
   - [Author](#author)
