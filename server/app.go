@@ -159,7 +159,9 @@ func (app *App) Open() error {
 
 	// background
 	app.Background = NewBackground(app)
-	app.Background.Start()
+	if err := app.Background.Start(); err != nil {
+		return err
+	}
 
 	// echo templates
 	e := app.Echo

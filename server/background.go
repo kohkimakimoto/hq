@@ -1,11 +1,12 @@
 package server
 
 import (
+	"sync"
+	"time"
+
 	"github.com/kayac/go-katsubushi"
 	"github.com/kohkimakimoto/hq/hq"
 	"github.com/robfig/cron"
-	"sync"
-	"time"
 )
 
 type Background struct {
@@ -20,20 +21,22 @@ func NewBackground(app *App) *Background {
 	}
 }
 
-func (bg *Background) Start() {
+func (bg *Background) Start() error {
 	logger := bg.app.Logger
 	logger.Debug("Starting background.")
 
 	config := bg.app.Config
-
 	app := bg.app
 
 	if config.JobLifetime > 0 {
-		// bg.cron.AddFunc("* * * * * *", cleanupJobs(app))
-		bg.cron.AddFunc("@hourly", cleanupJobs(app))
+		if _, err := bg.cron.AddFunc("@hourly", cleanupJobs(app)); err != nil {
+			return err
+		}
 	}
 
 	bg.cron.Start()
+
+	return nil
 }
 
 func (bg *Background) Close() {
