@@ -3,14 +3,15 @@ package server
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"strconv"
+	"sync/atomic"
+
 	"github.com/kayac/go-katsubushi"
 	"github.com/kohkimakimoto/boltutil"
 	"github.com/kohkimakimoto/hq/hq"
 	"github.com/labstack/echo"
 	"github.com/pkg/errors"
-	"net/http"
-	"strconv"
-	"sync/atomic"
 )
 
 func InfoHandler(c echo.Context) error {
@@ -299,8 +300,11 @@ func bindRequest(req interface{}, c echo.Context) error {
 			return err
 		}
 	} else {
-		if err := c.Bind(req); err != nil {
-			return err
+		httpReq := c.Request()
+		if httpReq.ContentLength != 0 || httpReq.Method == http.MethodGet || httpReq.Method == http.MethodDelete {
+			if err := c.Bind(req); err != nil {
+				return err
+			}
 		}
 	}
 
