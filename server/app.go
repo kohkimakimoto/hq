@@ -291,14 +291,14 @@ func setupAPIHandlers(e *echo.Echo, prefix string) {
 }
 
 func (app *App) sigusr1Handler() {
-	reopen := make(chan os.Signal, 1)
-	signal.Notify(reopen, syscall.SIGUSR1)
+	reopenSig := make(chan os.Signal, 1)
+	signal.Notify(reopenSig, syscall.SIGUSR1)
 
 	logger := app.Logger
 
 	for {
 		select {
-		case sig := <-reopen:
+		case sig := <-reopenSig:
 			logger.Infof("Received signal to reopen the logs: %v", sig)
 
 			if err := app.LogfileWriter.Reopen(); err != nil {
