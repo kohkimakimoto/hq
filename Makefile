@@ -1,7 +1,9 @@
 .PHONY:help
 .DEFAULT_GOAL := help
 
-export GO111MODULE=off
+export GO111MODULE := off
+export PATH := $(CURDIR)/.go-packages/bin:$(PATH)
+
 
 # This is a magic code to output help message at default
 # see https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
