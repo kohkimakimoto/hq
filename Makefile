@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 
-export GO111MODULE := off
-export PATH := $(CURDIR)/.go-packages/bin:$(PATH)
+export GO111MODULE := on
+export PATH := $(CURDIR)/.go-tools/bin:$(PATH)
 
 # This is a magic code to output help message at default
 # see https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
@@ -53,26 +53,23 @@ devbindata: ## devbindata
 packaging: ## Create packages (now support RPM only)
 	@bash -c $(CURDIR)/build/scripts/packaging.sh
 
-
 .PHONY: installtools
 installtools: ## Install dev tools
-	GOPATH=$(CURDIR)/.go-packages && \
+	GO111MODULE=off && GOPATH=$(CURDIR)/.go-tools && \
       go get -u github.com/mattn/go-bindata/... && \
-      go get -u github.com/golang/dep/cmd/dep && \
       go get -u github.com/mitchellh/gox && \
       go get -u github.com/axw/gocov/gocov && \
       go get -u gopkg.in/matm/v1/gocov-html
+	rm -rf $(CURDIR)/.go-tools/pkg
+	rm -rf $(CURDIR)/.go-tools/src
+
+.PHONY: cleantools
+cleantools:
+	GO111MODULE=off && GOPATH=$(CURDIR)/.go-tools && rm -rf $(CURDIR)/.go-tools
 
 .PHONY:deps
 deps: ## Install dependences.
-	PATH=$(CURDIR)/.go-packages/bin:${PATH} && dep ensure
-
-.PHONY:updatedeps
-updatedeps: ## update all dependences.
-	rm -rf Gopkg.*
-	rm -rf vendor
-	dep init
-	dep ensure
+	go mod tidy
 
 
 
