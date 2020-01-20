@@ -3,10 +3,11 @@ Thumbs.db
 .tags*
 ._*
 *.iml
+.idea/
 .vscode/
 node_modules/
 
-.go-packages/
+.go-tools/
 /_tmp
 /.vagrant
 /.envrc

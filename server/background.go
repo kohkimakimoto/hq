@@ -6,7 +6,7 @@ import (
 
 	"github.com/kayac/go-katsubushi"
 	"github.com/kohkimakimoto/hq/hq"
-	"github.com/robfig/cron"
+	"github.com/robfig/cron/v3"
 )
 
 type Background struct {
