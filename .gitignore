@@ -3,6 +3,7 @@ Thumbs.db
 .tags*
 ._*
 *.iml
+.idea
 .vscode/
 node_modules/
 
