@@ -2,8 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { errorParser } from './Error';
 
 /**
- * Client is an API client to make requests to the myRule API.
- * The myRule APIs only use POST request.
+ * Client is an API client to make requests to the API.
  */
 export class Client {
   public httpClientProvider: () => AxiosInstance;
