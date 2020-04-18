@@ -40,14 +40,14 @@ clean: ## Clean build outputs
 .PHONY:bindata
 bindata: ## bindata
 	yarn run clean && yarn run build
-	go-bindata -o ./res/ui/bindata.go -ignore bindata.go -prefix res/ui -pkg views res/ui/...
-	go-bindata -o ./res/views/bindata.go -ignore bindata.go -prefix res/views -pkg views res/views/...
+	$(CURDIR)/.go-tools/bin/go-bindata -o ./res/ui/bindata.go -ignore bindata.go -prefix res/ui -pkg views res/ui/...
+	$(CURDIR)/.go-tools/bin/go-bindata -o ./res/views/bindata.go -ignore bindata.go -prefix res/views -pkg views res/views/...
 
 .PHONY:devbindata
 devbindata: ## devbindata
 	yarn run clean && yarn run dev
-	go-bindata -o ./res/ui/bindata.go -ignore bindata.go -prefix res/ui -pkg views res/ui/...
-	go-bindata -o ./res/views/bindata.go -ignore bindata.go -prefix res/views -pkg views res/views/...
+	$(CURDIR)/.go-tools/bin/go-bindata -o ./res/ui/bindata.go -ignore bindata.go -prefix res/ui -pkg views res/ui/...
+	$(CURDIR)/.go-tools/bin/go-bindata -o ./res/views/bindata.go -ignore bindata.go -prefix res/views -pkg views res/views/...
 
 .PHONY:packaging
 packaging: ## Create packages (now support RPM only)
@@ -70,6 +70,10 @@ cleantools:
 .PHONY:deps
 deps: ## Install dependences.
 	go mod tidy
+
+.PHONY:githubrepo
+github-repo: ## Open Github repository
+	open https://github.com/kohkimakimoto/hq
 
 
 
