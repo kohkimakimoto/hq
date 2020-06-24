@@ -27,7 +27,7 @@ var (
 	// common flags
 	logLevelFlag = cli.StringFlag{
 		Name:   "log-level, l",
-		Usage:  "Set Log `LEVEL` (error|warning|info|debug).",
+		Usage:  "Set Log `LEVEL` (error|warn|info|debug).",
 		EnvVar: "HQ_LOG_LEVEL",
 	}
 
