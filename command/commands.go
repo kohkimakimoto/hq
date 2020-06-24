@@ -1,12 +1,13 @@
 package command
 
 import (
-	"github.com/cheynewallace/tabby"
-	"github.com/kohkimakimoto/hq/client"
-	"github.com/urfave/cli"
 	"os"
 	"runtime"
 	"text/tabwriter"
+
+	"github.com/cheynewallace/tabby"
+	"github.com/kohkimakimoto/hq/client"
+	"github.com/urfave/cli"
 )
 
 // Command set
@@ -27,7 +28,7 @@ var (
 	logLevelFlag = cli.StringFlag{
 		Name:   "log-level, l",
 		Usage:  "Set Log `LEVEL` (error|warning|info|debug).",
-		EnvVar: "SKYFORGE_LOG_LEVEL",
+		EnvVar: "HQ_LOG_LEVEL",
 	}
 
 	// serve flags
