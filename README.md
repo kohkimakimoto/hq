@@ -79,7 +79,7 @@ $ hq serve
 2019-04-18T18:56:25+09:00 INFO The server Listening on 0.0.0.0:19900 (pid: 74090)
 ```
 
-> Note: Running HQ server without any configuration like the above can cause to lost queued jobs, because HQ uses temporary directory to store jobs. Therefore this should be used only on DEV environment. When you use HQ on your production environment, You should set a proper configuration file. See [Configuration](#configuration).
+> Note: Running HQ server without any configuration like the above can cause to lose queued jobs, because HQ uses temporary directory to store jobs. Therefore this should be used only on DEV environment. When you use HQ on your production environment, You should set a proper configuration file. See [Configuration](#configuration).
 
 Next, you must launch your worker application. It is a web application that should be implemented for your purpose. But this time, you can use an example web app I made. Download [`workerapp.py`](./examples/workerapp.py) script and add it executable permission and then run the script like the following:
 
@@ -88,7 +88,7 @@ $ ./workerapp.py
 Serving at port 8000
 ```
 
-This is a web application that just outputs HTTP post request info to the console. 
+This is a web application that just outputs HTTP post request info to the console.
 You are ready to push a job. You can push a job to HQ by using the following `curl` command:
 
 ```
