@@ -1,0 +1,6 @@
+.eslintrc.js
+.prettierrc.js
+jest.config.js
+webpack.config.js
+public/*
+

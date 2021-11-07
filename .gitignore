@@ -6,11 +6,12 @@ Thumbs.db
 node_modules/
 /vendor
 /.vendor-new
-/.go-tools
 /coverage-report.html
+/dev/build/outputs/*
+
 !.gitkeep
-/build/outputs/*
 
 # env
 .env
 .envrc
+

@@ -2,6 +2,6 @@ package version
 
 var (
 	Name       = "hq"
-	Version    = "dev"     // This will be filled in by the build command.
-	CommitHash = "unknown" // This will be filled in by the build command.
+	Version    = "dev"     // It will be overwritten by the build script
+	CommitHash = "unknown" // It will be overwritten by the build script
 )

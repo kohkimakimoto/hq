@@ -64,7 +64,7 @@ HQ lives in a single binary without external dependencies. You can download a pr
 
 [Download latest version](https://github.com/kohkimakimoto/hq/releases/latest)
 
-If you use CentOS7, you can also use RPM package that is stored in the same releases page. It is useful because it configures systemd service automatically.
+You can also use RPM package that is stored in the same releases page. It is useful because it configures systemd service automatically.
 
 ## Getting Started
 
@@ -269,11 +269,12 @@ GET /stats
   "queues": 8192,
   "dispatchers": 8,
   "maxWorkers": 0,
-  "queueUsage": 0,
-  "numWaitingJobs": 0,
-  "numRunningJobs": 0,
   "numWorkers": 0,
-  "numJobs": 0
+  "numJobsInQueue": 0,
+  "numJobsWaiting": 0,
+  "numJobsRunning": 0,
+  "numStoredJobs": 67,
+  "numJobsInLastMinute": 0
 }
 ```
 
@@ -352,7 +353,7 @@ GET /job?name={name}&begin={id}&reverse={true|false}&status={status}&limit={limi
 ##### Parameters <!-- omit in toc -->
 
 - `name`: Specifies a regular expression string to filter the jobs with job's name
-- `term`: Specifies a regular expression string to filter the jobs with job's name, comment, url or status
+- `term`: Specifies a regular expression string to filter the jobs with job's id name, comment, url or status
 - `begin`: Load the jobs from ID. (default: 0)
 - `reverse`: Sort by descending ID.
 - `status`: Specifies STATUS to filter the jobs with job's status (`running|waiting|canceling|failure|success|canceled|unfinished|unknown`).
@@ -534,29 +535,35 @@ POST /job/{id}/stop
 HQ also provides command-line interface to communicate HQ server. To view a list of the available commands, just run `hq` without any arguments:
 
 ```
-Usage: hq [<options...>] <command>
+NAME:
+   hq - Simplistic job queue engine
 
-Simplistic job queue engine
-version 1.0.0 (e78e5977ffecffce7f5118e002069dd05165deb6)
+USAGE:
+   hq_darwin_amd64 [global options] command [command options] [arguments...]
 
-Options:
-  --help, -h     show help
-  --version, -v  print the version
-  
-Commands:
-  delete   Deletes a job
-  info     Displays a job detail
-  list     Lists jobs
-  push     Pushes a new job.
-  restart  Restarts a job
-  serve    Starts the HQ server process
-  stats    Displays the HQ server statistics.
-  stop     Stops a job
-  help, h  Shows a list of commands or help for one command
+VERSION:
+   2.0.0 (5bdbdaf31772c1f5cdd8feb2056e4d5fcafa7a51)
+
+COMMANDS:
+   delete   Deletes a job
+   info     Displays a job detail
+   list     Lists jobs
+   push     Pushes a new job.
+   restart  Restarts a job
+   serve    Starts the HQ server process
+   stats    Displays the HQ server statistics.
+   stop     Stops a job
+   help, h  Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --help, -h     show help (default: false)
+   --version, -v  print the version (default: false)
+
+COPYRIGHT:
+   Copyright (c) 2019 Kohki Makimoto
 ```
 
 See more detail, Run a sub command with `-h` option.
-
 
 ## Web UI
 

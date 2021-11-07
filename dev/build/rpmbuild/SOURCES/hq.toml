@@ -1,0 +1,33 @@
+# server_id
+server_id = 0
+
+# log_level
+log_level = "info"
+
+# addr
+addr = "0.0.0.0:19900"
+
+# data_dir
+data_dir = "/var/lib/hq"
+
+# access_log_file
+access_log_file = "/var/log/hq/access.log"
+
+# queues
+queues = 8192
+
+# dispatchers
+#dispatchers = 1
+
+# max_workers
+max_workers = 0
+
+# shutdown_timeout
+shutdown_timeout = 10
+
+# job_lifetime
+# job_lifetime = 2419200
+
+# job_list_default_limit
+job_list_default_limit = 0
+

@@ -1,0 +1,12 @@
+{
+  "url": "http://localhost:8000/",
+  "name": "example",
+  "comment": "This is an example job!",
+  "payload": {
+    "message": "Hello world!"
+  },
+  "headers": {
+    "X-Custom-Token": "xxxxxxx"
+  },
+  "timeout": 0
+}

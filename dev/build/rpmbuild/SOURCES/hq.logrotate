@@ -1,0 +1,11 @@
+/var/log/hq/*log {
+    daily
+    rotate 10
+    missingok
+    notifempty
+    compress
+    sharedscripts
+    postrotate
+        /bin/systemctl kill -s USR1 hq.service > /dev/null 2>/dev/null || true
+    endscript
+}
