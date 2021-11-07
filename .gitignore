@@ -1,0 +1,16 @@
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.pem
+node_modules/
+/vendor
+/.vendor-new
+/.go-tools
+/coverage-report.html
+!.gitkeep
+/build/outputs/*
+
+# env
+.env
+.envrc
