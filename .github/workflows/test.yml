@@ -20,6 +20,9 @@ jobs:
           go-version: '1.16'
       - name: Install
         run: make dev/tools/install && make deps
+      # We need to build before testing
+      - name: Build dev
+        run: make build/dev
       - name: Test Go code
         run: make test/go
       - name: Test UI js code
