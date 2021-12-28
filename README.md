@@ -539,7 +539,7 @@ NAME:
    hq - Simplistic job queue engine
 
 USAGE:
-   hq_darwin_amd64 [global options] command [command options] [arguments...]
+   hq [global options] command [command options] [arguments...]
 
 VERSION:
    2.0.0 (5bdbdaf31772c1f5cdd8feb2056e4d5fcafa7a51)
